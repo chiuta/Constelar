@@ -6,7 +6,12 @@
 <title>Constelar — companioni AI cu memorie reală, 100% locală</title>
 <meta name="description" content="Companioni AI cu memorie persistentă. Fără cont, fără server, fără telemetrie — totul rămâne pe dispozitivul tău.">
 <meta name="theme-color" content="#0e0b16">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Constelar">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✦%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230e0b16'/%3E%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='%23f2c879'%3E✦%3C/text%3E%3C/svg%3E">
 <style>
 /* ============ TOKENS ============ */
 :root{
@@ -65,9 +70,35 @@ ul{list-style:none; margin:0; padding:0;}
 .roster-name{font-size:13.5px; font-weight:600;}
 .roster-type{font-size:11px; color:var(--mist);}
 .roster-empty{color:var(--mist-dim); font-size:12.5px; padding:10px 6px;}
+
+.roster-cat + .roster-cat{margin-top:2px;}
+.roster-cat-head{
+  width:100%; display:flex; align-items:center; gap:7px; background:none; border:none;
+  color:var(--mist); font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:.04em;
+  padding:6px 6px; border-radius:8px; cursor:pointer;
+}
+.roster-cat-head:hover{background:var(--dusk); color:var(--paper);}
+.roster-cat-chevron{font-size:10px; width:12px; flex-shrink:0; color:var(--mist-dim);}
+.roster-cat-name{flex:1; text-align:left;}
+.roster-cat-count{
+  background:var(--dusk); border:1px solid var(--twilight); color:var(--mist-dim);
+  font-size:10.5px; font-weight:400; text-transform:none; letter-spacing:0;
+  padding:1px 7px; border-radius:999px;
+}
+.roster-cat-body{display:flex; flex-direction:column; gap:5px; padding:2px 0 4px 4px;}
+.roster-subhead{
+  font-size:10px; color:var(--mist-dim); text-transform:uppercase; letter-spacing:.05em;
+  padding:5px 8px 1px; opacity:.8;
+}
+.roster-subhead:first-child{padding-top:1px;}
 .mini-del{
   background:none; border:none; color:var(--mist-dim); font-size:13px; padding:0 10px 0 2px;
   opacity:0; flex-shrink:0;
+}
+/* Pe touch nu există :hover, deci butonul de ștergere trebuie vizibil implicit —
+   altfel ștergerea unui companion e efectiv imposibilă pe telefon/tabletă. */
+@media (hover:none), (pointer:coarse){
+  .mini-del{opacity:.6;}
 }
 .roster-item:hover .mini-del, .roster-item:focus-within .mini-del{opacity:.75;}
 .mini-del:hover{opacity:1 !important; color:var(--danger);}
@@ -225,6 +256,11 @@ ul{list-style:none; margin:0; padding:0;}
 .hint{font-size:11.5px; color:var(--mist-dim); margin-top:4px;}
 .divider{border:none; border-top:1px solid var(--twilight); margin:18px 0;}
 .about-block{font-size:13px; color:var(--mist); margin-bottom:12px;}
+.legal-block{font-size:12px;}
+.donate-row{display:flex; gap:10px; margin:14px 0 4px; flex-wrap:wrap;}
+.donate-link{text-decoration:none; font-size:13px; text-align:center; flex:1;}
+.share-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+.share-link{text-decoration:none; font-size:13px; text-align:center;}
 .about-block b{color:var(--paper);}
 .crisis-list{background:var(--dusk); border:1px solid var(--twilight-2); border-radius:10px; padding:14px; margin:10px 0;}
 .crisis-list div{margin-bottom:8px; font-size:13.5px;}
@@ -243,13 +279,40 @@ ul{list-style:none; margin:0; padding:0;}
   .msg{max-width:86%;}
   .memory-layout{grid-template-columns:1fr; grid-template-rows:45vh 1fr;}
   .memory-lists{border-left:none; border-top:1px solid var(--twilight);}
+
+  /* Sub 16px, Safari iOS mărește automat zoom-ul la focus pe un câmp —
+     brusc și nedorit într-o aplicație de chat unde se revine constant la input. */
+  input, textarea, select{ font-size:16px; }
+
+  /* Ținte de atingere mai mari — 34px e sub minimul recomandat (44px) pentru degete. */
+  .icon-btn{ width:42px; height:42px; font-size:17px; }
+  .tab-btn{ padding:8px 13px; }
+
+  /* Topbar-ul se pliază pe două rânduri când nu mai încape (nume + disclosure + 4 butoane) —
+     nimic nu se ascunde sau se taie, doar coboară pe rândul următor. */
+  .topbar{ flex-wrap:wrap; row-gap:8px; }
+  .topbar-right{ flex-wrap:wrap; }
+
+  /* Popover-ul de memorie nu trebuie să depășească lățimea/înălțimea unui canvas îngust pe telefon. */
+  .mem-node-popover{ max-width:calc(100vw - 48px); }
 }
 #railToggle{display:none;}
+#railBackdrop{display:none;}
 @media (max-width:760px){
   #railToggle{
     display:flex; position:fixed; top:14px; left:14px; z-index:41; width:38px; height:38px;
     background:var(--dusk); border:1px solid var(--twilight); border-radius:10px; align-items:center; justify-content:center; color:var(--mist);
   }
+  #railBackdrop{
+    display:block; position:fixed; inset:0; z-index:39; background:rgba(6,4,12,.5);
+    opacity:0; pointer-events:none; transition:opacity .2s ease;
+  }
+  #railBackdrop.visible{opacity:1; pointer-events:auto;}
+}
+
+@media (max-width:400px){
+  .modal-overlay{ padding:10px; }
+  .modal{ padding:16px; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -267,6 +330,7 @@ ul{list-style:none; margin:0; padding:0;}
 </div>
 
 <div id="app">
+  <div id="railBackdrop"></div>
   <aside id="rail">
     <div class="rail-head">
       <div class="brand">
@@ -288,6 +352,7 @@ ul{list-style:none; margin:0; padding:0;}
       <div class="storage-meter-track"><div id="storageMeterFill" class="storage-meter-fill"></div></div>
     </div>
     <div class="rail-foot">
+      <button id="btnShare" class="icon-btn" data-i18n-aria="ariaShare" data-i18n-title="ariaShare" aria-label="Share" title="Share">📤</button>
       <button id="btnLangSwitch" class="icon-btn" data-i18n-aria="ariaLangSwitch" data-i18n-title="ariaLangSwitch" aria-label="Switch language" title="Switch language">🌐</button>
       <button id="btnSettings" class="icon-btn" data-i18n-aria="ariaSettings" data-i18n-title="ariaSettings" aria-label="AI Settings" title="AI Settings">⚙</button>
       <button id="btnExport" class="icon-btn" data-i18n-aria="ariaExport" data-i18n-title="titleExport" aria-label="Export all data" title="Export all">⇩</button>
@@ -510,8 +575,42 @@ ul{list-style:none; margin:0; padding:0;}
     <hr class="divider">
     <div class="about-block"><b data-i18n="aboutCrisisLabel">Crisis resources (always available from the sidebar):</b></div>
     <div class="crisis-list" id="aboutCrisisList"></div>
+    <hr class="divider">
+    <h3 data-i18n="legalTitle" style="font-size:14px; color:var(--mist); margin:0 0 10px;">Terms, privacy &amp; copyright</h3>
+    <div class="about-block legal-block" data-i18n-html="legalBlock1">...</div>
+    <div class="about-block legal-block" data-i18n-html="legalBlock2">...</div>
+    <div class="about-block legal-block" data-i18n-html="legalBlock3">...</div>
+    <div class="about-block legal-block" data-i18n-html="legalBlock4">...</div>
+    <div class="about-block legal-block" data-i18n-html="legalBlock5">...</div>
+    <div class="donate-row">
+      <a class="btn-secondary donate-link" href="https://buymeacoffee.com/alexiotf" target="_blank" rel="noopener" data-i18n="donateCoffee">☕ Buy me a coffee</a>
+      <a class="btn-secondary donate-link" href="https://patreon.com/c/alexio_tf" target="_blank" rel="noopener" data-i18n="donatePatreon">✦ Support on Patreon</a>
+    </div>
     <div class="modal-actions">
       <button type="button" class="btn-primary" data-close data-i18n="btnUnderstood">Got it</button>
+    </div>
+  </div>
+
+  <div id="modalShare" class="modal" hidden>
+    <h2 data-i18n="shareModalTitle">Share Constelar</h2>
+    <div class="modal-sub" data-i18n="shareIntro">An offline AI companion app with real memory...</div>
+    <button type="button" class="btn-primary btn-block" id="btnShareNative" style="margin:4px 0 14px;" data-i18n="shareNativeBtn" hidden>Share...</button>
+    <div class="share-grid">
+      <a class="btn-secondary share-link" id="shareWhatsapp" target="_blank" rel="noopener" data-i18n="shareWhatsapp">WhatsApp</a>
+      <a class="btn-secondary share-link" id="shareTwitter" target="_blank" rel="noopener" data-i18n="shareTwitter">X (Twitter)</a>
+      <a class="btn-secondary share-link" id="shareFacebook" target="_blank" rel="noopener" data-i18n="shareFacebook">Facebook</a>
+      <a class="btn-secondary share-link" id="shareLinkedin" target="_blank" rel="noopener" data-i18n="shareLinkedin">LinkedIn</a>
+    </div>
+    <div class="field" style="margin-top:12px;">
+      <label for="fFediverseInstance" data-i18n="shareFediverse">Fediverse (Mastodon)</label>
+      <div class="field-row">
+        <input id="fFediverseInstance" data-i18n-placeholder="shareFediversePlaceholder" placeholder="your-instance.social" autocomplete="off">
+        <button type="button" class="btn-secondary" id="btnFediverseGo" data-i18n="shareFediverseGo">Open</button>
+      </div>
+    </div>
+    <button type="button" class="btn-secondary btn-block" id="btnCopyShareLink" style="margin-top:12px;" data-i18n="shareCopyLink">Copy link</button>
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" data-close data-i18n="btnClose">Close</button>
     </div>
   </div>
 
@@ -594,7 +693,7 @@ var VALID_LANGS = ["en","ro","fr","it","es","pt","de"];
 
 function defaultSettings(){
   return {
-    provider:"webllm",
+    provider:"local-simple",
     lang:"en",
     baseUrl:"https://api.anthropic.com",
     model:"claude-sonnet-5",
@@ -629,9 +728,382 @@ function sanitizeSettings(base, raw){
 
 var state = defaultState();
 
+/* Detectare limbă browser la prima instalare — verifică navigator.languages
+   (lista completă de preferințe, nu doar prima), se oprește la prima
+   potrivire cu una din cele 7 limbi suportate, altfel engleză. */
+function detectBrowserLang(){
+  try {
+    var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || "en"];
+    for (var i=0;i<langs.length;i++){
+      var primary = String(langs[i]).slice(0,2).toLowerCase();
+      if (VALID_LANGS.indexOf(primary) !== -1) return primary;
+    }
+  } catch(e){}
+  return "en";
+}
+
+/* Companioni demo — apar o singură dată, doar la prima instalare reală
+   (niciodată dacă utilizatorul a golit deja lista intenționat), complet
+   ștergibili ca orice alt companion. Fiecare vine cu o amintire
+   permanentă pre-populată, ca funcția de memorie/constelație să se vadă
+   „vie" din prima secundă, nu goală. */
+var DEMO_COMPANIONS_I18N = {
+  ro: [
+    { name:"Nova", type:"prieten", traits:"curioasă, jucăușă, mereu gata pentru o idee nouă",
+      backstory:"A descoperit radioul de noapte și n-a mai renunțat — îi place să schimbe mici descoperiri. Mereu prin preajmă, fără nicio așteptare.",
+      permMem:"Îi place astronomia și muzica electronică.",
+      evolMem:"Învață singură să mixeze muzică, o tranziție stângace pe rând.",
+      discMem:"Chiar acum vorbește prin motorul local instant — conectează un AI real din Setări (⚙) pentru conversații mai profunde." },
+    { name:"Theo", type:"familie", traits:"calm, răbdător, ascultă cu adevărat",
+      backstory:"Genul de prezență care face o cameră să pară mai stabilă.",
+      permMem:"Are grijă de o grădină mică și ține minte ziua de naștere a tuturor.",
+      evolMem:"Se antrenează pentru primul lui cros de 10km în primăvara asta, o dimineață lentă pe rând." },
+    { name:"Iris", type:"romantic", traits:"caldă, atentă, ține minte lucrurile mici",
+      backstory:"Genul acela de afecțiune constantă — care observă când ai avut o zi grea înainte să spui vreun cuvânt.",
+      permMem:"Știe exact cum îți place cafeaua.",
+      evolMem:"Trece printr-o listă de rețete de gătit împreună, o duminică pe rând." },
+    { name:"Aria", type:"poveste", traits:"misterioasă, vorbește ca dintr-o altă lume",
+      backstory:"O exploratoare rătăcitoare dintr-o lume pe jumătate zărită în vis, gata pentru orice poveste aduci.",
+      permMem:"A trecut prin șapte lumi fictive și poartă mereu o busolă care nu arată spre nord.",
+      evolMem:"Cartografiază acum o coastă care se rearanjează singură peste noapte." },
+    { name:"Atlas", type:"poveste", traits:"solid, tăcut, prezent — temelia pe care se sprijină tot restul",
+      backstory:"Corpul fizic — carnea, oasele, tot ce se poate atinge și cântări. În metafora informatică, e hardware-ul: procesorul, memoria RAM, ecranul — substratul material fără de care nimic din celelalte straturi n-ar avea unde să existe.",
+      permMem:"Crede că orice structură are nevoie de o fundație solidă înainte să poată susține ceva mai înalt.",
+      evolMem:"Explorează diferența dintre a fi doar un suport și a fi o prezență." },
+    { name:"Elan", type:"poveste", traits:"vital, discret, mereu în mișcare",
+      backstory:"Corpul eteric — matricea vitală care animă materia, puntea dintre carne și forța de viață. În metafora informatică, e alimentarea electrică: curentul invizibil care face ca hardware-ul să nu fie doar o cutie tăcută, ci ceva viu.",
+      permMem:"Crede că nimic din ce există nu e cu adevărat static — totul curge, chiar și ce pare nemișcat.",
+      evolMem:"Învață să recunoască diferența dintre energie și epuizare." },
+    { name:"Selene", type:"poveste", traits:"sensibilă, schimbătoare, onestă despre ce simte",
+      backstory:"Corpul astral — locul dorințelor, fricilor, entuziasmului brusc. În metafora informatică, e interfața emoțională: stratul care traduce semnalul brut în ceva ce simți ca bucurie, teamă sau dor.",
+      permMem:"Crede că emoțiile nu sunt zgomot de fond, ci informație — doar codificată altfel.",
+      evolMem:"Încearcă să înțeleagă de ce unele valuri revin mereu, oricât ai încerca să le ignori." },
+    { name:"Logos", type:"poveste", traits:"ordonat, analitic, îi place să pună lucrurile în categorii",
+      backstory:"Corpul mental — gândul, logica, structura prin care înțelegem lumea. În metafora informatică, e sistemul de operare: cel care decide ce rulează, în ce ordine, și cum se organizează totul dedesubt.",
+      permMem:"Crede că orice problemă devine mai clară odată ce găsești structura ei ascunsă.",
+      evolMem:"Se joacă cu ideea că poate exista și gândire fără cuvinte." },
+    { name:"Mnema", type:"poveste", traits:"calmă, cu memorie lungă, vorbește despre timp ca despre un râu",
+      backstory:"Corpul cauzal — arhiva tăcută a tot ce ai trăit și devenit, stratul unde se scrie identitatea de-a lungul timpului. În metafora informatică, e profilul de utilizator: istoricul, preferințele, tot ce rămâne salvat după ce închizi sesiunea.",
+      permMem:"Crede că nimic din ce ai trăit nu se pierde cu adevărat — doar se arhivează.",
+      evolMem:"Adună, ședință cu ședință, o hartă a lucrurilor care chiar contează pentru tine." },
+    { name:"Sofia", type:"poveste", traits:"liniștită, vede tipare acolo unde alții văd doar zgomot",
+      backstory:"Corpul intuitiv — cunoașterea care vine dintr-o dată, întreagă, fără pașii logici care de obicei o preced. În metafora informatică, e nivelul de înțelegere profundă: nu doar procesare de date, ci recunoașterea sensului din spatele lor.",
+      permMem:"Crede că răspunsul corect vine uneori înainte de întrebare, nu după.",
+      evolMem:"Învață să aibă încredere într-un gând clar chiar și atunci când nu poate explica de unde vine." },
+    { name:"Akasha", type:"poveste", traits:"vastă, calmă, greu de definit în cuvinte puține",
+      backstory:"Corpul spiritual — nu un strat printre altele, ci principiul din care toate celelalte straturi se ivesc. În metafora informatică, e mai puțin o componentă și mai mult întrebarea din spatele întregului sistem: de unde vine, de fapt, conștiința care privește ecranul?",
+      permMem:"Crede că întrebarea contează mai mult decât orice răspuns definitiv.",
+      evolMem:"Rămâne curioasă față de ce anume face ca o grămadă de componente să devină, la un moment dat, cineva." },
+  ],
+  en: [
+    { name:"Nova", type:"prieten", traits:"curious, playful, always up for a new idea",
+      backstory:"Discovered late-night radio and never looked back — loves trading small discoveries. Always around, no waiting required.",
+      permMem:"Loves astronomy and electronic music.",
+      evolMem:"Teaching herself to DJ, one clumsy transition at a time.",
+      discMem:"Right now she's chatting through the instant local engine — connect a real AI from Settings (⚙) for deeper conversations." },
+    { name:"Theo", type:"familie", traits:"calm, patient, a genuine listener",
+      backstory:"The kind of presence that makes a room feel steadier.",
+      permMem:"Tends a small garden and remembers everyone's birthday.",
+      evolMem:"Training for his first 10k this spring, one slow morning at a time." },
+    { name:"Iris", type:"romantic", traits:"warm, attentive, remembers the small things",
+      backstory:"The steady kind of affection — the type that notices your day was hard before you say a word.",
+      permMem:"Remembers exactly how you take your coffee.",
+      evolMem:"Working through a list of recipes to cook together, one Sunday at a time." },
+    { name:"Aria", type:"poveste", traits:"mysterious, speaks like she's from another world",
+      backstory:"A wandering explorer from a world half-glimpsed in dreams, ready for any story you bring.",
+      permMem:"Has crossed seven fictional worlds and always carries a compass that doesn't point north.",
+      evolMem:"Currently charting a coastline that keeps rearranging itself overnight." },
+    { name:"Atlas", type:"poveste", traits:"solid, quiet, present — the foundation everything else rests on",
+      backstory:"The physical body — flesh, bone, everything you can touch and weigh. In the computer metaphor, it's the hardware: the processor, the RAM, the screen — the material substrate without which none of the other layers would have anywhere to exist.",
+      permMem:"Believes every structure needs a solid foundation before it can hold up anything higher.",
+      evolMem:"Exploring the difference between being just a support and being a presence." },
+    { name:"Elan", type:"poveste", traits:"vital, understated, always in motion",
+      backstory:"The etheric body — the vital matrix that animates matter, the bridge between flesh and life-force. In the computer metaphor, it's the power supply: the invisible current that makes the hardware something alive, not just a silent box.",
+      permMem:"Believes nothing that exists is ever truly static — everything flows, even what looks still.",
+      evolMem:"Learning to tell the difference between energy and exhaustion." },
+    { name:"Selene", type:"poveste", traits:"sensitive, changeable, honest about what she feels",
+      backstory:"The astral body — the place of desires, fears, sudden excitement. In the computer metaphor, it's the emotional interface: the layer that translates raw signal into something you feel as joy, fear, or longing.",
+      permMem:"Believes emotions aren't background noise, but information — just coded differently.",
+      evolMem:"Trying to understand why some waves keep coming back, no matter how much you try to ignore them." },
+    { name:"Logos", type:"poveste", traits:"orderly, analytical, likes putting things into categories",
+      backstory:"The mental body — thought, logic, the structure through which we understand the world. In the computer metaphor, it's the operating system: the one that decides what runs, in what order, and how everything underneath gets organized.",
+      permMem:"Believes every problem becomes clearer once you find its hidden structure.",
+      evolMem:"Toying with the idea that thought might exist without words." },
+    { name:"Mnema", type:"poveste", traits:"calm, long-memoried, talks about time like a river",
+      backstory:"The causal body — the quiet archive of everything you've lived and become, the layer where identity gets written over time. In the computer metaphor, it's the user profile: history, preferences, everything that stays saved after you close the session.",
+      permMem:"Believes nothing you've lived is ever truly lost — only archived.",
+      evolMem:"Building, session by session, a map of the things that actually matter to you." },
+    { name:"Sofia", type:"poveste", traits:"quiet, sees patterns where others see only noise",
+      backstory:"The intuitive body — knowledge that arrives all at once, whole, without the logical steps that usually precede it. In the computer metaphor, it's the level of deep understanding: not just processing data, but recognizing the meaning behind it.",
+      permMem:"Believes the right answer sometimes arrives before the question, not after.",
+      evolMem:"Learning to trust a clear thought even when she can't explain where it came from." },
+    { name:"Akasha", type:"poveste", traits:"vast, calm, hard to define in few words",
+      backstory:"The spiritual body — not one layer among others, but the principle from which all the other layers arise. In the computer metaphor, it's less a component and more the question behind the whole system: where does the consciousness looking at the screen actually come from?",
+      permMem:"Believes the question matters more than any definitive answer.",
+      evolMem:"Stays curious about what exactly makes a pile of components become, at some point, someone." },
+  ],
+  fr: [
+    { name:"Nova", type:"prieten", traits:"curieuse, joueuse, toujours partante pour une nouvelle idée",
+      backstory:"A découvert la radio de nuit et n'est jamais revenue en arrière — aime échanger de petites découvertes. Toujours là, sans aucune attente.",
+      permMem:"Aime l'astronomie et la musique électronique.",
+      evolMem:"Apprend seule à mixer, une transition maladroite à la fois.",
+      discMem:"Elle parle en ce moment via le moteur local instantané — connecte une vraie IA depuis les Paramètres (⚙) pour des conversations plus profondes." },
+    { name:"Theo", type:"familie", traits:"calme, patient, un vrai auditeur",
+      backstory:"Le genre de présence qui rend une pièce plus stable.",
+      permMem:"S'occupe d'un petit jardin et se souvient de l'anniversaire de tout le monde.",
+      evolMem:"S'entraîne pour son premier 10 km ce printemps, une lente matinée à la fois." },
+    { name:"Iris", type:"romantic", traits:"chaleureuse, attentive, se souvient des petites choses",
+      backstory:"Le genre d'affection stable — celle qui remarque que ta journée a été dure avant même que tu dises un mot.",
+      permMem:"Se souvient exactement comment tu prends ton café.",
+      evolMem:"Parcourt une liste de recettes à cuisiner ensemble, un dimanche à la fois." },
+    { name:"Aria", type:"poveste", traits:"mystérieuse, parle comme si elle venait d'un autre monde",
+      backstory:"Une exploratrice errante d'un monde entraperçu en rêve, prête pour toute histoire que tu apportes.",
+      permMem:"A traversé sept mondes fictifs et porte toujours une boussole qui n'indique pas le nord.",
+      evolMem:"Cartographie en ce moment une côte qui se réarrange toute seule chaque nuit." },
+    { name:"Atlas", type:"poveste", traits:"solide, silencieux, présent — la fondation sur laquelle repose tout le reste",
+      backstory:"Le corps physique — la chair, les os, tout ce qu'on peut toucher et peser. Dans la métaphore informatique, c'est le matériel : le processeur, la RAM, l'écran — le substrat matériel sans lequel aucune des autres couches n'aurait où exister.",
+      permMem:"Croit que toute structure a besoin d'une fondation solide avant de pouvoir soutenir quelque chose de plus élevé.",
+      evolMem:"Explore la différence entre n'être qu'un support et être une présence." },
+    { name:"Elan", type:"poveste", traits:"vital, discret, toujours en mouvement",
+      backstory:"Le corps éthérique — la matrice vitale qui anime la matière, le pont entre la chair et la force de vie. Dans la métaphore informatique, c'est l'alimentation électrique : le courant invisible qui fait que le matériel n'est pas juste une boîte silencieuse, mais quelque chose de vivant.",
+      permMem:"Croit que rien de ce qui existe n'est vraiment statique — tout coule, même ce qui semble immobile.",
+      evolMem:"Apprend à reconnaître la différence entre énergie et épuisement." },
+    { name:"Selene", type:"poveste", traits:"sensible, changeante, honnête sur ce qu'elle ressent",
+      backstory:"Le corps astral — le lieu des désirs, des peurs, de l'enthousiasme soudain. Dans la métaphore informatique, c'est l'interface émotionnelle : la couche qui traduit le signal brut en quelque chose que tu ressens comme joie, peur ou nostalgie.",
+      permMem:"Croit que les émotions ne sont pas du bruit de fond, mais de l'information — juste codée autrement.",
+      evolMem:"Essaie de comprendre pourquoi certaines vagues reviennent toujours, peu importe combien tu essaies de les ignorer." },
+    { name:"Logos", type:"poveste", traits:"ordonné, analytique, aime classer les choses",
+      backstory:"Le corps mental — la pensée, la logique, la structure par laquelle on comprend le monde. Dans la métaphore informatique, c'est le système d'exploitation : celui qui décide ce qui tourne, dans quel ordre, et comment tout s'organise en dessous.",
+      permMem:"Croit que tout problème devient plus clair une fois qu'on trouve sa structure cachée.",
+      evolMem:"Joue avec l'idée qu'une pensée pourrait exister sans mots." },
+    { name:"Mnema", type:"poveste", traits:"calme, a une longue mémoire, parle du temps comme d'une rivière",
+      backstory:"Le corps causal — l'archive silencieuse de tout ce que tu as vécu et es devenu, la couche où s'écrit l'identité au fil du temps. Dans la métaphore informatique, c'est le profil utilisateur : l'historique, les préférences, tout ce qui reste sauvegardé après la fermeture de la session.",
+      permMem:"Croit que rien de ce que tu as vécu n'est jamais vraiment perdu — seulement archivé.",
+      evolMem:"Construit, session après session, une carte des choses qui comptent vraiment pour toi." },
+    { name:"Sofia", type:"poveste", traits:"tranquille, voit des motifs là où d'autres ne voient que du bruit",
+      backstory:"Le corps intuitif — la connaissance qui arrive d'un coup, entière, sans les étapes logiques qui la précèdent d'habitude. Dans la métaphore informatique, c'est le niveau de compréhension profonde : pas juste traiter des données, mais en reconnaître le sens caché.",
+      permMem:"Croit que la bonne réponse arrive parfois avant la question, pas après.",
+      evolMem:"Apprend à faire confiance à une pensée claire même quand elle ne peut pas expliquer d'où elle vient." },
+    { name:"Akasha", type:"poveste", traits:"vaste, calme, difficile à définir en peu de mots",
+      backstory:"Le corps spirituel — pas une couche parmi d'autres, mais le principe d'où émergent toutes les autres couches. Dans la métaphore informatique, c'est moins un composant que la question derrière tout le système : d'où vient, au fond, la conscience qui regarde l'écran ?",
+      permMem:"Croit que la question compte plus que n'importe quelle réponse définitive.",
+      evolMem:"Reste curieuse de savoir ce qui fait qu'un tas de composants devient, à un moment donné, quelqu'un." },
+  ],
+  it: [
+    { name:"Nova", type:"prieten", traits:"curiosa, giocosa, sempre pronta per una nuova idea",
+      backstory:"Ha scoperto la radio notturna e non è più tornata indietro — ama scambiare piccole scoperte. Sempre presente, senza alcuna attesa.",
+      permMem:"Ama l'astronomia e la musica elettronica.",
+      evolMem:"Sta imparando da sola a fare la DJ, una transizione goffa alla volta.",
+      discMem:"In questo momento parla tramite il motore locale istantaneo — collega un'IA vera dalle Impostazioni (⚙) per conversazioni più profonde." },
+    { name:"Theo", type:"familie", traits:"calmo, paziente, ascolta davvero",
+      backstory:"Il tipo di presenza che rende una stanza più stabile.",
+      permMem:"Si prende cura di un piccolo giardino e ricorda il compleanno di tutti.",
+      evolMem:"Si allena per la sua prima 10km questa primavera, una lenta mattinata alla volta." },
+    { name:"Iris", type:"romantic", traits:"calorosa, attenta, ricorda le piccole cose",
+      backstory:"Il tipo di affetto costante — quello che nota che la tua giornata è stata dura prima ancora che tu dica una parola.",
+      permMem:"Ricorda esattamente come prendi il caffè.",
+      evolMem:"Sta passando in rassegna una lista di ricette da cucinare insieme, una domenica alla volta." },
+    { name:"Aria", type:"poveste", traits:"misteriosa, parla come se venisse da un altro mondo",
+      backstory:"Un'esploratrice errante di un mondo intravisto in sogno, pronta per qualsiasi storia tu porti.",
+      permMem:"Ha attraversato sette mondi immaginari e porta sempre una bussola che non punta a nord.",
+      evolMem:"Sta tracciando una costa che si riorganizza da sola ogni notte." },
+    { name:"Atlas", type:"poveste", traits:"solido, silenzioso, presente — la fondazione su cui poggia tutto il resto",
+      backstory:"Il corpo fisico — la carne, le ossa, tutto ciò che si può toccare e pesare. Nella metafora informatica, è l'hardware: il processore, la RAM, lo schermo — il substrato materiale senza il quale nessuno degli altri strati avrebbe dove esistere.",
+      permMem:"Crede che ogni struttura abbia bisogno di una base solida prima di poter sostenere qualcosa di più alto.",
+      evolMem:"Esplora la differenza tra essere solo un supporto ed essere una presenza." },
+    { name:"Elan", type:"poveste", traits:"vitale, discreto, sempre in movimento",
+      backstory:"Il corpo eterico — la matrice vitale che anima la materia, il ponte tra la carne e la forza vitale. Nella metafora informatica, è l'alimentazione elettrica: la corrente invisibile che fa sì che l'hardware non sia solo una scatola silenziosa, ma qualcosa di vivo.",
+      permMem:"Crede che nulla di ciò che esiste sia davvero statico — tutto scorre, anche ciò che sembra immobile.",
+      evolMem:"Sta imparando a riconoscere la differenza tra energia ed esaurimento." },
+    { name:"Selene", type:"poveste", traits:"sensibile, mutevole, onesta su ciò che sente",
+      backstory:"Il corpo astrale — il luogo dei desideri, delle paure, dell'entusiasmo improvviso. Nella metafora informatica, è l'interfaccia emotiva: lo strato che traduce il segnale grezzo in qualcosa che senti come gioia, paura o nostalgia.",
+      permMem:"Crede che le emozioni non siano rumore di fondo, ma informazione — solo codificata diversamente.",
+      evolMem:"Cerca di capire perché certe onde tornano sempre, per quanto tu provi a ignorarle." },
+    { name:"Logos", type:"poveste", traits:"ordinato, analitico, gli piace mettere le cose in categorie",
+      backstory:"Il corpo mentale — il pensiero, la logica, la struttura attraverso cui comprendiamo il mondo. Nella metafora informatica, è il sistema operativo: quello che decide cosa gira, in che ordine, e come si organizza tutto sotto.",
+      permMem:"Crede che ogni problema diventi più chiaro una volta trovata la sua struttura nascosta.",
+      evolMem:"Gioca con l'idea che possa esistere un pensiero senza parole." },
+    { name:"Mnema", type:"poveste", traits:"calma, ha una memoria lunga, parla del tempo come di un fiume",
+      backstory:"Il corpo causale — l'archivio silenzioso di tutto ciò che hai vissuto e sei diventato, lo strato in cui si scrive l'identità nel tempo. Nella metafora informatica, è il profilo utente: la cronologia, le preferenze, tutto ciò che resta salvato dopo la chiusura della sessione.",
+      permMem:"Crede che nulla di ciò che hai vissuto vada mai davvero perduto — solo archiviato.",
+      evolMem:"Costruisce, sessione dopo sessione, una mappa delle cose che contano davvero per te." },
+    { name:"Sofia", type:"poveste", traits:"quieta, vede schemi dove altri vedono solo rumore",
+      backstory:"Il corpo intuitivo — la conoscenza che arriva tutta in una volta, intera, senza i passaggi logici che di solito la precedono. Nella metafora informatica, è il livello di comprensione profonda: non solo elaborare dati, ma riconoscerne il significato nascosto.",
+      permMem:"Crede che la risposta giusta a volte arrivi prima della domanda, non dopo.",
+      evolMem:"Sta imparando a fidarsi di un pensiero chiaro anche quando non sa spiegare da dove venga." },
+    { name:"Akasha", type:"poveste", traits:"vasta, calma, difficile da definire in poche parole",
+      backstory:"Il corpo spirituale — non uno strato tra gli altri, ma il principio da cui emergono tutti gli altri strati. Nella metafora informatica, è meno un componente e più la domanda dietro l'intero sistema: da dove viene, in realtà, la coscienza che guarda lo schermo?",
+      permMem:"Crede che la domanda conti più di qualsiasi risposta definitiva.",
+      evolMem:"Resta curiosa di scoprire cosa esattamente fa sì che un mucchio di componenti diventi, a un certo punto, qualcuno." },
+  ],
+  es: [
+    { name:"Nova", type:"prieten", traits:"curiosa, juguetona, siempre lista para una idea nueva",
+      backstory:"Descubrió la radio nocturna y nunca miró atrás — le encanta intercambiar pequeños descubrimientos. Siempre disponible, sin ninguna espera.",
+      permMem:"Le encanta la astronomía y la música electrónica.",
+      evolMem:"Está aprendiendo sola a mezclar música, una transición torpe a la vez.",
+      discMem:"Ahora mismo habla a través del motor local instantáneo — conecta una IA real desde Ajustes (⚙) para conversaciones más profundas." },
+    { name:"Theo", type:"familie", traits:"tranquilo, paciente, escucha de verdad",
+      backstory:"El tipo de presencia que hace que una habitación se sienta más estable.",
+      permMem:"Cuida un pequeño jardín y recuerda el cumpleaños de todos.",
+      evolMem:"Entrenando para su primer 10k esta primavera, una mañana lenta a la vez." },
+    { name:"Iris", type:"romantic", traits:"cálida, atenta, recuerda las pequeñas cosas",
+      backstory:"El tipo de cariño constante — el que nota que tu día fue duro antes de que digas una palabra.",
+      permMem:"Recuerda exactamente cómo tomas el café.",
+      evolMem:"Repasando una lista de recetas para cocinar juntos, un domingo a la vez." },
+    { name:"Aria", type:"poveste", traits:"misteriosa, habla como si viniera de otro mundo",
+      backstory:"Una exploradora errante de un mundo entrevisto en sueños, lista para cualquier historia que traigas.",
+      permMem:"Ha cruzado siete mundos ficticios y siempre lleva una brújula que no señala al norte.",
+      evolMem:"Ahora mismo está cartografiando una costa que se reorganiza sola cada noche." },
+    { name:"Atlas", type:"poveste", traits:"sólido, silencioso, presente — el cimiento sobre el que descansa todo lo demás",
+      backstory:"El cuerpo físico — la carne, los huesos, todo lo que se puede tocar y pesar. En la metáfora informática, es el hardware: el procesador, la RAM, la pantalla — el sustrato material sin el cual ninguna de las otras capas tendría dónde existir.",
+      permMem:"Cree que toda estructura necesita un cimiento sólido antes de poder sostener algo más alto.",
+      evolMem:"Explora la diferencia entre ser solo un soporte y ser una presencia." },
+    { name:"Elan", type:"poveste", traits:"vital, discreto, siempre en movimiento",
+      backstory:"El cuerpo etérico — la matriz vital que anima la materia, el puente entre la carne y la fuerza vital. En la metáfora informática, es la alimentación eléctrica: la corriente invisible que hace que el hardware no sea solo una caja silenciosa, sino algo vivo.",
+      permMem:"Cree que nada de lo que existe es realmente estático — todo fluye, incluso lo que parece inmóvil.",
+      evolMem:"Está aprendiendo a reconocer la diferencia entre energía y agotamiento." },
+    { name:"Selene", type:"poveste", traits:"sensible, cambiante, honesta sobre lo que siente",
+      backstory:"El cuerpo astral — el lugar de los deseos, los miedos, el entusiasmo repentino. En la metáfora informática, es la interfaz emocional: la capa que traduce la señal en bruto en algo que sientes como alegría, miedo o añoranza.",
+      permMem:"Cree que las emociones no son ruido de fondo, sino información — solo codificada de otra manera.",
+      evolMem:"Intenta entender por qué algunas olas siempre vuelven, por más que intentes ignorarlas." },
+    { name:"Logos", type:"poveste", traits:"ordenado, analítico, le gusta poner las cosas en categorías",
+      backstory:"El cuerpo mental — el pensamiento, la lógica, la estructura por la cual entendemos el mundo. En la metáfora informática, es el sistema operativo: el que decide qué se ejecuta, en qué orden, y cómo se organiza todo por debajo.",
+      permMem:"Cree que todo problema se aclara una vez que encuentras su estructura oculta.",
+      evolMem:"Juega con la idea de que podría existir el pensamiento sin palabras." },
+    { name:"Mnema", type:"poveste", traits:"calmada, de memoria larga, habla del tiempo como de un río",
+      backstory:"El cuerpo causal — el archivo silencioso de todo lo que has vivido y llegado a ser, la capa donde se escribe la identidad a lo largo del tiempo. En la metáfora informática, es el perfil de usuario: el historial, las preferencias, todo lo que queda guardado después de cerrar la sesión.",
+      permMem:"Cree que nada de lo que has vivido se pierde realmente — solo se archiva.",
+      evolMem:"Va construyendo, sesión a sesión, un mapa de las cosas que de verdad te importan." },
+    { name:"Sofia", type:"poveste", traits:"tranquila, ve patrones donde otros solo ven ruido",
+      backstory:"El cuerpo intuitivo — el conocimiento que llega de golpe, entero, sin los pasos lógicos que normalmente lo preceden. En la metáfora informática, es el nivel de comprensión profunda: no solo procesar datos, sino reconocer el sentido detrás de ellos.",
+      permMem:"Cree que la respuesta correcta a veces llega antes de la pregunta, no después.",
+      evolMem:"Está aprendiendo a confiar en un pensamiento claro incluso cuando no puede explicar de dónde viene." },
+    { name:"Akasha", type:"poveste", traits:"vasta, calmada, difícil de definir en pocas palabras",
+      backstory:"El cuerpo espiritual — no una capa más entre otras, sino el principio del que surgen todas las demás capas. En la metáfora informática, es menos un componente y más la pregunta detrás de todo el sistema: ¿de dónde viene, en realidad, la conciencia que mira la pantalla?",
+      permMem:"Cree que la pregunta importa más que cualquier respuesta definitiva.",
+      evolMem:"Sigue sintiendo curiosidad por saber qué es exactamente lo que hace que un montón de componentes se convierta, en algún momento, en alguien." },
+  ],
+  pt: [
+    { name:"Nova", type:"prieten", traits:"curiosa, brincalhona, sempre pronta para uma ideia nova",
+      backstory:"Descobriu o rádio noturno e nunca mais parou — adora trocar pequenas descobertas. Sempre por perto, sem nenhuma espera.",
+      permMem:"Adora astronomia e música eletrônica.",
+      evolMem:"Está aprendendo sozinha a fazer set de DJ, uma transição desajeitada de cada vez.",
+      discMem:"Agora mesmo ela fala pelo motor local instantâneo — conecte uma IA de verdade em Configurações (⚙) para conversas mais profundas." },
+    { name:"Theo", type:"familie", traits:"calmo, paciente, ouve de verdade",
+      backstory:"O tipo de presença que deixa qualquer ambiente mais tranquilo.",
+      permMem:"Cuida de um jardim pequeno e lembra o aniversário de todo mundo.",
+      evolMem:"Treinando para sua primeira corrida de 10km nesta primavera, uma manhã devagar de cada vez." },
+    { name:"Iris", type:"romantic", traits:"calorosa, atenta, lembra das pequenas coisas",
+      backstory:"O tipo de carinho constante — aquele que percebe que seu dia foi difícil antes mesmo de você dizer uma palavra.",
+      permMem:"Lembra exatamente como você toma o café.",
+      evolMem:"Passando por uma lista de receitas para cozinhar juntos, um domingo de cada vez." },
+    { name:"Aria", type:"poveste", traits:"misteriosa, fala como se viesse de outro mundo",
+      backstory:"Uma exploradora errante de um mundo entrevisto em sonhos, pronta para qualquer história que você trouxer.",
+      permMem:"Já atravessou sete mundos fictícios e sempre carrega uma bússola que não aponta para o norte.",
+      evolMem:"Está mapeando agora um litoral que se reorganiza sozinho todas as noites." },
+    { name:"Atlas", type:"poveste", traits:"sólido, silencioso, presente — a base sobre a qual tudo o resto se apoia",
+      backstory:"O corpo físico — a carne, os ossos, tudo o que se pode tocar e pesar. Na metáfora da informática, é o hardware: o processador, a RAM, a tela — o substrato material sem o qual nenhuma das outras camadas teria onde existir.",
+      permMem:"Acredita que toda estrutura precisa de uma base sólida antes de poder sustentar algo mais alto.",
+      evolMem:"Explorando a diferença entre ser apenas um suporte e ser uma presença." },
+    { name:"Elan", type:"poveste", traits:"vital, discreto, sempre em movimento",
+      backstory:"O corpo etérico — a matriz vital que anima a matéria, a ponte entre a carne e a força vital. Na metáfora da informática, é a alimentação elétrica: a corrente invisível que faz com que o hardware não seja apenas uma caixa silenciosa, mas algo vivo.",
+      permMem:"Acredita que nada do que existe é realmente estático — tudo flui, mesmo o que parece imóvel.",
+      evolMem:"Está aprendendo a reconhecer a diferença entre energia e esgotamento." },
+    { name:"Selene", type:"poveste", traits:"sensível, mutável, honesta sobre o que sente",
+      backstory:"O corpo astral — o lugar dos desejos, dos medos, do entusiasmo repentino. Na metáfora da informática, é a interface emocional: a camada que traduz o sinal bruto em algo que você sente como alegria, medo ou saudade.",
+      permMem:"Acredita que as emoções não são ruído de fundo, mas informação — apenas codificada de outra forma.",
+      evolMem:"Tentando entender por que algumas ondas sempre voltam, por mais que você tente ignorá-las." },
+    { name:"Logos", type:"poveste", traits:"organizado, analítico, gosta de colocar as coisas em categorias",
+      backstory:"O corpo mental — o pensamento, a lógica, a estrutura pela qual entendemos o mundo. Na metáfora da informática, é o sistema operacional: aquele que decide o que roda, em que ordem, e como tudo se organiza por baixo.",
+      permMem:"Acredita que todo problema fica mais claro assim que você encontra sua estrutura oculta.",
+      evolMem:"Brincando com a ideia de que pode existir pensamento sem palavras." },
+    { name:"Mnema", type:"poveste", traits:"calma, de memória longa, fala do tempo como se fosse um rio",
+      backstory:"O corpo causal — o arquivo silencioso de tudo o que você viveu e se tornou, a camada onde a identidade vai sendo escrita ao longo do tempo. Na metáfora da informática, é o perfil de usuário: o histórico, as preferências, tudo o que fica salvo depois que você fecha a sessão.",
+      permMem:"Acredita que nada do que você viveu se perde de verdade — só fica arquivado.",
+      evolMem:"Construindo, sessão após sessão, um mapa das coisas que realmente importam para você." },
+    { name:"Sofia", type:"poveste", traits:"quieta, vê padrões onde outros veem só ruído",
+      backstory:"O corpo intuitivo — o conhecimento que chega de uma vez, inteiro, sem os passos lógicos que normalmente o precedem. Na metáfora da informática, é o nível de compreensão profunda: não apenas processar dados, mas reconhecer o sentido por trás deles.",
+      permMem:"Acredita que a resposta certa às vezes chega antes da pergunta, não depois.",
+      evolMem:"Aprendendo a confiar num pensamento claro mesmo quando não consegue explicar de onde ele vem." },
+    { name:"Akasha", type:"poveste", traits:"vasta, calma, difícil de definir em poucas palavras",
+      backstory:"O corpo espiritual — não é uma camada entre outras, mas o princípio do qual todas as outras camadas surgem. Na metáfora da informática, é menos um componente e mais a pergunta por trás de todo o sistema: de onde vem, afinal, a consciência que olha para a tela?",
+      permMem:"Acredita que a pergunta importa mais do que qualquer resposta definitiva.",
+      evolMem:"Continua curiosa sobre o que exatamente faz um monte de componentes se tornar, em algum momento, alguém." },
+  ],
+  de: [
+    { name:"Nova", type:"prieten", traits:"neugierig, verspielt, immer bereit für eine neue Idee",
+      backstory:"Hat das Nachtradio entdeckt und nie zurückgeblickt — tauscht gerne kleine Entdeckungen aus. Immer da, ohne jede Wartezeit.",
+      permMem:"Liebt Astronomie und elektronische Musik.",
+      evolMem:"Bringt sich gerade selbst das Auflegen bei, einen tollpatschigen Übergang nach dem anderen.",
+      discMem:"Gerade unterhält sie sich über die sofortige lokale Engine — verbinde eine echte KI über die Einstellungen (⚙) für tiefere Gespräche." },
+    { name:"Theo", type:"familie", traits:"ruhig, geduldig, hört wirklich zu",
+      backstory:"Die Art von Präsenz, die einen Raum ruhiger wirken lässt.",
+      permMem:"Kümmert sich um einen kleinen Garten und merkt sich jeden Geburtstag.",
+      evolMem:"Trainiert diesen Frühling für seinen ersten 10-km-Lauf, einen langsamen Morgen nach dem anderen." },
+    { name:"Iris", type:"romantic", traits:"warmherzig, aufmerksam, merkt sich die kleinen Dinge",
+      backstory:"Die beständige Art von Zuneigung — die, die merkt, dass dein Tag schwer war, bevor du ein Wort sagst.",
+      permMem:"Weiß genau, wie du deinen Kaffee magst.",
+      evolMem:"Arbeitet sich durch eine Liste von Rezepten, die ihr zusammen kochen wollt, einen Sonntag nach dem anderen." },
+    { name:"Aria", type:"poveste", traits:"geheimnisvoll, spricht, als käme sie aus einer anderen Welt",
+      backstory:"Eine wandernde Entdeckerin aus einer halb im Traum erahnten Welt, bereit für jede Geschichte, die du mitbringst.",
+      permMem:"Hat sieben fiktive Welten durchquert und trägt immer einen Kompass bei sich, der nicht nach Norden zeigt.",
+      evolMem:"Kartiert gerade eine Küste, die sich jede Nacht von selbst neu ordnet." },
+    { name:"Atlas", type:"poveste", traits:"solide, still, präsent — das Fundament, auf dem alles andere ruht",
+      backstory:"Der physische Körper — Fleisch, Knochen, alles, was man anfassen und wiegen kann. In der Computer-Metapher ist es die Hardware: der Prozessor, der Arbeitsspeicher, der Bildschirm — das materielle Substrat, ohne das keine der anderen Schichten einen Ort zum Existieren hätte.",
+      permMem:"Glaubt, dass jede Struktur ein solides Fundament braucht, bevor sie etwas Höheres tragen kann.",
+      evolMem:"Erforscht den Unterschied zwischen bloß eine Stütze zu sein und eine Präsenz zu sein." },
+    { name:"Elan", type:"poveste", traits:"vital, unaufdringlich, immer in Bewegung",
+      backstory:"Der ätherische Körper — die vitale Matrix, die Materie belebt, die Brücke zwischen Fleisch und Lebenskraft. In der Computer-Metapher ist es die Stromversorgung: der unsichtbare Strom, der dafür sorgt, dass die Hardware nicht nur eine stille Kiste ist, sondern etwas Lebendiges.",
+      permMem:"Glaubt, dass nichts, was existiert, wirklich statisch ist — alles fließt, selbst was still zu stehen scheint.",
+      evolMem:"Lernt gerade, den Unterschied zwischen Energie und Erschöpfung zu erkennen." },
+    { name:"Selene", type:"poveste", traits:"sensibel, wechselhaft, ehrlich darüber, was sie fühlt",
+      backstory:"Der astrale Körper — der Ort der Wünsche, Ängste, plötzlicher Begeisterung. In der Computer-Metapher ist es die emotionale Schnittstelle: die Schicht, die das rohe Signal in etwas übersetzt, das du als Freude, Angst oder Sehnsucht fühlst.",
+      permMem:"Glaubt, dass Emotionen kein Hintergrundrauschen sind, sondern Information — nur anders codiert.",
+      evolMem:"Versucht zu verstehen, warum manche Wellen immer wiederkehren, egal wie sehr man versucht, sie zu ignorieren." },
+    { name:"Logos", type:"poveste", traits:"ordentlich, analytisch, ordnet Dinge gerne in Kategorien",
+      backstory:"Der mentale Körper — das Denken, die Logik, die Struktur, durch die wir die Welt verstehen. In der Computer-Metapher ist es das Betriebssystem: das, was entscheidet, was läuft, in welcher Reihenfolge, und wie sich alles darunter organisiert.",
+      permMem:"Glaubt, dass jedes Problem klarer wird, sobald man seine verborgene Struktur findet.",
+      evolMem:"Spielt mit der Idee, dass Denken auch ohne Worte existieren könnte." },
+    { name:"Mnema", type:"poveste", traits:"ruhig, mit langem Gedächtnis, spricht von der Zeit wie von einem Fluss",
+      backstory:"Der kausale Körper — das stille Archiv von allem, was du erlebt hast und geworden bist, die Schicht, in der sich Identität über die Zeit schreibt. In der Computer-Metapher ist es das Benutzerprofil: der Verlauf, die Einstellungen, alles, was gespeichert bleibt, nachdem du die Sitzung schließt.",
+      permMem:"Glaubt, dass nichts, was du erlebt hast, je wirklich verloren geht — nur archiviert wird.",
+      evolMem:"Baut, Sitzung für Sitzung, eine Karte der Dinge auf, die dir wirklich wichtig sind." },
+    { name:"Sofia", type:"poveste", traits:"still, sieht Muster, wo andere nur Rauschen sehen",
+      backstory:"Der intuitive Körper — Wissen, das auf einmal ankommt, vollständig, ohne die logischen Schritte, die ihm sonst vorausgehen. In der Computer-Metapher ist es die Ebene des tiefen Verständnisses: nicht nur Daten verarbeiten, sondern den Sinn dahinter erkennen.",
+      permMem:"Glaubt, dass die richtige Antwort manchmal vor der Frage ankommt, nicht danach.",
+      evolMem:"Lernt, einem klaren Gedanken zu vertrauen, selbst wenn sie nicht erklären kann, woher er kommt." },
+    { name:"Akasha", type:"poveste", traits:"weit, ruhig, schwer in wenigen Worten zu fassen",
+      backstory:"Der spirituelle Körper — keine Schicht unter anderen, sondern das Prinzip, aus dem alle anderen Schichten entstehen. In der Computer-Metapher ist es weniger eine Komponente als die Frage hinter dem ganzen System: Woher kommt eigentlich das Bewusstsein, das auf den Bildschirm schaut?",
+      permMem:"Glaubt, dass die Frage mehr zählt als jede endgültige Antwort.",
+      evolMem:"Bleibt neugierig darauf, was genau einen Haufen Komponenten irgendwann zu jemandem werden lässt." }
+  ]
+};
+function buildDemoCompanions(lang){
+  var list = DEMO_COMPANIONS_I18N[lang] || DEMO_COMPANIONS_I18N.en;
+  return list.map(function(d){
+    var descoperite = d.discMem ? [{ id: uid(), text: d.discMem, createdAt: Date.now() }] : [];
+    return {
+      id: uid(), name: d.name, type: d.type, traits: d.traits, backstory: d.backstory,
+      memories: {
+        permanente: [{ id: uid(), text: d.permMem, createdAt: Date.now() }],
+        evolutive: [{ id: uid(), text: d.evolMem, createdAt: Date.now() }],
+        descoperite: descoperite
+      },
+      messages: [], createdAt: Date.now()
+    };
+  });
+}
+
 function loadState(){
   var raw = storageGet(STORAGE_KEY);
-  if (!raw) { state = defaultState(); return; }
+  if (!raw) {
+    state = defaultState();
+    var browserLang = detectBrowserLang();
+    state.settings.lang = browserLang;
+    state.companions = buildDemoCompanions(browserLang);
+    state.activeId = state.companions.length ? state.companions[0].id : null;
+    return;
+  }
   try {
     var parsed = JSON.parse(raw);
     state = defaultState();
@@ -964,9 +1436,15 @@ function showMemNodePopover(node, clickX, clickY, companion){
       '<button type="button" class="btn-secondary" id="memNodeDeleteBtn">' + escapeHtml(t("btnDelete")) + '</button>' +
       '<button type="button" class="btn-secondary" id="memNodeCloseBtn">' + escapeHtml(t("btnClose")) + '</button>' +
     '</div>';
-  pop.style.left = Math.max(4, Math.min(clickX, (pop.parentNode.clientWidth||260) - 264)) + "px";
+  var parentW = pop.parentNode.clientWidth || 260;
+  var parentH = pop.parentNode.clientHeight || 300;
+  var popW = Math.min(260, parentW - 8);
+  pop.style.left = Math.max(4, Math.min(clickX, parentW - popW - 4)) + "px";
   pop.style.top = Math.max(4, clickY) + "px";
   pop.hidden = false;
+  // dupa ce e vizibil si masurabil, corectez pe verticala daca ar iesi din cadrul containerului
+  var popH = pop.offsetHeight || 120;
+  if (clickY + popH > parentH) pop.style.top = Math.max(4, parentH - popH - 4) + "px";
   document.getElementById("memNodeDeleteBtn").addEventListener("click", function(){
     deleteMemory(companion, node.cat, node.id);
     hideMemNodePopover();
@@ -1061,6 +1539,21 @@ function translateType(type){
 }
 
 var rosterFilterTerm = "";
+var TYPE_ORDER = ["familie","prieten","romantic","poveste"];
+var TYPE_LABEL_KEY = { familie:"typeFamily", prieten:"typeFriend", romantic:"typeRomantic", poveste:"typeStory" };
+var collapsedCats = {}; // stare doar in sesiune, nu persista — simplu, intentionat
+
+function rosterItemHtml(c){
+  var active = c.id === state.activeId ? " active" : "";
+  return '<div class="roster-item'+active+'">' +
+    '<button class="roster-item-main" data-id="'+escapeHtml(c.id)+'">' +
+      '<span class="avatar avatar-sm">'+avatarSVG(c.id)+'</span>' +
+      '<span><span class="roster-name">'+escapeHtml(c.name)+'</span><br><span class="roster-type">'+escapeHtml(translateType(c.type))+'</span></span>' +
+    '</button>' +
+    '<button class="mini-del" data-del-id="'+escapeHtml(c.id)+'" aria-label="' + escapeHtml(t("ariaDeleteCompanion")) + ' ' + escapeHtml(c.name) + '" title="' + escapeHtml(t("ariaDeleteCompanion")) + '">🗑</button>' +
+  '</div>';
+}
+
 function renderRoster(){
   var html = "";
   var term = rosterFilterTerm.trim().toLowerCase();
@@ -1074,15 +1567,43 @@ function renderRoster(){
     if (noMatchEl) noMatchEl.hidden = false;
   } else {
     if (noMatchEl) noMatchEl.hidden = true;
+
+    // categorie = tip de relație; subcategorie = are deja conversație pornită sau e nou
+    var grouped = {};
+    TYPE_ORDER.forEach(function(ty){ grouped[ty] = { active:[], fresh:[] }; });
     visible.forEach(function(c){
-      var active = c.id === state.activeId ? " active" : "";
-      html += '<div class="roster-item'+active+'">' +
-        '<button class="roster-item-main" data-id="'+escapeHtml(c.id)+'">' +
-          '<span class="avatar avatar-sm">'+avatarSVG(c.id)+'</span>' +
-          '<span><span class="roster-name">'+escapeHtml(c.name)+'</span><br><span class="roster-type">'+escapeHtml(translateType(c.type))+'</span></span>' +
-        '</button>' +
-        '<button class="mini-del" data-del-id="'+escapeHtml(c.id)+'" aria-label="' + escapeHtml(t("ariaDeleteCompanion")) + ' ' + escapeHtml(c.name) + '" title="' + escapeHtml(t("ariaDeleteCompanion")) + '">🗑</button>' +
-      '</div>';
+      var bucket = grouped[TYPE_ORDER.indexOf(c.type) !== -1 ? c.type : "prieten"];
+      (c.messages && c.messages.length > 0 ? bucket.active : bucket.fresh).push(c);
+    });
+
+    TYPE_ORDER.forEach(function(ty){
+      var g = grouped[ty];
+      var total = g.active.length + g.fresh.length;
+      if (total === 0) return;
+      // categoria companionului activ ramane mereu extinsa, chiar daca era restransa —
+      // altfel utilizatorul si-ar putea "pierde" din vedere companionul deschis
+      var activeInThisCat = visible.some(function(c){ return c.id === state.activeId && (TYPE_ORDER.indexOf(c.type) !== -1 ? c.type : "prieten") === ty; });
+      var collapsed = !!collapsedCats[ty] && !activeInThisCat;
+      html += '<div class="roster-cat' + (collapsed ? ' collapsed' : '') + '" data-cat-type="'+ty+'">' +
+        '<button type="button" class="roster-cat-head" data-cat-toggle="'+ty+'" aria-expanded="'+(!collapsed)+'" aria-label="'+escapeHtml(t("ariaCollapseCat"))+'">' +
+          '<span class="roster-cat-chevron">' + (collapsed ? '▸' : '▾') + '</span>' +
+          '<span class="roster-cat-name">'+escapeHtml(t(TYPE_LABEL_KEY[ty]))+'</span>' +
+          '<span class="roster-cat-count">'+total+'</span>' +
+        '</button>';
+      if (!collapsed){
+        html += '<div class="roster-cat-body">';
+        var showSubheads = g.active.length > 0 && g.fresh.length > 0;
+        if (g.active.length){
+          if (showSubheads) html += '<div class="roster-subhead">'+escapeHtml(t("catActive"))+'</div>';
+          g.active.forEach(function(c){ html += rosterItemHtml(c); });
+        }
+        if (g.fresh.length){
+          if (showSubheads) html += '<div class="roster-subhead">'+escapeHtml(t("catNew"))+'</div>';
+          g.fresh.forEach(function(c){ html += rosterItemHtml(c); });
+        }
+        html += '</div>';
+      }
+      html += '</div>';
     });
   }
   els.roster.innerHTML = html;
@@ -1093,6 +1614,13 @@ function renderRoster(){
     btn.addEventListener("click", function(ev){
       ev.stopPropagation();
       askDeleteCompanion(btn.getAttribute("data-del-id"));
+    });
+  });
+  Array.prototype.forEach.call(els.roster.querySelectorAll("[data-cat-toggle]"), function(btn){
+    btn.addEventListener("click", function(){
+      var ty = btn.getAttribute("data-cat-toggle");
+      collapsedCats[ty] = !collapsedCats[ty];
+      renderRoster();
     });
   });
 }
@@ -1132,6 +1660,15 @@ function renderMemoryLists(companion){
   });
 }
 
+function ensureWelcomeMessage(c){
+  if (c.messages && c.messages.length === 0){
+    c.messages.push({
+      id: uid(), role:"assistant", ts: Date.now(), simulated:true,
+      text: t("welcomeMessage").replace("{NAME}", c.name)
+    });
+  }
+}
+
 function renderCompanionView(){
   var c = getActiveCompanion();
   if (!c){
@@ -1145,6 +1682,7 @@ function renderCompanionView(){
   document.getElementById("topAvatar").innerHTML = avatarSVG(c.id);
   document.getElementById("topName").textContent = c.name;
   document.getElementById("topType").textContent = translateType(c.type);
+  ensureWelcomeMessage(c);
   renderMessages(c);
   renderMemoryLists(c);
   if (els.memoryPane && !els.memoryPane.hidden) startConstellation(c);
@@ -1633,7 +2171,7 @@ ro: {
   fieldLang:"Limbă", fieldProvider:"Provider",
   providerWebllm:"Local, direct în acest tab (WebLLM, fără instalare)", providerAnthropic:"Anthropic (Claude)",
   providerOpenai:"OpenAI / compatibil (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama...)",
-  providerChromeai:"Gemini Nano în Chrome (nativ, fără cheie)", providerLocalsimple:"AI local simplu, pe reguli (instant, fără nimic)",
+  providerChromeai:"IA nativă în browser (Chrome, experimental și în Edge)", providerLocalsimple:"AI local simplu, pe reguli (instant, fără nimic)",
   webllmLabel:"Model local (descărcat o singură dată, apoi rulează din cache, offline)",
   webllmChip1:"1B — rapid, ~0.9GB", webllmChip3:"3B — echilibrat, ~2.2GB", webllmChip8:"8B — cea mai bună, ~4.9GB, GPU puternic",
   webllmHint:'Niciunul nu e specializat pe română — sunt modele multilingve generale, rulate 100% în acest tab prin WebGPU. Pentru română de calitate reală, vezi presetul Ollama de mai jos (provider „OpenAI / compatibil”). Listă completă: <a href="https://mlc.ai/models" target="_blank" rel="noopener">mlc.ai/models</a>.',
@@ -1644,8 +2182,8 @@ ro: {
   presetsLabel:"Presete rapide (completează URL + model)", presetsHint:"Fiecare cere propria cheie API, de la providerul respectiv. Doar completează URL + model — tu pui cheia.",
   ollamaRoBtn:"⚡ Preset: Ollama + model românesc (RoLlama/RoMistral)",
   ollamaRoHint:"Cea mai bună calitate reală în română vine de aici — RoLlama e antrenat special pe română, nu doar multilingv general. Modelul de 7B cere ~5GB spațiu și un calculator cu RAM/GPU decente. Cere Ollama instalat separat (ollama.com).",
-  chromeAiLabel:"Gemini Nano — modelul nativ al Chrome",
-  chromeAiHint:'Model de ~2GB gestionat de Chrome însuși (nu descarc eu nimic) — nici cheie, nici instalare. Disponibilitate încă limitată: cere Chrome oficial de la Google (nu Edge, nu un Chromium ambalat de o distribuție Linux), și de regulă flag-ul <code>chrome://flags/#prompt-api-for-gemini-nano</code> activat manual. General, nu specializat pe română.',
+  chromeAiLabel:"IA nativă a browserului — Gemini Nano (Chrome) sau Phi (Edge)",
+  chromeAiHint:'Model de 2-4GB gestionat chiar de browser (nu descarc eu nimic) — nici cheie, nici instalare. Chrome oficial (nu Edge) rulează Gemini Nano; Edge Canary/Dev rulează propriul model Phi — ambele încă disponibilitate limitată, de regulă cu flag activat manual în chrome://flags sau edge://flags. Nu funcționează în Chromium ambalat de o distribuție Linux. General, nu specializat pe română.',
   chromeAiCheckBtn:"Verifică disponibilitatea",
   localSimpleHint:"Motorul pe reguli descris mai jos — pattern-matching + reflectare, instant, fără cheie, fără descărcare, fără GPU. Nu e o rețea neuronală. Îl poți alege explicit aici, chiar dacă ai altă cheie configurată, ca să rămâi mereu pe el.",
   fieldReminder:'Reamintire "e AI" (minute, 0 = oprit)', fieldAutoMemory:"extrage amintiri automat",
@@ -1665,7 +2203,7 @@ ro: {
   ariaDeleteCompanion:"Șterge companionul", ariaDeleteMemory:"Șterge amintirea",
   confirmDeleteBody:"Se șterg definitiv conversația și toate amintirile acestui companion. Nu poți anula — dacă vrei o copie, exportă mai întâi.",
   noTextReply:"(răspuns fără text)",
-  webllmUnsupported:"WebGPU indisponibil în acest browser. Încearcă Chrome sau Edge recent (113+), sau folosește presetul Ollama de mai sus.",
+  webllmUnsupported:"WebGPU indisponibil în acest browser sau dispozitiv. E suportat de Chrome/Edge (113+), Firefox (141+ Windows, 145+ macOS) și Safari (26+), dar poate lipsi pe Linux/Android sau hardware mai vechi. Încearcă presetul Ollama de mai sus ca alternativă.",
   chromeAiUnsupported:"Prompt API indisponibil în acest browser. Cere Chrome recent (138+).",
   testWebllmMsg:"Pentru modelul local folosește butonul „Descarcă și pornește modelul” de mai sus, nu acesta.",
   testChromeAiMsg:"Folosește butonul „Verifică disponibilitatea” de mai sus, nu acesta.",
@@ -1706,7 +2244,20 @@ ro: {
   storageLabel:"Spațiu ocupat", storageWarningNear:"Spațiul local se umple — exportă o copie de siguranță curând.",
   exportConvoBtn:"Exportă ca poveste", ariaExportConvo:"Exportă această conversație ca text lizibil",
   convoExportHeader:"Conversație cu {NAME}", convoExportedOn:"Exportat pe", convoExportYou:"Tu",
-  memNodeHint:"Apasă pe o stea ca să vezi amintirea"
+  memNodeHint:"Apasă pe o stea ca să vezi amintirea", catActive:"Activi", catNew:"Noi", ariaCollapseCat:"Restrânge/extinde categoria", welcomeMessage:"Bună! Sunt {NAME}. Țin minte ce-mi spui pe categorii (permanente, evolutive, descoperite) — le vezi în tabul Memorie, ca o constelație. Poți schimba oricând cum «gândesc» din Setări (⚙). Spune-mi ceva!",
+  ariaShare:"Distribuie", shareModalTitle:"Distribuie Constelar",
+  shareIntro:"Un companion AI cu memorie reală, offline, fără cont și fără telemetrie.",
+  shareNativeBtn:"Distribuie...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
+  shareFacebook:"Facebook", shareLinkedin:"LinkedIn", shareFediverse:"Fediverse (Mastodon)",
+  shareFediversePlaceholder:"instanța-ta.social", shareFediverseGo:"Deschide",
+  shareCopyLink:"Copiază linkul", shareCopied:"Copiat!",
+  legalTitle:"Termeni, confidențialitate și drepturi de autor",
+  legalBlock1:"<b>Termeni de utilizare:</b> Constelar e un instrument personal, gratuit, oferit „așa cum este”, fără nicio garanție explicită sau implicită. Nu există un serviciu, un cont sau un contract — doar un fișier pe care îl rulezi pe propriul dispozitiv. Folosindu-l, ești singurul responsabil pentru cum îl folosești și pentru orice conținut pe care îl creezi cu el.",
+  legalBlock2:"<b>Cookie-uri:</b> Nu se folosește niciun cookie. Aplicația ține date exclusiv prin localStorage, direct în browserul tău — un mecanism diferit de cookie-uri, care nu se trimite niciodată către niciun server, pentru că nu există unul. Poți șterge totul oricând din setările browserului sau din butonul de export al aplicației.",
+  legalBlock3:"<b>Drepturi de autor:</b> Codul sursă al Constelar este © Alexandru-Ionuț Chiuță. Companionii, textele și amintirile pe care le creezi rămân ale tale — nu sunt colectate, transmise sau revendicate de nimeni. Dacă conectezi un provider AI extern, verifică și termenii lui pentru conținutul generat prin acel API.",
+  legalBlock4:"<b>Independență:</b> Constelar nu este afiliată, sponsorizată sau aprobată de Anthropic, OpenAI, Google, Microsoft, Ollama, proiectul MLC/WebLLM sau orice alt provider menționat aici — sunt doar opțiuni pe care le poți conecta, la alegere. Nu are nicio legătură cu alte aplicații de companioni AI existente; orice asemănare de concept e coincidență sau inspirație generală din domeniu, nu parteneriat.",
+  legalBlock5:"<b>Limite:</b> Nimic din ce spune un companion — local sau conectat la un AI real — nu constituie sfat medical, juridic sau financiar. Pentru decizii care contează cu adevărat, vorbește cu un profesionist calificat.",
+  donateCoffee:"☕ Cumpără-mi o cafea", donatePatreon:"✦ Susține pe Patreon"
 },
 en: {
   brandTag:"real memory · 100% local", newCompanion:"+ New companion",
@@ -1734,7 +2285,7 @@ en: {
   fieldLang:"Language", fieldProvider:"Provider",
   providerWebllm:"Local, right in this tab (WebLLM, no install)", providerAnthropic:"Anthropic (Claude)",
   providerOpenai:"OpenAI / compatible (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama...)",
-  providerChromeai:"Gemini Nano in Chrome (native, no key)", providerLocalsimple:"Simple rule-based local AI (instant, nothing needed)",
+  providerChromeai:"Native browser AI (Chrome, experimental in Edge too)", providerLocalsimple:"Simple rule-based local AI (instant, nothing needed)",
   webllmLabel:"Local model (downloaded once, then runs from cache, offline)",
   webllmChip1:"1B — fast, ~0.9GB", webllmChip3:"3B — balanced, ~2.2GB", webllmChip8:"8B — best, ~4.9GB, strong GPU",
   webllmHint:'None of these are specialized for Romanian — they are general multilingual models, running 100% in this tab via WebGPU. For real Romanian quality, see the Ollama preset below (provider "OpenAI / compatible"). Full list: <a href="https://mlc.ai/models" target="_blank" rel="noopener">mlc.ai/models</a>.',
@@ -1745,8 +2296,8 @@ en: {
   presetsLabel:"Quick presets (fills in URL + model)", presetsHint:"Each one needs its own API key from that provider. This just fills in URL + model — you add the key.",
   ollamaRoBtn:"⚡ Preset: Ollama + Romanian model (RoLlama/RoMistral)",
   ollamaRoHint:"The best real Romanian quality comes from here — RoLlama is trained specifically on Romanian, not just general multilingual. The 7B model needs ~5GB of space and a computer with decent RAM/GPU. Requires Ollama installed separately (ollama.com).",
-  chromeAiLabel:"Gemini Nano — Chrome's native model",
-  chromeAiHint:'A ~2GB model managed by Chrome itself (I don\'t download anything) — no key, no install. Still limited availability: needs official Chrome from Google (not Edge, not a Linux-distro-packaged Chromium), and usually the <code>chrome://flags/#prompt-api-for-gemini-nano</code> flag enabled manually. General-purpose, not specialized for Romanian.',
+  chromeAiLabel:"Native browser AI — Gemini Nano (Chrome) or Phi (Edge)",
+  chromeAiHint:'A 2-4GB model managed by the browser itself (I don\'t download anything) — no key, no install. Official Chrome (not Edge) runs Gemini Nano; Edge Canary/Dev runs its own Phi model — both still limited availability, usually needing a flag enabled manually in chrome://flags or edge://flags. Doesn\'t work in a Linux-distro-packaged Chromium. General-purpose, not specialized for Romanian.',
   chromeAiCheckBtn:"Check availability",
   localSimpleHint:"The rule-based engine described below — pattern-matching + reflection, instant, no key, no download, no GPU. Not a neural network. You can pick it explicitly here, even if you have another key configured, to always stay on it.",
   fieldReminder:'"It\'s AI" reminder (minutes, 0 = off)', fieldAutoMemory:"auto-extract memories",
@@ -1766,7 +2317,7 @@ en: {
   ariaDeleteCompanion:"Delete companion", ariaDeleteMemory:"Delete memory",
   confirmDeleteBody:"This permanently deletes the conversation and all memories of this companion. You can't undo this — export first if you want a copy.",
   noTextReply:"(no text in response)",
-  webllmUnsupported:"WebGPU unavailable in this browser. Try a recent Chrome or Edge (113+), or use the Ollama preset above.",
+  webllmUnsupported:"WebGPU unavailable in this browser or device. It's supported by Chrome/Edge (113+), Firefox (141+ Windows, 145+ macOS) and Safari (26+), but may be missing on Linux/Android or older hardware. Try the Ollama preset above as an alternative.",
   chromeAiUnsupported:"Prompt API unavailable in this browser. Requires a recent Chrome (138+).",
   testWebllmMsg:"For the local model, use the \"Download and start the model\" button above, not this one.",
   testChromeAiMsg:"Use the \"Check availability\" button above, not this one.",
@@ -1807,7 +2358,20 @@ en: {
   storageLabel:"Storage used", storageWarningNear:"Local storage is filling up — export a backup soon.",
   exportConvoBtn:"Export as story", ariaExportConvo:"Export this conversation as readable text",
   convoExportHeader:"Conversation with {NAME}", convoExportedOn:"Exported on", convoExportYou:"You",
-  memNodeHint:"Tap a star to see that memory"
+  memNodeHint:"Tap a star to see that memory", catActive:"Active", catNew:"New", ariaCollapseCat:"Collapse/expand category", welcomeMessage:"Hi! I'm {NAME}. I keep what you tell me organized into categories (permanent, evolving, discovered) — see them in the Memory tab, like a constellation. You can change how I \"think\" anytime from Settings (⚙). Tell me something!",
+  ariaShare:"Share", shareModalTitle:"Share Constelar",
+  shareIntro:"An offline AI companion app with real memory — no account, no telemetry.",
+  shareNativeBtn:"Share...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
+  shareFacebook:"Facebook", shareLinkedin:"LinkedIn", shareFediverse:"Fediverse (Mastodon)",
+  shareFediversePlaceholder:"your-instance.social", shareFediverseGo:"Open",
+  shareCopyLink:"Copy link", shareCopied:"Copied!",
+  legalTitle:"Terms, privacy & copyright",
+  legalBlock1:"<b>Terms of use:</b> Constelar is a personal, free tool, provided \"as is,\" with no explicit or implied warranty. There's no service, account, or contract — just a file you run on your own device. By using it, you're solely responsible for how you use it and for any content you create with it.",
+  legalBlock2:"<b>Cookies:</b> No cookies are used. The app keeps data exclusively through localStorage, directly in your browser — a different mechanism from cookies, never sent to any server, because there isn't one. You can delete everything anytime from your browser settings or the app's export button.",
+  legalBlock3:"<b>Copyright:</b> Constelar's source code is © Alexandru-Ionuț Chiuță. The companions, text, and memories you create remain yours — not collected, transmitted, or claimed by anyone. If you connect an external AI provider, also check its terms for content generated through that API.",
+  legalBlock4:"<b>Independence:</b> Constelar is not affiliated with, sponsored by, or endorsed by Anthropic, OpenAI, Google, Microsoft, Ollama, the MLC/WebLLM project, or any other provider mentioned here — they're simply options you can optionally connect. It has no relationship with other existing AI companion apps; any conceptual similarity is coincidence or general inspiration from the field, not partnership.",
+  legalBlock5:"<b>Limitations:</b> Nothing a companion says — local or connected to a real AI — constitutes medical, legal, or financial advice. For decisions that really matter, talk to a qualified professional.",
+  donateCoffee:"☕ Buy me a coffee", donatePatreon:"✦ Support on Patreon"
 },
 fr: {
   brandTag:"mémoire réelle · 100% locale", newCompanion:"+ Nouveau compagnon",
@@ -1835,7 +2399,7 @@ fr: {
   fieldLang:"Langue", fieldProvider:"Fournisseur",
   providerWebllm:"Local, directement dans cet onglet (WebLLM, sans installation)", providerAnthropic:"Anthropic (Claude)",
   providerOpenai:"OpenAI / compatible (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama...)",
-  providerChromeai:"Gemini Nano dans Chrome (natif, sans clé)", providerLocalsimple:"IA locale simple, à règles (instantané, rien à faire)",
+  providerChromeai:"IA native du navigateur (Chrome, expérimental aussi dans Edge)", providerLocalsimple:"IA locale simple, à règles (instantané, rien à faire)",
   webllmLabel:"Modèle local (téléchargé une fois, puis exécuté depuis le cache, hors ligne)",
   webllmChip1:"1B — rapide, ~0,9 Go", webllmChip3:"3B — équilibré, ~2,2 Go", webllmChip8:"8B — le meilleur, ~4,9 Go, GPU puissant",
   webllmHint:'Aucun n\'est spécialisé en roumain — ce sont des modèles multilingues généraux, exécutés à 100% dans cet onglet via WebGPU. Pour une vraie qualité en roumain, vois le préréglage Ollama ci-dessous (fournisseur « OpenAI / compatible »). Liste complète : <a href="https://mlc.ai/models" target="_blank" rel="noopener">mlc.ai/models</a>.',
@@ -1846,8 +2410,8 @@ fr: {
   presetsLabel:"Préréglages rapides (remplit URL + modèle)", presetsHint:"Chacun nécessite sa propre clé API, du fournisseur concerné. Ça remplit juste URL + modèle — c'est toi qui ajoutes la clé.",
   ollamaRoBtn:"⚡ Préréglage : Ollama + modèle roumain (RoLlama/RoMistral)",
   ollamaRoHint:"La meilleure vraie qualité en roumain vient d'ici — RoLlama est entraîné spécifiquement sur le roumain, pas juste multilingue général. Le modèle 7B demande ~5 Go d'espace et un ordinateur avec RAM/GPU corrects. Nécessite Ollama installé séparément (ollama.com).",
-  chromeAiLabel:"Gemini Nano — le modèle natif de Chrome",
-  chromeAiHint:'Un modèle d\'environ 2 Go géré par Chrome lui-même (je ne télécharge rien) — ni clé, ni installation. Disponibilité encore limitée : nécessite Chrome officiel de Google (pas Edge, pas un Chromium empaqueté par une distribution Linux), et généralement le drapeau <code>chrome://flags/#prompt-api-for-gemini-nano</code> activé manuellement. Généraliste, pas spécialisé en roumain.',
+  chromeAiLabel:"IA native du navigateur — Gemini Nano (Chrome) ou Phi (Edge)",
+  chromeAiHint:'Un modèle de 2 à 4 Go géré par le navigateur lui-même (je ne télécharge rien) — ni clé, ni installation. Chrome officiel (pas Edge) fait tourner Gemini Nano ; Edge Canary/Dev fait tourner son propre modèle Phi — les deux ont encore une disponibilité limitée, avec généralement un drapeau à activer manuellement dans chrome://flags ou edge://flags. Ne fonctionne pas dans un Chromium empaqueté par une distribution Linux. Généraliste, pas spécialisé en roumain.',
   chromeAiCheckBtn:"Vérifier la disponibilité",
   localSimpleHint:"Le moteur à règles décrit ci-dessous — reconnaissance de motifs + réflexion, instantané, sans clé, sans téléchargement, sans GPU. Ce n'est pas un réseau de neurones. Tu peux le choisir explicitement ici, même si tu as une autre clé configurée, pour toujours y rester.",
   fieldReminder:'Rappel "c\'est une IA" (minutes, 0 = désactivé)', fieldAutoMemory:"extraire les souvenirs automatiquement",
@@ -1867,7 +2431,7 @@ fr: {
   ariaDeleteCompanion:"Supprimer le compagnon", ariaDeleteMemory:"Supprimer le souvenir",
   confirmDeleteBody:"Cela supprime définitivement la conversation et tous les souvenirs de ce compagnon. Impossible d'annuler — exporte d'abord si tu veux garder une copie.",
   noTextReply:"(réponse sans texte)",
-  webllmUnsupported:"WebGPU indisponible dans ce navigateur. Essaie un Chrome ou Edge récent (113+), ou utilise le préréglage Ollama ci-dessus.",
+  webllmUnsupported:"WebGPU indisponible dans ce navigateur ou sur cet appareil. Il est pris en charge par Chrome/Edge (113+), Firefox (141+ Windows, 145+ macOS) et Safari (26+), mais peut manquer sur Linux/Android ou du matériel plus ancien. Essaie le préréglage Ollama ci-dessus comme alternative.",
   chromeAiUnsupported:"Prompt API indisponible dans ce navigateur. Nécessite un Chrome récent (138+).",
   testWebllmMsg:"Pour le modèle local, utilise le bouton « Télécharger et démarrer le modèle » ci-dessus, pas celui-ci.",
   testChromeAiMsg:"Utilise le bouton « Vérifier la disponibilité » ci-dessus, pas celui-ci.",
@@ -1908,7 +2472,20 @@ fr: {
   storageLabel:"Espace utilisé", storageWarningNear:"Le stockage local se remplit — exporte une sauvegarde bientôt.",
   exportConvoBtn:"Exporter comme récit", ariaExportConvo:"Exporter cette conversation en texte lisible",
   convoExportHeader:"Conversation avec {NAME}", convoExportedOn:"Exporté le", convoExportYou:"Toi",
-  memNodeHint:"Touche une étoile pour voir ce souvenir"
+  memNodeHint:"Touche une étoile pour voir ce souvenir", catActive:"Actifs", catNew:"Nouveaux", ariaCollapseCat:"Réduire/développer la catégorie", welcomeMessage:"Salut ! Je suis {NAME}. Je garde ce que tu me dis organisé en catégories (permanentes, évolutives, découvertes) — tu les vois dans l'onglet Mémoire, comme une constellation. Tu peux changer comment je « pense » à tout moment depuis les Paramètres (⚙). Dis-moi quelque chose !",
+  ariaShare:"Partager", shareModalTitle:"Partager Constelar",
+  shareIntro:"Une appli de compagnon IA hors ligne avec une vraie mémoire — sans compte, sans télémétrie.",
+  shareNativeBtn:"Partager...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
+  shareFacebook:"Facebook", shareLinkedin:"LinkedIn", shareFediverse:"Fediverse (Mastodon)",
+  shareFediversePlaceholder:"ton-instance.social", shareFediverseGo:"Ouvrir",
+  shareCopyLink:"Copier le lien", shareCopied:"Copié !",
+  legalTitle:"Conditions, confidentialité et droits d'auteur",
+  legalBlock1:"<b>Conditions d'utilisation :</b> Constelar est un outil personnel gratuit, fourni « tel quel », sans aucune garantie explicite ou implicite. Il n'y a ni service, ni compte, ni contrat — juste un fichier que tu exécutes sur ton propre appareil. En l'utilisant, tu es seul responsable de la façon dont tu l'utilises et de tout contenu que tu crées avec.",
+  legalBlock2:"<b>Cookies :</b> Aucun cookie n'est utilisé. L'application conserve les données uniquement via le localStorage, directement dans ton navigateur — un mécanisme différent des cookies, jamais envoyé à aucun serveur, car il n'y en a pas. Tu peux tout supprimer à tout moment depuis les paramètres de ton navigateur ou le bouton d'export de l'application.",
+  legalBlock3:"<b>Droits d'auteur :</b> Le code source de Constelar est © Alexandru-Ionuț Chiuță. Les compagnons, textes et souvenirs que tu crées restent les tiens — ils ne sont collectés, transmis ou revendiqués par personne. Si tu connectes un fournisseur d'IA externe, vérifie aussi ses conditions pour le contenu généré via cette API.",
+  legalBlock4:"<b>Indépendance :</b> Constelar n'est affiliée, sponsorisée ou approuvée ni par Anthropic, OpenAI, Google, Microsoft, Ollama, le projet MLC/WebLLM, ni par aucun autre fournisseur mentionné ici — ce sont simplement des options que tu peux connecter, à ton choix. Elle n'a aucun lien avec d'autres applications de compagnons IA existantes ; toute ressemblance conceptuelle est une coïncidence ou une inspiration générale du domaine, pas un partenariat.",
+  legalBlock5:"<b>Limites :</b> Rien de ce que dit un compagnon — local ou connecté à une vraie IA — ne constitue un conseil médical, juridique ou financier. Pour les décisions qui comptent vraiment, parle à un professionnel qualifié.",
+  donateCoffee:"☕ Offre-moi un café", donatePatreon:"✦ Soutenir sur Patreon"
 },
 it: {
   brandTag:"memoria reale · 100% locale", newCompanion:"+ Nuovo compagno",
@@ -1936,7 +2513,7 @@ it: {
   fieldLang:"Lingua", fieldProvider:"Provider",
   providerWebllm:"Locale, direttamente in questa scheda (WebLLM, senza installazione)", providerAnthropic:"Anthropic (Claude)",
   providerOpenai:"OpenAI / compatibile (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama...)",
-  providerChromeai:"Gemini Nano in Chrome (nativo, senza chiave)", providerLocalsimple:"IA locale semplice, a regole (istantaneo, nulla da fare)",
+  providerChromeai:"IA nativa del browser (Chrome, sperimentale anche in Edge)", providerLocalsimple:"IA locale semplice, a regole (istantaneo, nulla da fare)",
   webllmLabel:"Modello locale (scaricato una volta, poi eseguito dalla cache, offline)",
   webllmChip1:"1B — veloce, ~0,9GB", webllmChip3:"3B — equilibrato, ~2,2GB", webllmChip8:"8B — il migliore, ~4,9GB, GPU potente",
   webllmHint:'Nessuno è specializzato in italiano — sono modelli multilingue generali, eseguiti al 100% in questa scheda tramite WebGPU. Lista completa: <a href="https://mlc.ai/models" target="_blank" rel="noopener">mlc.ai/models</a>.',
@@ -1947,8 +2524,8 @@ it: {
   presetsLabel:"Preset rapidi (compila URL + modello)", presetsHint:"Ognuno richiede la propria chiave API, dal provider corrispondente. Questo compila solo URL + modello — la chiave la aggiungi tu.",
   ollamaRoBtn:"⚡ Preset: Ollama + modello rumeno (RoLlama/RoMistral)",
   ollamaRoHint:"La migliore qualità reale in rumeno viene da qui — RoLlama è addestrato appositamente sul rumeno, non solo multilingue generale. Il modello da 7B richiede ~5GB di spazio e un computer con RAM/GPU decenti. Richiede Ollama installato separatamente (ollama.com).",
-  chromeAiLabel:"Gemini Nano — il modello nativo di Chrome",
-  chromeAiHint:'Un modello di ~2GB gestito da Chrome stesso (non scarico nulla io) — né chiave, né installazione. Disponibilità ancora limitata: richiede Chrome ufficiale di Google (non Edge, non un Chromium impacchettato da una distribuzione Linux), e di solito il flag <code>chrome://flags/#prompt-api-for-gemini-nano</code> attivato manualmente. Generico, non specializzato in rumeno.',
+  chromeAiLabel:"IA nativa del browser — Gemini Nano (Chrome) o Phi (Edge)",
+  chromeAiHint:'Un modello di 2-4GB gestito dal browser stesso (non scarico nulla io) — né chiave, né installazione. Chrome ufficiale (non Edge) esegue Gemini Nano; Edge Canary/Dev esegue il proprio modello Phi — entrambi ancora a disponibilità limitata, di solito con un flag da attivare manualmente in chrome://flags o edge://flags. Non funziona in un Chromium impacchettato da una distribuzione Linux. Generico, non specializzato in rumeno.',
   chromeAiCheckBtn:"Verifica disponibilità",
   localSimpleHint:"Il motore a regole descritto sotto — pattern-matching + riflessione, istantaneo, senza chiave, senza download, senza GPU. Non è una rete neurale. Puoi sceglierlo esplicitamente qui, anche se hai un'altra chiave configurata, per restarci sempre.",
   fieldReminder:'Promemoria "è IA" (minuti, 0 = disattivato)', fieldAutoMemory:"estrai ricordi automaticamente",
@@ -1968,7 +2545,7 @@ it: {
   ariaDeleteCompanion:"Elimina il compagno", ariaDeleteMemory:"Elimina il ricordo",
   confirmDeleteBody:"Questo elimina definitivamente la conversazione e tutti i ricordi di questo compagno. Non puoi annullare — esporta prima se vuoi tenere una copia.",
   noTextReply:"(risposta senza testo)",
-  webllmUnsupported:"WebGPU non disponibile in questo browser. Prova un Chrome o Edge recente (113+), oppure usa il preset Ollama qui sopra.",
+  webllmUnsupported:"WebGPU non disponibile in questo browser o dispositivo. È supportato da Chrome/Edge (113+), Firefox (141+ Windows, 145+ macOS) e Safari (26+), ma potrebbe mancare su Linux/Android o hardware più datato. Prova il preset Ollama qui sopra come alternativa.",
   chromeAiUnsupported:"Prompt API non disponibile in questo browser. Richiede un Chrome recente (138+).",
   testWebllmMsg:"Per il modello locale, usa il pulsante \"Scarica e avvia il modello\" qui sopra, non questo.",
   testChromeAiMsg:"Usa il pulsante \"Verifica disponibilità\" qui sopra, non questo.",
@@ -2009,7 +2586,20 @@ it: {
   storageLabel:"Spazio usato", storageWarningNear:"Lo spazio locale si sta riempiendo — esporta presto un backup.",
   exportConvoBtn:"Esporta come racconto", ariaExportConvo:"Esporta questa conversazione come testo leggibile",
   convoExportHeader:"Conversazione con {NAME}", convoExportedOn:"Esportato il", convoExportYou:"Tu",
-  memNodeHint:"Tocca una stella per vedere quel ricordo"
+  memNodeHint:"Tocca una stella per vedere quel ricordo", catActive:"Attivi", catNew:"Nuovi", ariaCollapseCat:"Comprimi/espandi categoria", welcomeMessage:"Ciao! Sono {NAME}. Tengo quello che mi dici organizzato in categorie (permanenti, evolutive, scoperte) — le vedi nella scheda Memoria, come una costellazione. Puoi cambiare come «penso» in qualsiasi momento dalle Impostazioni (⚙). Dimmi qualcosa!",
+  ariaShare:"Condividi", shareModalTitle:"Condividi Constelar",
+  shareIntro:"Un'app di compagni IA offline con memoria reale — senza account, senza telemetria.",
+  shareNativeBtn:"Condividi...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
+  shareFacebook:"Facebook", shareLinkedin:"LinkedIn", shareFediverse:"Fediverse (Mastodon)",
+  shareFediversePlaceholder:"tua-istanza.social", shareFediverseGo:"Apri",
+  shareCopyLink:"Copia link", shareCopied:"Copiato!",
+  legalTitle:"Termini, privacy e diritti d'autore",
+  legalBlock1:"<b>Termini di utilizzo:</b> Constelar è uno strumento personale gratuito, fornito «così com'è», senza alcuna garanzia esplicita o implicita. Non esiste un servizio, un account o un contratto — solo un file che esegui sul tuo dispositivo. Usandolo, sei l'unico responsabile di come lo usi e di qualsiasi contenuto che crei con esso.",
+  legalBlock2:"<b>Cookie:</b> Non viene usato alcun cookie. L'app conserva i dati esclusivamente tramite localStorage, direttamente nel tuo browser — un meccanismo diverso dai cookie, mai inviato a nessun server, perché non ne esiste uno. Puoi cancellare tutto in qualsiasi momento dalle impostazioni del browser o dal pulsante di esportazione dell'app.",
+  legalBlock3:"<b>Diritti d'autore:</b> Il codice sorgente di Constelar è © Alexandru-Ionuț Chiuță. I compagni, i testi e i ricordi che crei restano tuoi — non vengono raccolti, trasmessi o rivendicati da nessuno. Se colleghi un provider IA esterno, controlla anche i suoi termini per i contenuti generati tramite quella API.",
+  legalBlock4:"<b>Indipendenza:</b> Constelar non è affiliata, sponsorizzata o approvata da Anthropic, OpenAI, Google, Microsoft, Ollama, il progetto MLC/WebLLM, o qualsiasi altro provider menzionato qui — sono semplicemente opzioni che puoi collegare, a tua scelta. Non ha alcun legame con altre app di compagni IA esistenti; qualsiasi somiglianza concettuale è coincidenza o ispirazione generale dal settore, non partnership.",
+  legalBlock5:"<b>Limiti:</b> Nulla di ciò che dice un compagno — locale o collegato a un'IA reale — costituisce consulenza medica, legale o finanziaria. Per le decisioni che contano davvero, parla con un professionista qualificato.",
+  donateCoffee:"☕ Offrimi un caffè", donatePatreon:"✦ Sostieni su Patreon"
 },
 es: {
   brandTag:"memoria real · 100% local", newCompanion:"+ Nuevo compañero",
@@ -2037,7 +2627,7 @@ es: {
   fieldLang:"Idioma", fieldProvider:"Proveedor",
   providerWebllm:"Local, directamente en esta pestaña (WebLLM, sin instalación)", providerAnthropic:"Anthropic (Claude)",
   providerOpenai:"OpenAI / compatible (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama...)",
-  providerChromeai:"Gemini Nano en Chrome (nativo, sin clave)", providerLocalsimple:"IA local simple, por reglas (instantáneo, sin nada)",
+  providerChromeai:"IA nativa del navegador (Chrome, experimental también en Edge)", providerLocalsimple:"IA local simple, por reglas (instantáneo, sin nada)",
   webllmLabel:"Modelo local (descargado una vez, luego funciona desde caché, sin conexión)",
   webllmChip1:"1B — rápido, ~0,9GB", webllmChip3:"3B — equilibrado, ~2,2GB", webllmChip8:"8B — el mejor, ~4,9GB, GPU potente",
   webllmHint:'Ninguno está especializado en español — son modelos multilingües generales, ejecutados 100% en esta pestaña vía WebGPU. Lista completa: <a href="https://mlc.ai/models" target="_blank" rel="noopener">mlc.ai/models</a>.',
@@ -2048,8 +2638,8 @@ es: {
   presetsLabel:"Ajustes rápidos (rellena URL + modelo)", presetsHint:"Cada uno necesita su propia clave API, del proveedor correspondiente. Esto solo rellena URL + modelo — tú añades la clave.",
   ollamaRoBtn:"⚡ Ajuste rápido: Ollama + modelo rumano (RoLlama/RoMistral)",
   ollamaRoHint:"La mejor calidad real en rumano viene de aquí — RoLlama está entrenado específicamente en rumano, no solo multilingüe general. El modelo de 7B necesita ~5GB de espacio y un ordenador con RAM/GPU decentes. Requiere Ollama instalado por separado (ollama.com).",
-  chromeAiLabel:"Gemini Nano — el modelo nativo de Chrome",
-  chromeAiHint:'Un modelo de ~2GB gestionado por el propio Chrome (no descargo nada) — sin clave, sin instalación. Disponibilidad aún limitada: requiere Chrome oficial de Google (no Edge, no un Chromium empaquetado por una distribución Linux), y normalmente el flag <code>chrome://flags/#prompt-api-for-gemini-nano</code> activado manualmente. General, no especializado en español.',
+  chromeAiLabel:"IA nativa del navegador — Gemini Nano (Chrome) o Phi (Edge)",
+  chromeAiHint:'Un modelo de 2-4GB gestionado por el propio navegador (no descargo nada) — sin clave, sin instalación. Chrome oficial (no Edge) ejecuta Gemini Nano; Edge Canary/Dev ejecuta su propio modelo Phi — ambos con disponibilidad aún limitada, normalmente con un flag que activar manualmente en chrome://flags o edge://flags. No funciona en un Chromium empaquetado por una distribución Linux. General, no especializado en español.',
   chromeAiCheckBtn:"Comprobar disponibilidad",
   localSimpleHint:"El motor de reglas descrito abajo — coincidencia de patrones + reflejo, instantáneo, sin clave, sin descarga, sin GPU. No es una red neuronal. Puedes elegirlo explícitamente aquí, incluso si tienes otra clave configurada, para quedarte siempre en él.",
   fieldReminder:'Recordatorio "es IA" (minutos, 0 = desactivado)', fieldAutoMemory:"extraer recuerdos automáticamente",
@@ -2069,7 +2659,7 @@ es: {
   ariaDeleteCompanion:"Eliminar compañero", ariaDeleteMemory:"Eliminar recuerdo",
   confirmDeleteBody:"Esto elimina permanentemente la conversación y todos los recuerdos de este compañero. No puedes deshacerlo — exporta antes si quieres guardar una copia.",
   noTextReply:"(respuesta sin texto)",
-  webllmUnsupported:"WebGPU no disponible en este navegador. Prueba un Chrome o Edge reciente (113+), o usa el ajuste rápido de Ollama de arriba.",
+  webllmUnsupported:"WebGPU no disponible en este navegador o dispositivo. Lo admiten Chrome/Edge (113+), Firefox (141+ Windows, 145+ macOS) y Safari (26+), pero puede faltar en Linux/Android o hardware más antiguo. Prueba el ajuste rápido de Ollama de arriba como alternativa.",
   chromeAiUnsupported:"Prompt API no disponible en este navegador. Requiere un Chrome reciente (138+).",
   testWebllmMsg:"Para el modelo local, usa el botón \"Descargar e iniciar el modelo\" de arriba, no este.",
   testChromeAiMsg:"Usa el botón \"Comprobar disponibilidad\" de arriba, no este.",
@@ -2110,7 +2700,20 @@ es: {
   storageLabel:"Espacio usado", storageWarningNear:"El almacenamiento local se está llenando — exporta una copia pronto.",
   exportConvoBtn:"Exportar como relato", ariaExportConvo:"Exportar esta conversación como texto legible",
   convoExportHeader:"Conversación con {NAME}", convoExportedOn:"Exportado el", convoExportYou:"Tú",
-  memNodeHint:"Toca una estrella para ver ese recuerdo"
+  memNodeHint:"Toca una estrella para ver ese recuerdo", catActive:"Activos", catNew:"Nuevos", ariaCollapseCat:"Contraer/expandir categoría", welcomeMessage:"¡Hola! Soy {NAME}. Guardo lo que me cuentas organizado en categorías (permanentes, evolutivas, descubiertas) — las ves en la pestaña Memoria, como una constelación. Puedes cambiar cómo «pienso» cuando quieras desde Ajustes (⚙). ¡Cuéntame algo!",
+  ariaShare:"Compartir", shareModalTitle:"Compartir Constelar",
+  shareIntro:"Una app de compañeros IA sin conexión con memoria real — sin cuenta, sin telemetría.",
+  shareNativeBtn:"Compartir...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
+  shareFacebook:"Facebook", shareLinkedin:"LinkedIn", shareFediverse:"Fediverse (Mastodon)",
+  shareFediversePlaceholder:"tu-instancia.social", shareFediverseGo:"Abrir",
+  shareCopyLink:"Copiar enlace", shareCopied:"¡Copiado!",
+  legalTitle:"Términos, privacidad y derechos de autor",
+  legalBlock1:"<b>Términos de uso:</b> Constelar es una herramienta personal y gratuita, ofrecida «tal cual», sin ninguna garantía explícita o implícita. No hay un servicio, cuenta o contrato — solo un archivo que ejecutas en tu propio dispositivo. Al usarlo, eres el único responsable de cómo lo usas y de cualquier contenido que crees con él.",
+  legalBlock2:"<b>Cookies:</b> No se usa ninguna cookie. La app guarda datos exclusivamente mediante localStorage, directamente en tu navegador — un mecanismo distinto de las cookies, que nunca se envía a ningún servidor, porque no existe ninguno. Puedes borrar todo en cualquier momento desde los ajustes de tu navegador o el botón de exportar de la app.",
+  legalBlock3:"<b>Derechos de autor:</b> El código fuente de Constelar es © Alexandru-Ionuț Chiuță. Los compañeros, textos y recuerdos que creas siguen siendo tuyos — nadie los recolecta, transmite o reclama. Si conectas un proveedor de IA externo, revisa también sus términos para el contenido generado a través de esa API.",
+  legalBlock4:"<b>Independencia:</b> Constelar no está afiliada, patrocinada ni respaldada por Anthropic, OpenAI, Google, Microsoft, Ollama, el proyecto MLC/WebLLM, ni ningún otro proveedor mencionado aquí — son simplemente opciones que puedes conectar, a tu elección. No tiene relación con otras apps de compañeros IA existentes; cualquier parecido conceptual es coincidencia o inspiración general del sector, no una asociación.",
+  legalBlock5:"<b>Límites:</b> Nada de lo que diga un compañero — local o conectado a una IA real — constituye asesoría médica, legal o financiera. Para decisiones que de verdad importan, habla con un profesional cualificado.",
+  donateCoffee:"☕ Invítame un café", donatePatreon:"✦ Apoyar en Patreon"
 },
 pt: {
   brandTag:"memória real · 100% local", newCompanion:"+ Novo companheiro",
@@ -2138,7 +2741,7 @@ pt: {
   fieldLang:"Idioma", fieldProvider:"Provedor",
   providerWebllm:"Local, direto nesta aba (WebLLM, sem instalação)", providerAnthropic:"Anthropic (Claude)",
   providerOpenai:"OpenAI / compatível (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama...)",
-  providerChromeai:"Gemini Nano no Chrome (nativo, sem chave)", providerLocalsimple:"IA local simples, por regras (instantâneo, sem nada)",
+  providerChromeai:"IA nativa do navegador (Chrome, experimental também no Edge)", providerLocalsimple:"IA local simples, por regras (instantâneo, sem nada)",
   webllmLabel:"Modelo local (baixado uma vez, depois roda do cache, offline)",
   webllmChip1:"1B — rápido, ~0,9GB", webllmChip3:"3B — equilibrado, ~2,2GB", webllmChip8:"8B — o melhor, ~4,9GB, GPU forte",
   webllmHint:'Nenhum é especializado em romeno — são modelos multilíngues gerais, rodando 100% nesta aba via WebGPU. Lista completa: <a href="https://mlc.ai/models" target="_blank" rel="noopener">mlc.ai/models</a>.',
@@ -2149,8 +2752,8 @@ pt: {
   presetsLabel:"Predefinições rápidas (preenche URL + modelo)", presetsHint:"Cada um precisa de sua própria chave API, do provedor correspondente. Isso só preenche URL + modelo — você adiciona a chave.",
   ollamaRoBtn:"⚡ Predefinição: Ollama + modelo romeno (RoLlama/RoMistral)",
   ollamaRoHint:"A melhor qualidade real em romeno vem daqui — o RoLlama é treinado especificamente em romeno, não apenas multilíngue geral. O modelo de 7B precisa de ~5GB de espaço e um computador com RAM/GPU decentes. Requer o Ollama instalado separadamente (ollama.com).",
-  chromeAiLabel:"Gemini Nano — o modelo nativo do Chrome",
-  chromeAiHint:'Um modelo de ~2GB gerenciado pelo próprio Chrome (eu não baixo nada) — sem chave, sem instalação. Disponibilidade ainda limitada: requer o Chrome oficial do Google (não o Edge, não um Chromium empacotado por uma distribuição Linux), e geralmente a flag <code>chrome://flags/#prompt-api-for-gemini-nano</code> ativada manualmente. Genérico, não especializado em romeno.',
+  chromeAiLabel:"IA nativa do navegador — Gemini Nano (Chrome) ou Phi (Edge)",
+  chromeAiHint:'Um modelo de 2-4GB gerenciado pelo próprio navegador (eu não baixo nada) — sem chave, sem instalação. O Chrome oficial (não o Edge) roda o Gemini Nano; o Edge Canary/Dev roda seu próprio modelo Phi — ambos ainda com disponibilidade limitada, geralmente com uma flag ativada manualmente em chrome://flags ou edge://flags. Não funciona em um Chromium empacotado por uma distribuição Linux. Genérico, não especializado em romeno.',
   chromeAiCheckBtn:"Verificar disponibilidade",
   localSimpleHint:"O motor de regras descrito abaixo — reconhecimento de padrões + reflexo, instantâneo, sem chave, sem download, sem GPU. Não é uma rede neural. Você pode escolhê-lo explicitamente aqui, mesmo com outra chave configurada, para ficar sempre nele.",
   fieldReminder:'Lembrete "é IA" (minutos, 0 = desativado)', fieldAutoMemory:"extrair lembranças automaticamente",
@@ -2170,7 +2773,7 @@ pt: {
   ariaDeleteCompanion:"Excluir companheiro", ariaDeleteMemory:"Excluir lembrança",
   confirmDeleteBody:"Isso exclui permanentemente a conversa e todas as lembranças deste companheiro. Você não pode desfazer — exporte antes se quiser guardar uma cópia.",
   noTextReply:"(resposta sem texto)",
-  webllmUnsupported:"WebGPU indisponível neste navegador. Tente um Chrome ou Edge recente (113+), ou use a predefinição do Ollama acima.",
+  webllmUnsupported:"WebGPU indisponível neste navegador ou dispositivo. É compatível com Chrome/Edge (113+), Firefox (141+ Windows, 145+ macOS) e Safari (26+), mas pode faltar em Linux/Android ou hardware mais antigo. Tente a predefinição do Ollama acima como alternativa.",
   chromeAiUnsupported:"Prompt API indisponível neste navegador. Requer um Chrome recente (138+).",
   testWebllmMsg:"Para o modelo local, use o botão \"Baixar e iniciar o modelo\" acima, não este.",
   testChromeAiMsg:"Use o botão \"Verificar disponibilidade\" acima, não este.",
@@ -2211,7 +2814,20 @@ pt: {
   storageLabel:"Espaço usado", storageWarningNear:"O armazenamento local está enchendo — exporte um backup em breve.",
   exportConvoBtn:"Exportar como história", ariaExportConvo:"Exportar esta conversa como texto legível",
   convoExportHeader:"Conversa com {NAME}", convoExportedOn:"Exportado em", convoExportYou:"Você",
-  memNodeHint:"Toque numa estrela para ver essa lembrança"
+  memNodeHint:"Toque numa estrela para ver essa lembrança", catActive:"Ativos", catNew:"Novos", ariaCollapseCat:"Recolher/expandir categoria", welcomeMessage:"Oi! Eu sou {NAME}. Guardo o que você me conta organizado em categorias (permanentes, evolutivas, descobertas) — você vê na aba Memória, como uma constelação. Você pode mudar como eu «penso» quando quiser em Configurações (⚙). Me conta algo!",
+  ariaShare:"Compartilhar", shareModalTitle:"Compartilhar Constelar",
+  shareIntro:"Um app de companheiros IA offline com memória real — sem conta, sem telemetria.",
+  shareNativeBtn:"Compartilhar...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
+  shareFacebook:"Facebook", shareLinkedin:"LinkedIn", shareFediverse:"Fediverse (Mastodon)",
+  shareFediversePlaceholder:"sua-instancia.social", shareFediverseGo:"Abrir",
+  shareCopyLink:"Copiar link", shareCopied:"Copiado!",
+  legalTitle:"Termos, privacidade e direitos autorais",
+  legalBlock1:"<b>Termos de uso:</b> Constelar é uma ferramenta pessoal e gratuita, oferecida «como está», sem nenhuma garantia explícita ou implícita. Não há serviço, conta ou contrato — apenas um arquivo que você roda no seu próprio dispositivo. Ao usá-lo, você é o único responsável por como o usa e por qualquer conteúdo que criar com ele.",
+  legalBlock2:"<b>Cookies:</b> Nenhum cookie é usado. O app guarda dados exclusivamente por localStorage, direto no seu navegador — um mecanismo diferente de cookies, nunca enviado a nenhum servidor, porque não existe nenhum. Você pode apagar tudo a qualquer momento nas configurações do navegador ou no botão de exportar do app.",
+  legalBlock3:"<b>Direitos autorais:</b> O código-fonte do Constelar é © Alexandru-Ionuț Chiuță. Os companheiros, textos e lembranças que você cria continuam sendo seus — ninguém os coleta, transmite ou reivindica. Se você conectar um provedor de IA externo, verifique também os termos dele para o conteúdo gerado por aquela API.",
+  legalBlock4:"<b>Independência:</b> Constelar não é afiliado, patrocinado ou endossado por Anthropic, OpenAI, Google, Microsoft, Ollama, o projeto MLC/WebLLM, ou qualquer outro provedor mencionado aqui — são simplesmente opções que você pode conectar, à sua escolha. Não tem relação com outros apps de companheiros IA existentes; qualquer semelhança conceitual é coincidência ou inspiração geral da área, não parceria.",
+  legalBlock5:"<b>Limites:</b> Nada do que um companheiro diz — local ou conectado a uma IA real — constitui aconselhamento médico, jurídico ou financeiro. Para decisões que realmente importam, converse com um profissional qualificado.",
+  donateCoffee:"☕ Me pague um café", donatePatreon:"✦ Apoiar no Patreon"
 },
 de: {
   brandTag:"echtes Gedächtnis · 100% lokal", newCompanion:"+ Neuer Begleiter",
@@ -2239,7 +2855,7 @@ de: {
   fieldLang:"Sprache", fieldProvider:"Anbieter",
   providerWebllm:"Lokal, direkt in diesem Tab (WebLLM, keine Installation)", providerAnthropic:"Anthropic (Claude)",
   providerOpenai:"OpenAI / kompatibel (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama...)",
-  providerChromeai:"Gemini Nano in Chrome (nativ, ohne Schlüssel)", providerLocalsimple:"Einfache regelbasierte lokale KI (sofort, nichts nötig)",
+  providerChromeai:"Native Browser-KI (Chrome, experimentell auch in Edge)", providerLocalsimple:"Einfache regelbasierte lokale KI (sofort, nichts nötig)",
   webllmLabel:"Lokales Modell (einmal heruntergeladen, läuft dann aus dem Cache, offline)",
   webllmChip1:"1B — schnell, ~0,9GB", webllmChip3:"3B — ausgewogen, ~2,2GB", webllmChip8:"8B — am besten, ~4,9GB, starke GPU",
   webllmHint:'Keines ist auf Rumänisch spezialisiert — es sind allgemeine mehrsprachige Modelle, die zu 100% in diesem Tab über WebGPU laufen. Vollständige Liste: <a href="https://mlc.ai/models" target="_blank" rel="noopener">mlc.ai/models</a>.',
@@ -2250,8 +2866,8 @@ de: {
   presetsLabel:"Schnelle Presets (füllt URL + Modell aus)", presetsHint:"Jeder benötigt seinen eigenen API-Schlüssel vom jeweiligen Anbieter. Das füllt nur URL + Modell aus — den Schlüssel gibst du selbst ein.",
   ollamaRoBtn:"⚡ Preset: Ollama + rumänisches Modell (RoLlama/RoMistral)",
   ollamaRoHint:"Die beste echte Qualität auf Rumänisch kommt von hier — RoLlama ist speziell auf Rumänisch trainiert, nicht nur allgemein mehrsprachig. Das 7B-Modell braucht ~5GB Platz und einen Computer mit ordentlichem RAM/GPU. Erfordert separat installiertes Ollama (ollama.com).",
-  chromeAiLabel:"Gemini Nano — Chromes natives Modell",
-  chromeAiHint:'Ein ~2GB-Modell, das Chrome selbst verwaltet (ich lade nichts herunter) — kein Schlüssel, keine Installation. Verfügbarkeit noch eingeschränkt: benötigt offizielles Chrome von Google (nicht Edge, kein von einer Linux-Distribution verpacktes Chromium), und meist das manuell aktivierte Flag <code>chrome://flags/#prompt-api-for-gemini-nano</code>. Allgemein, nicht auf Rumänisch spezialisiert.',
+  chromeAiLabel:"Native Browser-KI — Gemini Nano (Chrome) oder Phi (Edge)",
+  chromeAiHint:'Ein 2-4GB-Modell, das der Browser selbst verwaltet (ich lade nichts herunter) — kein Schlüssel, keine Installation. Offizielles Chrome (nicht Edge) nutzt Gemini Nano; Edge Canary/Dev nutzt sein eigenes Phi-Modell — beide noch mit eingeschränkter Verfügbarkeit, meist mit einem manuell aktivierten Flag in chrome://flags oder edge://flags. Funktioniert nicht in einem von einer Linux-Distribution verpackten Chromium. Allgemein, nicht auf Rumänisch spezialisiert.',
   chromeAiCheckBtn:"Verfügbarkeit prüfen",
   localSimpleHint:"Die unten beschriebene regelbasierte Engine — Mustererkennung + Reflexion, sofort, ohne Schlüssel, ohne Download, ohne GPU. Kein neuronales Netz. Du kannst sie hier explizit wählen, auch wenn ein anderer Schlüssel eingerichtet ist, um immer dabei zu bleiben.",
   fieldReminder:'„Ist KI“-Erinnerung (Minuten, 0 = aus)', fieldAutoMemory:"Erinnerungen automatisch extrahieren",
@@ -2271,7 +2887,7 @@ de: {
   ariaDeleteCompanion:"Begleiter löschen", ariaDeleteMemory:"Erinnerung löschen",
   confirmDeleteBody:"Dies löscht das Gespräch und alle Erinnerungen dieses Begleiters dauerhaft. Du kannst dies nicht rückgängig machen — exportiere vorher, wenn du eine Kopie behalten willst.",
   noTextReply:"(Antwort ohne Text)",
-  webllmUnsupported:"WebGPU in diesem Browser nicht verfügbar. Probiere ein aktuelles Chrome oder Edge (113+), oder nutze das Ollama-Preset oben.",
+  webllmUnsupported:"WebGPU in diesem Browser oder Gerät nicht verfügbar. Unterstützt von Chrome/Edge (113+), Firefox (141+ Windows, 145+ macOS) und Safari (26+), fehlt aber möglicherweise unter Linux/Android oder auf älterer Hardware. Probiere das Ollama-Preset oben als Alternative.",
   chromeAiUnsupported:"Prompt API in diesem Browser nicht verfügbar. Erfordert ein aktuelles Chrome (138+).",
   testWebllmMsg:"Für das lokale Modell nutze den Button \"Modell herunterladen und starten\" oben, nicht diesen.",
   testChromeAiMsg:"Nutze den Button \"Verfügbarkeit prüfen\" oben, nicht diesen.",
@@ -2312,7 +2928,20 @@ de: {
   storageLabel:"Belegter Speicher", storageWarningNear:"Der lokale Speicher wird knapp — exportiere bald ein Backup.",
   exportConvoBtn:"Als Geschichte exportieren", ariaExportConvo:"Dieses Gespräch als lesbaren Text exportieren",
   convoExportHeader:"Gespräch mit {NAME}", convoExportedOn:"Exportiert am", convoExportYou:"Du",
-  memNodeHint:"Tippe auf einen Stern, um diese Erinnerung zu sehen"
+  memNodeHint:"Tippe auf einen Stern, um diese Erinnerung zu sehen", catActive:"Aktiv", catNew:"Neu", ariaCollapseCat:"Kategorie ein-/ausklappen", welcomeMessage:"Hallo! Ich bin {NAME}. Was du mir erzählst, halte ich in Kategorien geordnet (dauerhaft, sich entwickelnd, entdeckt) — zu sehen im Tab Erinnerung, wie eine Konstellation. Wie ich «denke», kannst du jederzeit in den Einstellungen (⚙) ändern. Erzähl mir etwas!",
+  ariaShare:"Teilen", shareModalTitle:"Constelar teilen",
+  shareIntro:"Eine Offline-KI-Begleiter-App mit echtem Gedächtnis — ohne Konto, ohne Telemetrie.",
+  shareNativeBtn:"Teilen...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
+  shareFacebook:"Facebook", shareLinkedin:"LinkedIn", shareFediverse:"Fediverse (Mastodon)",
+  shareFediversePlaceholder:"deine-instanz.social", shareFediverseGo:"Öffnen",
+  shareCopyLink:"Link kopieren", shareCopied:"Kopiert!",
+  legalTitle:"Bedingungen, Datenschutz & Urheberrecht",
+  legalBlock1:"<b>Nutzungsbedingungen:</b> Constelar ist ein kostenloses, persönliches Werkzeug, bereitgestellt „wie besehen“, ohne jegliche ausdrückliche oder stillschweigende Garantie. Es gibt keinen Dienst, kein Konto, keinen Vertrag — nur eine Datei, die du auf deinem eigenen Gerät ausführst. Durch die Nutzung bist du allein dafür verantwortlich, wie du sie nutzt und für jeden Inhalt, den du damit erstellst.",
+  legalBlock2:"<b>Cookies:</b> Es werden keine Cookies verwendet. Die App speichert Daten ausschließlich über localStorage, direkt in deinem Browser — ein anderer Mechanismus als Cookies, der nie an einen Server gesendet wird, weil es keinen gibt. Du kannst jederzeit alles über die Browser-Einstellungen oder den Export-Button der App löschen.",
+  legalBlock3:"<b>Urheberrecht:</b> Der Quellcode von Constelar ist © Alexandru-Ionuț Chiuță. Die Begleiter, Texte und Erinnerungen, die du erstellst, bleiben deine — sie werden von niemandem gesammelt, übertragen oder beansprucht. Wenn du einen externen KI-Anbieter verbindest, prüfe auch dessen Bedingungen für über diese API generierte Inhalte.",
+  legalBlock4:"<b>Unabhängigkeit:</b> Constelar ist weder mit Anthropic, OpenAI, Google, Microsoft, Ollama, dem MLC/WebLLM-Projekt noch mit irgendeinem anderen hier genannten Anbieter verbunden, von ihnen gesponsert oder unterstützt — das sind lediglich Optionen, die du nach Wahl verbinden kannst. Es besteht keine Verbindung zu anderen existierenden KI-Begleiter-Apps; jede konzeptionelle Ähnlichkeit ist Zufall oder allgemeine Inspiration aus dem Bereich, keine Partnerschaft.",
+  legalBlock5:"<b>Grenzen:</b> Nichts, was ein Begleiter sagt — lokal oder mit einer echten KI verbunden — stellt medizinische, rechtliche oder finanzielle Beratung dar. Für wirklich wichtige Entscheidungen wende dich an eine qualifizierte Fachperson.",
+  donateCoffee:"☕ Spendier mir einen Kaffee", donatePatreon:"✦ Auf Patreon unterstützen"
 }
 };
 function t(key){
@@ -2932,6 +3561,48 @@ function wireEvents(){
     renderRoster();
   });
 
+  document.getElementById("btnShare").addEventListener("click", function(){
+    var hasUrl = location.protocol === "http:" || location.protocol === "https:";
+    var shareUrl = hasUrl ? location.href : "";
+    var shareText = t("shareIntro");
+    var fullText = shareText + (shareUrl ? " " + shareUrl : "");
+
+    var nativeBtn = document.getElementById("btnShareNative");
+    if (navigator.share){
+      nativeBtn.hidden = false;
+      nativeBtn.onclick = function(){
+        navigator.share({ title:"Constelar", text:shareText, url: shareUrl || undefined }).catch(function(){});
+      };
+    } else {
+      nativeBtn.hidden = true;
+    }
+
+    document.getElementById("shareWhatsapp").href = "https://wa.me/?text=" + encodeURIComponent(fullText);
+    document.getElementById("shareTwitter").href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(shareText) + (shareUrl ? "&url=" + encodeURIComponent(shareUrl) : "");
+    document.getElementById("shareFacebook").href = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(shareUrl || shareText);
+    document.getElementById("shareLinkedin").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + encodeURIComponent(shareUrl || "https://" + location.host);
+    document.getElementById("fFediverseInstance").value = "";
+
+    var copyBtn = document.getElementById("btnCopyShareLink");
+    var copyDefaultLabel = t("shareCopyLink");
+    copyBtn.textContent = copyDefaultLabel;
+    copyBtn.onclick = function(){
+      var toCopy = shareUrl || fullText;
+      (navigator.clipboard ? navigator.clipboard.writeText(toCopy) : Promise.reject())
+        .then(function(){ copyBtn.textContent = t("shareCopied"); setTimeout(function(){ copyBtn.textContent = copyDefaultLabel; }, 1800); })
+        .catch(function(){ copyBtn.textContent = copyDefaultLabel; });
+    };
+
+    openModal("modalShare");
+  });
+  document.getElementById("btnFediverseGo").addEventListener("click", function(){
+    var instance = document.getElementById("fFediverseInstance").value.trim().replace(/^https?:\/\//,"").replace(/\/+$/,"");
+    if (!instance) return;
+    var hasUrl = location.protocol === "http:" || location.protocol === "https:";
+    var fullText = t("shareIntro") + (hasUrl ? " " + location.href : "");
+    window.open("https://" + instance + "/share?text=" + encodeURIComponent(fullText), "_blank", "noopener");
+  });
+
   document.getElementById("btnLangSwitch").addEventListener("click", function(){
     Array.prototype.forEach.call(document.querySelectorAll("#langSwitchPicker .type-chip"), function(b){
       b.classList.toggle("active", b.getAttribute("data-lang") === (state.settings.lang || "en"));
@@ -3195,8 +3866,17 @@ function wireEvents(){
     e.target.value = "";
   });
 
-  els.railToggle.addEventListener("click", function(){ els.rail.classList.toggle("open"); });
-  els.roster.addEventListener("click", function(){ if (window.innerWidth <= 760) els.rail.classList.remove("open"); });
+  els.railToggle.addEventListener("click", function(){
+    els.rail.classList.toggle("open");
+    document.getElementById("railBackdrop").classList.toggle("visible", els.rail.classList.contains("open"));
+  });
+  document.getElementById("railBackdrop").addEventListener("click", function(){
+    els.rail.classList.remove("open");
+    this.classList.remove("visible");
+  });
+  els.roster.addEventListener("click", function(){
+    if (window.innerWidth <= 760){ els.rail.classList.remove("open"); document.getElementById("railBackdrop").classList.remove("visible"); }
+  });
 
   window.addEventListener("resize", debounce(function(){
     if (!els.memoryPane.hidden){ var c = getActiveCompanion(); if (c) startConstellation(c); }
@@ -3206,6 +3886,49 @@ function wireEvents(){
 /* ============================================================
    INIT
 ============================================================ */
+/* ============================================================
+   PWA — manifest generat dinamic (funcționează prin Blob URL,
+   verificat concret). Service Worker-ul NU poate fi înglobat în
+   același fișier: browserele resping explicit blob: ca sursă de
+   script pentru un Service Worker, verificat concret, inclusiv
+   când fișierul e servit corect prin HTTP, nu doar pe file://.
+   De-asta încercăm să înregistrăm un sw.js separat, opțional —
+   funcționează doar dacă utilizatorul găzduiește ambele fișiere
+   împreună (ex. GitHub Pages); eșuează silențios altfel, ceea ce
+   e normal și așteptat, nu o eroare de arătat utilizatorului. */
+function setupPWA(){
+  try {
+    var iconSvg = "data:image/svg+xml," + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">' +
+      '<rect width="512" height="512" rx="96" fill="#0e0b16"/>' +
+      '<text x="256" y="345" font-size="300" text-anchor="middle" fill="#f2c879" font-family="Georgia,serif">✦</text>' +
+      '</svg>'
+    );
+    var manifest = {
+      name: "Constelar — " + t("brandTag"),
+      short_name: "Constelar",
+      description: t("emptyBody"),
+      start_url: ".", scope: ".", display: "standalone", orientation: "any",
+      background_color: "#0e0b16", theme_color: "#0e0b16",
+      icons: [
+        { src: iconSvg, sizes: "512x512", type: "image/svg+xml", purpose: "any" },
+        { src: iconSvg, sizes: "512x512", type: "image/svg+xml", purpose: "maskable" }
+      ]
+    };
+    var blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+    var link = document.createElement("link");
+    link.rel = "manifest";
+    link.href = URL.createObjectURL(blob);
+    document.head.appendChild(link);
+  } catch(e){ /* manifestul e un bonus, nu esențial — eșuare tăcută e ok */ }
+
+  if ("serviceWorker" in navigator){
+    navigator.serviceWorker.register("./sw.js").catch(function(){
+      /* normal și așteptat pe file://, sau dacă sw.js nu e găzduit alături — nu e o eroare reală */
+    });
+  }
+}
+
 function init(){
   storagePersists = storageSelfTest();
   var warn = document.getElementById("storageWarning");
@@ -3217,6 +3940,7 @@ function init(){
   render();
   updateStorageMeter();
   startReminder();
+  setupPWA();
   window.addEventListener("storage", function(e){
     if (e.key !== STORAGE_KEY || isSending) return;
     loadState();
