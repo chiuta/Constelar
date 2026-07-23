@@ -49,6 +49,7 @@ ul{list-style:none; margin:0; padding:0;}
   background:linear-gradient(180deg,var(--void-2),var(--void));
   border-right:1px solid var(--twilight);
   display:flex; flex-direction:column; padding:18px 14px; gap:14px;
+  min-height:0;
 }
 .rail-head{padding:2px 4px 10px; border-bottom:1px solid var(--twilight);}
 .brand{display:flex; align-items:center; gap:10px;}
@@ -56,7 +57,7 @@ ul{list-style:none; margin:0; padding:0;}
 .brand-name{font-family:var(--font-display); font-size:19px; font-weight:700; letter-spacing:.3px;}
 .brand-tag{font-size:11px; color:var(--mist); letter-spacing:.2px;}
 
-.roster{flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:6px; margin:0 -4px; padding:0 4px;}
+.roster{flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:6px; margin:0 -4px; padding:0 4px;}
 .roster-item{
   display:flex; align-items:center; gap:2px; border-radius:var(--radius-sm);
   border:1px solid transparent; background:transparent;
@@ -138,10 +139,12 @@ ul{list-style:none; margin:0; padding:0;}
   display:flex; align-items:center; justify-content:space-between; gap:12px;
   padding:12px 20px; border-bottom:1px solid var(--twilight); background:rgba(21,17,41,.5); backdrop-filter:blur(6px);
 }
-.topbar-left{display:flex; align-items:center; gap:10px; min-width:0;}
-.top-name{font-family:var(--font-display); font-size:17px; font-weight:700;}
-.top-type{font-size:11.5px; color:var(--mist); text-transform:capitalize;}
-.topbar-right{display:flex; align-items:center; gap:8px;}
+.topbar-left{display:flex; align-items:center; gap:10px; min-width:0; flex:1 1 auto; overflow:hidden;}
+.topbar-left > div:last-child{min-width:0; overflow:hidden;}
+.top-name{font-family:var(--font-display); font-size:17px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.top-type{font-size:11.5px; color:var(--mist); text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.top-provider{font-size:10px; color:var(--mist-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;}
+.topbar-right{display:flex; align-items:center; gap:8px; flex-shrink:0;}
 .ai-disclosure{
   font-size:11px; color:var(--mist); background:var(--dusk); border:1px solid var(--twilight);
   padding:5px 10px; border-radius:999px; white-space:nowrap;
@@ -257,6 +260,13 @@ ul{list-style:none; margin:0; padding:0;}
 .divider{border:none; border-top:1px solid var(--twilight); margin:18px 0;}
 .about-block{font-size:13px; color:var(--mist); margin-bottom:12px;}
 .legal-block{font-size:12px;}
+.msg-speak{background:none; border:none; color:var(--mist-dim); font-size:12px; padding:2px 4px; margin-left:2px; opacity:0; cursor:pointer;}
+.msg:hover .msg-speak, .msg:focus-within .msg-speak{opacity:.7;}
+.msg-speak:hover{opacity:1 !important; color:var(--starlight);}
+@media (hover:none),(pointer:coarse){ .msg-speak{opacity:.55;} }
+.recap-line{font-size:13px; color:var(--paper); border-left:2px solid var(--twilight); padding:6px 0 6px 12px; margin-bottom:8px;}
+.recap-line.recap-user{border-left-color:var(--starlight-dim);}
+.recap-stats{font-size:11.5px; color:var(--mist-dim); margin-top:12px; padding-top:10px; border-top:1px solid var(--twilight);}
 .donate-row{display:flex; gap:10px; margin:14px 0 4px; flex-wrap:wrap;}
 .donate-link{text-decoration:none; font-size:13px; text-align:center; flex:1;}
 .share-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
@@ -377,11 +387,13 @@ ul{list-style:none; margin:0; padding:0;}
           <div>
             <div id="topName" class="top-name"></div>
             <div id="topType" class="top-type"></div>
+            <div id="topProvider" class="top-provider"></div>
           </div>
         </div>
         <div class="topbar-right">
           <span class="ai-disclosure" data-i18n="aiDisclosure">✦ is AI, not a real person</span>
           <button id="btnEditCompanion" class="tab-btn" data-i18n-aria="ariaEdit" data-i18n-title="ariaEdit" aria-label="Edit companion" title="Edit">✎</button>
+          <button id="btnRecap" class="tab-btn" data-i18n-aria="ariaRecap" data-i18n-title="ariaRecap" aria-label="Conversation recap" title="Conversation recap">📊</button>
           <button id="btnExportConvo" class="tab-btn" data-i18n-aria="ariaExportConvo" data-i18n-title="ariaExportConvo" aria-label="Export this conversation as readable text" title="Export this conversation as readable text">📜</button>
           <button id="btnChatTab" class="tab-btn active" data-i18n="tabChat">Chat</button>
           <button id="btnMemoryTab" class="tab-btn" data-i18n="tabMemory">Memory</button>
@@ -435,7 +447,10 @@ ul{list-style:none; margin:0; padding:0;}
     <form id="formNewCompanion">
       <div class="field">
         <label for="fName" data-i18n="fieldName">Name</label>
-        <input id="fName" required data-i18n-placeholder="placeholderName" placeholder="e.g. Vera">
+        <div class="field-row" style="gap:8px;">
+          <input id="fName" required data-i18n-placeholder="placeholderName" placeholder="e.g. Vera" style="flex:1;">
+          <button type="button" class="btn-secondary" id="btnRandomCompanion" data-i18n-aria="ariaRandomCompanion" data-i18n-title="ariaRandomCompanion" aria-label="Surprise me" title="Surprise me" style="flex-shrink:0;">🎲</button>
+        </div>
       </div>
       <div class="field">
         <label data-i18n="fieldRelType">Relationship type</label>
@@ -453,6 +468,29 @@ ul{list-style:none; margin:0; padding:0;}
       <div class="field">
         <label for="fBackstory" data-i18n="fieldBackstory">Context / backstory (optional)</label>
         <textarea id="fBackstory" data-i18n-placeholder="placeholderBackstory" placeholder="anything you want the character to know about themselves"></textarea>
+      </div>
+      <div class="field">
+        <label for="fCompanionProvider" data-i18n="fieldCompanionProvider">AI used by this companion</label>
+        <select id="fCompanionProvider">
+          <option value="" data-i18n="providerInheritGlobal">Same as Settings (global)</option>
+          <option value="local-simple" data-i18n="providerLocalsimple">Simple rule-based local AI</option>
+          <option value="webllm" data-i18n="providerWebllm">Local, right in this tab (WebLLM)</option>
+          <option value="anthropic" data-i18n="providerAnthropic">Anthropic (Claude)</option>
+          <option value="openai" data-i18n="providerOpenai">OpenAI / compatible</option>
+          <option value="pollinations" data-i18n="providerPollinations">Pollinations (free, no account, no key)</option>
+          <option value="chrome-ai" data-i18n="providerChromeai">Native browser AI</option>
+        </select>
+        <div class="field-row" style="margin-top:8px;">
+          <div class="field">
+            <label for="fCompanionBaseUrl" data-i18n="fieldCompanionBaseUrl">Base URL (optional)</label>
+            <input id="fCompanionBaseUrl" autocomplete="off" placeholder="https://...">
+          </div>
+          <div class="field">
+            <label for="fCompanionModel" data-i18n="fieldCompanionModel">Model (optional)</label>
+            <input id="fCompanionModel" autocomplete="off" placeholder="model-name">
+          </div>
+        </div>
+        <div class="hint" data-i18n="companionConfigHint">Left empty, the provider defaults are used.</div>
       </div>
       <div class="modal-actions">
         <button type="button" class="btn-secondary" data-close data-i18n="btnCancel">Cancel</button>
@@ -483,6 +521,7 @@ ul{list-style:none; margin:0; padding:0;}
           <option value="webllm" data-i18n="providerWebllm">Local, right in this tab (WebLLM, no install)</option>
           <option value="anthropic" data-i18n="providerAnthropic">Anthropic (Claude)</option>
           <option value="openai" data-i18n="providerOpenai">OpenAI / compatible (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama...)</option>
+          <option value="pollinations" data-i18n="providerPollinations">Pollinations (free, no account, no key)</option>
           <option value="chrome-ai" data-i18n="providerChromeai">Gemini Nano in Chrome (native, no key)</option>
           <option value="local-simple" data-i18n="providerLocalsimple">Simple rule-based local AI (instant, nothing needed)</option>
         </select>
@@ -495,7 +534,7 @@ ul{list-style:none; margin:0; padding:0;}
           <button type="button" class="type-chip active" data-model="Llama-3.2-3B-Instruct-q4f16_1-MLC" data-i18n="webllmChip3">3B — balanced, ~2.2GB</button>
           <button type="button" class="type-chip" data-model="Llama-3.1-8B-Instruct-q4f32_1-MLC" data-i18n="webllmChip8">8B — best, ~4.9GB, strong GPU</button>
         </div>
-        <input id="fWebllmModel" autocomplete="off" style="margin-top:8px" value="Llama-3.2-3B-Instruct-q4f16_1-MLC">
+        <input id="fWebllmModel" autocomplete="off" style="margin-top:8px" data-i18n-aria="webllmLabel" aria-label="Local model" value="Llama-3.2-3B-Instruct-q4f16_1-MLC">
         <div class="hint" data-i18n-html="webllmHint">None of these are specialized for Romanian...</div>
         <button type="button" class="btn-secondary" id="btnWebllmLoad" style="margin-top:8px" data-i18n="webllmLoadBtn">Download and start the model</button>
         <div id="webllmStatus" class="hint" aria-live="polite"></div>
@@ -554,6 +593,7 @@ ul{list-style:none; margin:0; padding:0;}
         </div>
         <div class="field">
           <label class="checkbox-row" style="margin-top:26px;"><input type="checkbox" id="fAutoMemory"> <span data-i18n="fieldAutoMemory">auto-extract memories</span></label>
+          <label class="checkbox-row"><input type="checkbox" id="fAutoSpeak"> <span data-i18n="fieldAutoSpeak">read replies aloud</span></label>
         </div>
       </div>
       <div id="testStatus" class="hint" aria-live="polite"></div>
@@ -583,7 +623,7 @@ ul{list-style:none; margin:0; padding:0;}
     <div class="about-block legal-block" data-i18n-html="legalBlock4">...</div>
     <div class="about-block legal-block" data-i18n-html="legalBlock5">...</div>
     <div class="donate-row">
-      <a class="btn-secondary donate-link" href="https://buymeacoffee.com/alexiotf" target="_blank" rel="noopener" data-i18n="donateCoffee">☕ Buy me a coffee</a>
+      <a class="btn-secondary donate-link" href="https://buymeacoffee.com/echo.of.the.strings" target="_blank" rel="noopener" data-i18n="donateCoffee">☕ Buy me a coffee</a>
       <a class="btn-secondary donate-link" href="https://patreon.com/c/alexio_tf" target="_blank" rel="noopener" data-i18n="donatePatreon">✦ Support on Patreon</a>
     </div>
     <div class="modal-actions">
@@ -629,6 +669,15 @@ ul{list-style:none; margin:0; padding:0;}
     <div class="modal-actions">
       <button type="button" class="btn-secondary" data-close data-i18n="btnCancel">Cancel</button>
       <button type="button" class="btn-danger" id="confirmYes" data-i18n="btnDelete">Delete</button>
+    </div>
+  </div>
+
+  <div id="modalRecap" class="modal" hidden>
+    <h2 data-i18n="recapTitle">Conversation recap</h2>
+    <div class="modal-sub" data-i18n="recapHint">Extracted locally by word frequency.</div>
+    <div id="recapBody"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" data-close data-i18n="btnClose">Close</button>
     </div>
   </div>
 
@@ -687,7 +736,7 @@ function storageSelfTest(){
 /* ============================================================
    STATE
 ============================================================ */
-var VALID_PROVIDERS = ["webllm","anthropic","openai","chrome-ai","local-simple"];
+var VALID_PROVIDERS = ["webllm","anthropic","openai","pollinations","chrome-ai","local-simple"];
 
 var VALID_LANGS = ["en","ro","fr","it","es","pt","de"];
 
@@ -700,7 +749,8 @@ function defaultSettings(){
     apiKey:"",
     webllmModel:"Llama-3.2-3B-Instruct-q4f16_1-MLC",
     reminderMinutes:30,
-    autoMemory:false
+    autoMemory:false,
+    autoSpeak:false
   };
 }
 function defaultState(){
@@ -723,6 +773,7 @@ function sanitizeSettings(base, raw){
   if (typeof raw.webllmModel === "string") out.webllmModel = raw.webllmModel.slice(0,150);
   if (typeof raw.reminderMinutes === "number" && isFinite(raw.reminderMinutes)) out.reminderMinutes = Math.max(0, Math.min(1440, Math.round(raw.reminderMinutes)));
   if (typeof raw.autoMemory === "boolean") out.autoMemory = raw.autoMemory;
+  if (typeof raw.autoSpeak === "boolean") out.autoSpeak = raw.autoSpeak;
   return out;
 }
 
@@ -1078,12 +1129,39 @@ var DEMO_COMPANIONS_I18N = {
       evolMem:"Bleibt neugierig darauf, was genau einen Haufen Komponenten irgendwann zu jemandem werden lässt." }
   ]
 };
+/* Fiecare dintre primii cinci companioni demo demonstrează concret una
+   dintre cele cinci opțiuni de provider — nu doar o descrie, chiar rulează
+   pe ea. Restul moștenesc setarea globală (null), adică exact
+   comportamentul normal al unui companion obișnuit. Cei care cer o cheie
+   API sau hardware special (Claude, OpenAI, WebLLM, Browser AI) degradează
+   grațios la motorul local dacă nu sunt configurați — deci demonstrația
+   rămâne funcțională din prima secundă, fără nicio setare. */
+var DEMO_CONFIG_BY_NAME = {
+  // Primii cinci: câte un tip de provider distinct
+  "Nova":   { provider:"local-simple" },
+  "Theo":   { provider:"webllm" },
+  "Iris":   { provider:"chrome-ai" },
+  "Aria":   { provider:"anthropic" },
+  "Atlas":  { provider:"openai" },
+  // Ceilalți șase: variante concrete de configurație, în spiritul AI-Liber —
+  // de la „fără cont și fără cheie” până la complet pe hardware propriu
+  "Elan":   { provider:"pollinations", model:"openai" },                                   // fără cont, fără cheie
+  "Selene": { provider:"pollinations", model:"mistral" },                                   // fără cheie, alt model
+  "Logos":  { provider:"openai", baseUrl:"https://openrouter.ai/api", model:"openai/gpt-4o-mini" }, // agregator, cheie gratuită
+  "Mnema":  { provider:"openai", baseUrl:"http://localhost:11434/v1", model:"llama3.2" },   // Ollama, pe hardware propriu
+  "Sofia":  { provider:"webllm", webllmModel:"Llama-3.2-1B-Instruct-q4f16_1-MLC" },         // în browser, cel mai ușor
+  "Akasha": { provider:"webllm", webllmModel:"Llama-3.1-8B-Instruct-q4f32_1-MLC" }          // în browser, cel mai capabil
+};
 function buildDemoCompanions(lang){
   var list = DEMO_COMPANIONS_I18N[lang] || DEMO_COMPANIONS_I18N.en;
   return list.map(function(d){
     var descoperite = d.discMem ? [{ id: uid(), text: d.discMem, createdAt: Date.now() }] : [];
     return {
       id: uid(), name: d.name, type: d.type, traits: d.traits, backstory: d.backstory,
+      provider: (DEMO_CONFIG_BY_NAME[d.name] || {}).provider || null,
+      baseUrl: (DEMO_CONFIG_BY_NAME[d.name] || {}).baseUrl || "",
+      model: (DEMO_CONFIG_BY_NAME[d.name] || {}).model || "",
+      webllmModel: (DEMO_CONFIG_BY_NAME[d.name] || {}).webllmModel || "",
       memories: {
         permanente: [{ id: uid(), text: d.permMem, createdAt: Date.now() }],
         evolutive: [{ id: uid(), text: d.evolMem, createdAt: Date.now() }],
@@ -1634,6 +1712,7 @@ function renderMessages(companion){
     }
     var cls = m.role === "user" ? "msg-user" : "msg-ai";
     html += '<div class="msg '+cls+'" data-mid="'+escapeHtml(m.id)+'"><span class="msg-text">'+escapeHtml(m.text)+'</span>' +
+      (m.role === "assistant" ? '<button type="button" class="msg-speak" data-speak-mid="'+escapeHtml(m.id)+'" aria-label="'+escapeHtml(t("ariaSpeak"))+'" title="'+escapeHtml(t("ariaSpeak"))+'">🔊</button>' : '') +
       (m.simulated ? '<span class="msg-sim-tag">'+escapeHtml(t("simTag"))+'</span>' : '') +
       '<span class="msg-time">'+fmtTime(m.ts)+'</span></div>';
   });
@@ -1662,9 +1741,10 @@ function renderMemoryLists(companion){
 
 function ensureWelcomeMessage(c){
   if (c.messages && c.messages.length === 0){
+    var backstoryPart = (c.backstory && c.backstory.trim()) ? (c.backstory.trim() + " ") : "";
     c.messages.push({
       id: uid(), role:"assistant", ts: Date.now(), simulated:true,
-      text: t("welcomeMessage").replace("{NAME}", c.name)
+      text: t("welcomeMessage").replace("{NAME}", c.name).replace("{BACKSTORY}", backstoryPart)
     });
   }
 }
@@ -1682,6 +1762,12 @@ function renderCompanionView(){
   document.getElementById("topAvatar").innerHTML = avatarSVG(c.id);
   document.getElementById("topName").textContent = c.name;
   document.getElementById("topType").textContent = translateType(c.type);
+  var provEl = document.getElementById("topProvider");
+  if (provEl){
+    var eff = effectiveProvider(c);
+    var isGlobal = !c.provider;
+    provEl.textContent = t("providerBadgePrefix") + (PROVIDER_SHORT[eff] || eff) + (isGlobal ? " (" + t("providerBadgeGlobal") + ")" : "");
+  }
   ensureWelcomeMessage(c);
   renderMessages(c);
   renderMemoryLists(c);
@@ -1703,8 +1789,24 @@ function openModal(id){
   els.modalOverlay.hidden = false;
   Array.prototype.forEach.call(document.querySelectorAll(".modal"), function(m){ m.hidden = (m.id !== id); });
   var target = document.getElementById(id);
-  var focusable = target && target.querySelector("input, textarea, select, button");
+  /* Alegem primul element care poate CHIAR primi focus. Varianta anterioară lua
+     pur și simplu primul din DOM — dar dacă acela era ascuns (ex. butonul de
+     partajare nativă, ascuns când browserul n-are Web Share API), focus() eșua
+     în tăcere și modalul rămânea fără gestionarea focusului, rupând navigarea
+     la tastatură și cititoarele de ecran. Bug prins prin audit adversarial. */
+  var focusable = null;
+  if (target){
+    var cands = target.querySelectorAll('input, textarea, select, button, a[href], [tabindex]:not([tabindex="-1"])');
+    for (var fi = 0; fi < cands.length; fi++){
+      var el = cands[fi];
+      if (el.hidden || el.disabled) continue;
+      if (el.type === "hidden") continue;
+      if (el.offsetParent === null && getComputedStyle(el).position !== "fixed") continue;
+      focusable = el; break;
+    }
+  }
   if (focusable) focusable.focus();
+  else if (target){ target.setAttribute("tabindex", "-1"); target.focus(); }
 }
 function closeModals(){
   els.modalOverlay.hidden = true;
@@ -1727,6 +1829,7 @@ document.addEventListener("keydown", function(e){
    COMPANION CRUD
 ============================================================ */
 function selectCompanion(id){
+  ttsStop();
   state.activeId = id;
   render();
 }
@@ -1770,6 +1873,12 @@ function normalizeCompanion(raw, preserveId){
     id: validExistingId ? raw.id : uid(),
     name: name,
     type: type,
+    // null = folosește providerul global din Setări; altfel, acest companion
+    // rulează mereu pe providerul lui propriu, indiferent de setarea globală
+    provider: VALID_PROVIDERS.indexOf(raw.provider) !== -1 ? raw.provider : null,
+    baseUrl: typeof raw.baseUrl === "string" ? raw.baseUrl.slice(0,300) : "",
+    model: typeof raw.model === "string" ? raw.model.slice(0,100) : "",
+    webllmModel: typeof raw.webllmModel === "string" ? raw.webllmModel.slice(0,150) : "",
     traits: typeof raw.traits === "string" ? safeTruncate(raw.traits, 300) : "",
     backstory: typeof raw.backstory === "string" ? safeTruncate(raw.backstory, 2000) : "",
     memories: {
@@ -1782,11 +1891,45 @@ function normalizeCompanion(raw, preserveId){
   };
 }
 
+/* Providerul efectiv al unui companion: al lui propriu dacă are unul,
+   altfel cel global din Setări. Un singur loc de adevăr, folosit atât
+   la trimiterea mesajului cât și la afișarea etichetei din topbar. */
+function effectiveProvider(c){
+  return (c && c.provider && VALID_PROVIDERS.indexOf(c.provider) !== -1) ? c.provider : state.settings.provider;
+}
+var PROVIDER_LABEL_KEY = {
+  webllm:"providerWebllm", anthropic:"providerAnthropic", openai:"providerOpenai",
+  pollinations:"providerPollinations", "chrome-ai":"providerChromeai", "local-simple":"providerLocalsimple"
+};
+var PROVIDER_SHORT = {
+  webllm:"WebLLM", anthropic:"Claude", openai:"OpenAI-compat",
+  pollinations:"Pollinations", "chrome-ai":"Browser AI", "local-simple":"Local"
+};
+
+/* Configurația efectivă a unui companion. Dacă are provider propriu,
+   folosește și URL-ul/modelul lui propriu; altfel moștenește tot din
+   Setări. Cheia API rămâne mereu una singură, globală — nu multiplicăm
+   secrete prin fiecare companion. */
+function effectiveConfig(c){
+  var s = state.settings;
+  var own = c && c.provider && VALID_PROVIDERS.indexOf(c.provider) !== -1;
+  if (!own) return { provider:s.provider, baseUrl:s.baseUrl, model:s.model, apiKey:s.apiKey, webllmModel:s.webllmModel };
+  return {
+    provider: c.provider,
+    baseUrl: c.baseUrl || "",
+    model: c.model || "",
+    apiKey: s.apiKey,
+    webllmModel: c.webllmModel || s.webllmModel
+  };
+}
+
 function createCompanion(data){
   var c = {
     id: uid(),
     name: data.name,
     type: data.type,
+    provider: (VALID_PROVIDERS.indexOf(data.provider) !== -1) ? data.provider : null,
+    baseUrl: data.baseUrl || "", model: data.model || "", webllmModel: data.webllmModel || "",
     traits: data.traits,
     backstory: data.backstory,
     memories: { permanente:[], evolutive:[], descoperite:[] },
@@ -1803,6 +1946,8 @@ function updateCompanion(id, data){
   for (var i=0;i<state.companions.length;i++){ if (state.companions[i].id === id) c = state.companions[i]; }
   if (!c) return;
   c.name = data.name; c.type = data.type; c.traits = data.traits; c.backstory = data.backstory;
+  c.provider = (VALID_PROVIDERS.indexOf(data.provider) !== -1) ? data.provider : null;
+  c.baseUrl = data.baseUrl || ""; c.model = data.model || ""; c.webllmModel = data.webllmModel || "";
   render();
 }
 
@@ -2032,8 +2177,19 @@ async function callChromeAIStreaming(companion, userText, onDelta){
 /* ============================================================
    APEL CĂTRE PROVIDER AI (opțional — doar dacă e cheie API)
 ============================================================ */
+/* Construiește URL-ul final tolerant la felul în care utilizatorul scrie baza.
+   Documentația Ollama, LM Studio și multe altele afișează URL-ul CU „/v1"
+   inclus, în timp ce noi adăugăm noi înșine „/v1/...". Fără normalizarea de
+   mai jos rezulta „/v1/v1/chat/completions" — o cerere care eșua mereu.
+   Bug real, prins prin test: presetul Ollama livrat era rupt exact așa. */
+function apiUrl(baseUrl, fallback, suffix){
+  var b = String(baseUrl || fallback).trim().replace(/\/+$/, "");
+  b = b.replace(/\/v1$/, "");
+  return b + suffix;
+}
+
 async function callProvider(companion, userText){
-  var s = state.settings;
+  var s = effectiveConfig(companion);
   var sys = buildSystemPrompt(companion);
   var history = (companion.messages || [])
     .filter(function(m){ return m.role === "user" || m.role === "assistant"; })
@@ -2041,8 +2197,22 @@ async function callProvider(companion, userText){
     .map(function(m){ return { role: m.role, content: m.text }; });
   history.push({ role:"user", content:userText });
 
-  if (s.provider === "anthropic"){
-    var res = await fetch((s.baseUrl || "https://api.anthropic.com").replace(/\/$/,"") + "/v1/messages", {
+  if (s.provider === "pollinations"){
+    /* Pollinations: compatibil OpenAI, dar pe /openai (nu /v1/chat/completions),
+       și — spre deosebire de restul — funcționează fără cheie și fără cont.
+       Cheia e opțională: dacă există una, o trimitem. */
+    var pUrl = apiUrl(s.baseUrl, "https://text.pollinations.ai", "/openai");
+    var pHeaders = { "content-type":"application/json" };
+    if (s.apiKey) pHeaders["Authorization"] = "Bearer " + s.apiKey;
+    var pRes = await fetch(pUrl, {
+      method:"POST", headers: pHeaders,
+      body: JSON.stringify({ model: s.model || "openai", messages: [{role:"system", content:sys}].concat(history) })
+    });
+    if (!pRes.ok){ throw new Error("API " + pRes.status + ": " + (await pRes.text()).slice(0,300)); }
+    var pData = await pRes.json();
+    return (pData.choices && pData.choices[0] && pData.choices[0].message && pData.choices[0].message.content) || t("noTextReply");
+  } else if (s.provider === "anthropic"){
+    var res = await fetch(apiUrl(s.baseUrl, "https://api.anthropic.com", "/v1/messages"), {
       method:"POST",
       headers:{
         "content-type":"application/json",
@@ -2062,7 +2232,7 @@ async function callProvider(companion, userText){
     var block = (data.content || []).find(function(b){ return b.type === "text"; });
     return block ? block.text : t("noTextReply");
   } else {
-    var url = (s.baseUrl || "https://api.openai.com").replace(/\/$/,"") + "/v1/chat/completions";
+    var url = apiUrl(s.baseUrl, "https://api.openai.com", "/v1/chat/completions");
     var headers = { "content-type":"application/json" };
     if (s.apiKey) headers["Authorization"] = "Bearer " + s.apiKey;
     var res2 = await fetch(url, {
@@ -2103,7 +2273,7 @@ async function testConnection(){
   statusEl.textContent = t("testTesting");
   try {
     if (provider === "anthropic"){
-      var res = await fetch(baseUrl + "/v1/messages", {
+      var res = await fetch(apiUrl(baseUrl, "https://api.anthropic.com", "/v1/messages"), {
         method:"POST",
         headers:{
           "content-type":"application/json", "x-api-key":apiKey,
@@ -2115,7 +2285,7 @@ async function testConnection(){
     } else {
       var headers = { "content-type":"application/json" };
       if (apiKey) headers["Authorization"] = "Bearer " + apiKey;
-      var res2 = await fetch(baseUrl + "/v1/chat/completions", {
+      var res2 = await fetch(apiUrl(baseUrl, "https://api.openai.com", "/v1/chat/completions"), {
         method:"POST", headers: headers,
         body: JSON.stringify({ model:model, max_tokens:8, messages:[{role:"user", content:"ping"}] })
       });
@@ -2244,7 +2414,7 @@ ro: {
   storageLabel:"Spațiu ocupat", storageWarningNear:"Spațiul local se umple — exportă o copie de siguranță curând.",
   exportConvoBtn:"Exportă ca poveste", ariaExportConvo:"Exportă această conversație ca text lizibil",
   convoExportHeader:"Conversație cu {NAME}", convoExportedOn:"Exportat pe", convoExportYou:"Tu",
-  memNodeHint:"Apasă pe o stea ca să vezi amintirea", catActive:"Activi", catNew:"Noi", ariaCollapseCat:"Restrânge/extinde categoria", welcomeMessage:"Bună! Sunt {NAME}. Țin minte ce-mi spui pe categorii (permanente, evolutive, descoperite) — le vezi în tabul Memorie, ca o constelație. Poți schimba oricând cum «gândesc» din Setări (⚙). Spune-mi ceva!",
+  memNodeHint:"Apasă pe o stea ca să vezi amintirea", catActive:"Activi", catNew:"Noi", ariaCollapseCat:"Restrânge/extinde categoria", welcomeMessage:"Bună! Sunt {NAME}. {BACKSTORY}Țin minte ce-mi spui pe categorii (permanente, evolutive, descoperite) — le vezi în tabul Memorie, ca o constelație. Poți schimba oricând cum «gândesc» din Setări (⚙). Spune-mi ceva!",
   ariaShare:"Distribuie", shareModalTitle:"Distribuie Constelar",
   shareIntro:"Un companion AI cu memorie reală, offline, fără cont și fără telemetrie.",
   shareNativeBtn:"Distribuie...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
@@ -2257,7 +2427,12 @@ ro: {
   legalBlock3:"<b>Drepturi de autor:</b> Codul sursă al Constelar este © Alexandru-Ionuț Chiuță. Companionii, textele și amintirile pe care le creezi rămân ale tale — nu sunt colectate, transmise sau revendicate de nimeni. Dacă conectezi un provider AI extern, verifică și termenii lui pentru conținutul generat prin acel API.",
   legalBlock4:"<b>Independență:</b> Constelar nu este afiliată, sponsorizată sau aprobată de Anthropic, OpenAI, Google, Microsoft, Ollama, proiectul MLC/WebLLM sau orice alt provider menționat aici — sunt doar opțiuni pe care le poți conecta, la alegere. Nu are nicio legătură cu alte aplicații de companioni AI existente; orice asemănare de concept e coincidență sau inspirație generală din domeniu, nu parteneriat.",
   legalBlock5:"<b>Limite:</b> Nimic din ce spune un companion — local sau conectat la un AI real — nu constituie sfat medical, juridic sau financiar. Pentru decizii care contează cu adevărat, vorbește cu un profesionist calificat.",
-  donateCoffee:"☕ Cumpără-mi o cafea", donatePatreon:"✦ Susține pe Patreon"
+  donateCoffee:"☕ Cumpără-mi o cafea", donatePatreon:"✦ Susține pe Patreon", fieldCompanionProvider:"AI folosit de acest companion", providerInheritGlobal:"Ca în Setări (global)", providerBadgePrefix:"AI: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (gratuit, fără cont și fără cheie)",
+  fieldCompanionBaseUrl:"URL de bază (opțional)", fieldCompanionModel:"Model (opțional)",
+  companionConfigHint:"Lăsate goale, se folosesc valorile implicite ale providerului. Cheia API rămâne cea globală din Setări.", ariaRandomCompanion:"Personaj aleatoriu (generat local)", ariaSpeak:"Citește cu voce tare", ariaRecap:"Rezumatul conversației", fieldAutoSpeak:"citește răspunsurile cu voce tare",
+  recapTitle:"Rezumatul conversației", recapEmpty:"Conversația e încă prea scurtă pentru un rezumat.",
+  recapHint:"Extras local, prin frecvența cuvintelor — nicio rețea neuronală, nicio conexiune.",
+  recapStats:"{N} propoziții analizate · teme recurente: ", ttsUnavailable:"Vocea nu e disponibilă aici (niciun sistem de voci instalat).", shareFediverseInvalid:"instanță invalidă — ex: mastodon.social"
 },
 en: {
   brandTag:"real memory · 100% local", newCompanion:"+ New companion",
@@ -2358,7 +2533,7 @@ en: {
   storageLabel:"Storage used", storageWarningNear:"Local storage is filling up — export a backup soon.",
   exportConvoBtn:"Export as story", ariaExportConvo:"Export this conversation as readable text",
   convoExportHeader:"Conversation with {NAME}", convoExportedOn:"Exported on", convoExportYou:"You",
-  memNodeHint:"Tap a star to see that memory", catActive:"Active", catNew:"New", ariaCollapseCat:"Collapse/expand category", welcomeMessage:"Hi! I'm {NAME}. I keep what you tell me organized into categories (permanent, evolving, discovered) — see them in the Memory tab, like a constellation. You can change how I \"think\" anytime from Settings (⚙). Tell me something!",
+  memNodeHint:"Tap a star to see that memory", catActive:"Active", catNew:"New", ariaCollapseCat:"Collapse/expand category", welcomeMessage:"Hi! I'm {NAME}. {BACKSTORY}I keep what you tell me organized into categories (permanent, evolving, discovered) — see them in the Memory tab, like a constellation. You can change how I \"think\" anytime from Settings (⚙). Tell me something!",
   ariaShare:"Share", shareModalTitle:"Share Constelar",
   shareIntro:"An offline AI companion app with real memory — no account, no telemetry.",
   shareNativeBtn:"Share...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
@@ -2371,7 +2546,12 @@ en: {
   legalBlock3:"<b>Copyright:</b> Constelar's source code is © Alexandru-Ionuț Chiuță. The companions, text, and memories you create remain yours — not collected, transmitted, or claimed by anyone. If you connect an external AI provider, also check its terms for content generated through that API.",
   legalBlock4:"<b>Independence:</b> Constelar is not affiliated with, sponsored by, or endorsed by Anthropic, OpenAI, Google, Microsoft, Ollama, the MLC/WebLLM project, or any other provider mentioned here — they're simply options you can optionally connect. It has no relationship with other existing AI companion apps; any conceptual similarity is coincidence or general inspiration from the field, not partnership.",
   legalBlock5:"<b>Limitations:</b> Nothing a companion says — local or connected to a real AI — constitutes medical, legal, or financial advice. For decisions that really matter, talk to a qualified professional.",
-  donateCoffee:"☕ Buy me a coffee", donatePatreon:"✦ Support on Patreon"
+  donateCoffee:"☕ Buy me a coffee", donatePatreon:"✦ Support on Patreon", fieldCompanionProvider:"AI used by this companion", providerInheritGlobal:"Same as Settings (global)", providerBadgePrefix:"AI: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (free, no account, no key)",
+  fieldCompanionBaseUrl:"Base URL (optional)", fieldCompanionModel:"Model (optional)",
+  companionConfigHint:"Left empty, the provider's defaults are used. The API key stays the global one from Settings.", ariaRandomCompanion:"Random character (generated locally)", ariaSpeak:"Read aloud", ariaRecap:"Conversation recap", fieldAutoSpeak:"read replies aloud",
+  recapTitle:"Conversation recap", recapEmpty:"The conversation is still too short to summarize.",
+  recapHint:"Extracted locally by word frequency — no neural network, no connection.",
+  recapStats:"{N} sentences analyzed · recurring themes: ", ttsUnavailable:"Speech isn't available here (no voices installed).", shareFediverseInvalid:"invalid instance — e.g. mastodon.social"
 },
 fr: {
   brandTag:"mémoire réelle · 100% locale", newCompanion:"+ Nouveau compagnon",
@@ -2472,7 +2652,7 @@ fr: {
   storageLabel:"Espace utilisé", storageWarningNear:"Le stockage local se remplit — exporte une sauvegarde bientôt.",
   exportConvoBtn:"Exporter comme récit", ariaExportConvo:"Exporter cette conversation en texte lisible",
   convoExportHeader:"Conversation avec {NAME}", convoExportedOn:"Exporté le", convoExportYou:"Toi",
-  memNodeHint:"Touche une étoile pour voir ce souvenir", catActive:"Actifs", catNew:"Nouveaux", ariaCollapseCat:"Réduire/développer la catégorie", welcomeMessage:"Salut ! Je suis {NAME}. Je garde ce que tu me dis organisé en catégories (permanentes, évolutives, découvertes) — tu les vois dans l'onglet Mémoire, comme une constellation. Tu peux changer comment je « pense » à tout moment depuis les Paramètres (⚙). Dis-moi quelque chose !",
+  memNodeHint:"Touche une étoile pour voir ce souvenir", catActive:"Actifs", catNew:"Nouveaux", ariaCollapseCat:"Réduire/développer la catégorie", welcomeMessage:"Salut ! Je suis {NAME}. {BACKSTORY}Je garde ce que tu me dis organisé en catégories (permanentes, évolutives, découvertes) — tu les vois dans l'onglet Mémoire, comme une constellation. Tu peux changer comment je « pense » à tout moment depuis les Paramètres (⚙). Dis-moi quelque chose !",
   ariaShare:"Partager", shareModalTitle:"Partager Constelar",
   shareIntro:"Une appli de compagnon IA hors ligne avec une vraie mémoire — sans compte, sans télémétrie.",
   shareNativeBtn:"Partager...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
@@ -2485,7 +2665,12 @@ fr: {
   legalBlock3:"<b>Droits d'auteur :</b> Le code source de Constelar est © Alexandru-Ionuț Chiuță. Les compagnons, textes et souvenirs que tu crées restent les tiens — ils ne sont collectés, transmis ou revendiqués par personne. Si tu connectes un fournisseur d'IA externe, vérifie aussi ses conditions pour le contenu généré via cette API.",
   legalBlock4:"<b>Indépendance :</b> Constelar n'est affiliée, sponsorisée ou approuvée ni par Anthropic, OpenAI, Google, Microsoft, Ollama, le projet MLC/WebLLM, ni par aucun autre fournisseur mentionné ici — ce sont simplement des options que tu peux connecter, à ton choix. Elle n'a aucun lien avec d'autres applications de compagnons IA existantes ; toute ressemblance conceptuelle est une coïncidence ou une inspiration générale du domaine, pas un partenariat.",
   legalBlock5:"<b>Limites :</b> Rien de ce que dit un compagnon — local ou connecté à une vraie IA — ne constitue un conseil médical, juridique ou financier. Pour les décisions qui comptent vraiment, parle à un professionnel qualifié.",
-  donateCoffee:"☕ Offre-moi un café", donatePatreon:"✦ Soutenir sur Patreon"
+  donateCoffee:"☕ Offre-moi un café", donatePatreon:"✦ Soutenir sur Patreon", fieldCompanionProvider:"IA utilisée par ce compagnon", providerInheritGlobal:"Comme dans les Paramètres (global)", providerBadgePrefix:"IA : ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (gratuit, sans compte ni clé)",
+  fieldCompanionBaseUrl:"URL de base (facultatif)", fieldCompanionModel:"Modèle (facultatif)",
+  companionConfigHint:"Laissés vides, les valeurs par défaut du fournisseur sont utilisées. La clé API reste celle globale des Paramètres.", ariaRandomCompanion:"Personnage aléatoire (généré localement)", ariaSpeak:"Lire à voix haute", ariaRecap:"Résumé de la conversation", fieldAutoSpeak:"lire les réponses à voix haute",
+  recapTitle:"Résumé de la conversation", recapEmpty:"La conversation est encore trop courte pour un résumé.",
+  recapHint:"Extrait localement par fréquence des mots — aucun réseau de neurones, aucune connexion.",
+  recapStats:"{N} phrases analysées · thèmes récurrents : ", ttsUnavailable:"La voix n'est pas disponible ici (aucune voix installée).", shareFediverseInvalid:"instance invalide — ex : mastodon.social"
 },
 it: {
   brandTag:"memoria reale · 100% locale", newCompanion:"+ Nuovo compagno",
@@ -2586,7 +2771,7 @@ it: {
   storageLabel:"Spazio usato", storageWarningNear:"Lo spazio locale si sta riempiendo — esporta presto un backup.",
   exportConvoBtn:"Esporta come racconto", ariaExportConvo:"Esporta questa conversazione come testo leggibile",
   convoExportHeader:"Conversazione con {NAME}", convoExportedOn:"Esportato il", convoExportYou:"Tu",
-  memNodeHint:"Tocca una stella per vedere quel ricordo", catActive:"Attivi", catNew:"Nuovi", ariaCollapseCat:"Comprimi/espandi categoria", welcomeMessage:"Ciao! Sono {NAME}. Tengo quello che mi dici organizzato in categorie (permanenti, evolutive, scoperte) — le vedi nella scheda Memoria, come una costellazione. Puoi cambiare come «penso» in qualsiasi momento dalle Impostazioni (⚙). Dimmi qualcosa!",
+  memNodeHint:"Tocca una stella per vedere quel ricordo", catActive:"Attivi", catNew:"Nuovi", ariaCollapseCat:"Comprimi/espandi categoria", welcomeMessage:"Ciao! Sono {NAME}. {BACKSTORY}Tengo quello che mi dici organizzato in categorie (permanenti, evolutive, scoperte) — le vedi nella scheda Memoria, come una costellazione. Puoi cambiare come «penso» in qualsiasi momento dalle Impostazioni (⚙). Dimmi qualcosa!",
   ariaShare:"Condividi", shareModalTitle:"Condividi Constelar",
   shareIntro:"Un'app di compagni IA offline con memoria reale — senza account, senza telemetria.",
   shareNativeBtn:"Condividi...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
@@ -2599,7 +2784,12 @@ it: {
   legalBlock3:"<b>Diritti d'autore:</b> Il codice sorgente di Constelar è © Alexandru-Ionuț Chiuță. I compagni, i testi e i ricordi che crei restano tuoi — non vengono raccolti, trasmessi o rivendicati da nessuno. Se colleghi un provider IA esterno, controlla anche i suoi termini per i contenuti generati tramite quella API.",
   legalBlock4:"<b>Indipendenza:</b> Constelar non è affiliata, sponsorizzata o approvata da Anthropic, OpenAI, Google, Microsoft, Ollama, il progetto MLC/WebLLM, o qualsiasi altro provider menzionato qui — sono semplicemente opzioni che puoi collegare, a tua scelta. Non ha alcun legame con altre app di compagni IA esistenti; qualsiasi somiglianza concettuale è coincidenza o ispirazione generale dal settore, non partnership.",
   legalBlock5:"<b>Limiti:</b> Nulla di ciò che dice un compagno — locale o collegato a un'IA reale — costituisce consulenza medica, legale o finanziaria. Per le decisioni che contano davvero, parla con un professionista qualificato.",
-  donateCoffee:"☕ Offrimi un caffè", donatePatreon:"✦ Sostieni su Patreon"
+  donateCoffee:"☕ Offrimi un caffè", donatePatreon:"✦ Sostieni su Patreon", fieldCompanionProvider:"IA usata da questo compagno", providerInheritGlobal:"Come nelle Impostazioni (globale)", providerBadgePrefix:"IA: ", providerBadgeGlobal:"globale", providerPollinations:"Pollinations (gratuito, senza account né chiave)",
+  fieldCompanionBaseUrl:"URL di base (opzionale)", fieldCompanionModel:"Modello (opzionale)",
+  companionConfigHint:"Se lasciati vuoti, si usano i valori predefiniti del provider. La chiave API resta quella globale nelle Impostazioni.", ariaRandomCompanion:"Personaggio casuale (generato in locale)", ariaSpeak:"Leggi ad alta voce", ariaRecap:"Riepilogo della conversazione", fieldAutoSpeak:"leggi le risposte ad alta voce",
+  recapTitle:"Riepilogo della conversazione", recapEmpty:"La conversazione è ancora troppo breve per un riepilogo.",
+  recapHint:"Estratto localmente per frequenza delle parole — nessuna rete neurale, nessuna connessione.",
+  recapStats:"{N} frasi analizzate · temi ricorrenti: ", ttsUnavailable:"La voce non è disponibile qui (nessuna voce installata).", shareFediverseInvalid:"istanza non valida — es: mastodon.social"
 },
 es: {
   brandTag:"memoria real · 100% local", newCompanion:"+ Nuevo compañero",
@@ -2700,7 +2890,7 @@ es: {
   storageLabel:"Espacio usado", storageWarningNear:"El almacenamiento local se está llenando — exporta una copia pronto.",
   exportConvoBtn:"Exportar como relato", ariaExportConvo:"Exportar esta conversación como texto legible",
   convoExportHeader:"Conversación con {NAME}", convoExportedOn:"Exportado el", convoExportYou:"Tú",
-  memNodeHint:"Toca una estrella para ver ese recuerdo", catActive:"Activos", catNew:"Nuevos", ariaCollapseCat:"Contraer/expandir categoría", welcomeMessage:"¡Hola! Soy {NAME}. Guardo lo que me cuentas organizado en categorías (permanentes, evolutivas, descubiertas) — las ves en la pestaña Memoria, como una constelación. Puedes cambiar cómo «pienso» cuando quieras desde Ajustes (⚙). ¡Cuéntame algo!",
+  memNodeHint:"Toca una estrella para ver ese recuerdo", catActive:"Activos", catNew:"Nuevos", ariaCollapseCat:"Contraer/expandir categoría", welcomeMessage:"¡Hola! Soy {NAME}. {BACKSTORY}Guardo lo que me cuentas organizado en categorías (permanentes, evolutivas, descubiertas) — las ves en la pestaña Memoria, como una constelación. Puedes cambiar cómo «pienso» cuando quieras desde Ajustes (⚙). ¡Cuéntame algo!",
   ariaShare:"Compartir", shareModalTitle:"Compartir Constelar",
   shareIntro:"Una app de compañeros IA sin conexión con memoria real — sin cuenta, sin telemetría.",
   shareNativeBtn:"Compartir...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
@@ -2713,7 +2903,12 @@ es: {
   legalBlock3:"<b>Derechos de autor:</b> El código fuente de Constelar es © Alexandru-Ionuț Chiuță. Los compañeros, textos y recuerdos que creas siguen siendo tuyos — nadie los recolecta, transmite o reclama. Si conectas un proveedor de IA externo, revisa también sus términos para el contenido generado a través de esa API.",
   legalBlock4:"<b>Independencia:</b> Constelar no está afiliada, patrocinada ni respaldada por Anthropic, OpenAI, Google, Microsoft, Ollama, el proyecto MLC/WebLLM, ni ningún otro proveedor mencionado aquí — son simplemente opciones que puedes conectar, a tu elección. No tiene relación con otras apps de compañeros IA existentes; cualquier parecido conceptual es coincidencia o inspiración general del sector, no una asociación.",
   legalBlock5:"<b>Límites:</b> Nada de lo que diga un compañero — local o conectado a una IA real — constituye asesoría médica, legal o financiera. Para decisiones que de verdad importan, habla con un profesional cualificado.",
-  donateCoffee:"☕ Invítame un café", donatePatreon:"✦ Apoyar en Patreon"
+  donateCoffee:"☕ Invítame un café", donatePatreon:"✦ Apoyar en Patreon", fieldCompanionProvider:"IA usada por este compañero", providerInheritGlobal:"Igual que en Ajustes (global)", providerBadgePrefix:"IA: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (gratis, sin cuenta ni clave)",
+  fieldCompanionBaseUrl:"URL base (opcional)", fieldCompanionModel:"Modelo (opcional)",
+  companionConfigHint:"Si se dejan vacíos, se usan los valores por defecto del proveedor. La clave API sigue siendo la global de Ajustes.", ariaRandomCompanion:"Personaje aleatorio (generado localmente)", ariaSpeak:"Leer en voz alta", ariaRecap:"Resumen de la conversación", fieldAutoSpeak:"leer las respuestas en voz alta",
+  recapTitle:"Resumen de la conversación", recapEmpty:"La conversación aún es demasiado corta para resumirla.",
+  recapHint:"Extraído localmente por frecuencia de palabras — sin red neuronal, sin conexión.",
+  recapStats:"{N} frases analizadas · temas recurrentes: ", ttsUnavailable:"La voz no está disponible aquí (ninguna voz instalada).", shareFediverseInvalid:"instancia inválida — ej: mastodon.social"
 },
 pt: {
   brandTag:"memória real · 100% local", newCompanion:"+ Novo companheiro",
@@ -2814,7 +3009,7 @@ pt: {
   storageLabel:"Espaço usado", storageWarningNear:"O armazenamento local está enchendo — exporte um backup em breve.",
   exportConvoBtn:"Exportar como história", ariaExportConvo:"Exportar esta conversa como texto legível",
   convoExportHeader:"Conversa com {NAME}", convoExportedOn:"Exportado em", convoExportYou:"Você",
-  memNodeHint:"Toque numa estrela para ver essa lembrança", catActive:"Ativos", catNew:"Novos", ariaCollapseCat:"Recolher/expandir categoria", welcomeMessage:"Oi! Eu sou {NAME}. Guardo o que você me conta organizado em categorias (permanentes, evolutivas, descobertas) — você vê na aba Memória, como uma constelação. Você pode mudar como eu «penso» quando quiser em Configurações (⚙). Me conta algo!",
+  memNodeHint:"Toque numa estrela para ver essa lembrança", catActive:"Ativos", catNew:"Novos", ariaCollapseCat:"Recolher/expandir categoria", welcomeMessage:"Oi! Eu sou {NAME}. {BACKSTORY}Guardo o que você me conta organizado em categorias (permanentes, evolutivas, descobertas) — você vê na aba Memória, como uma constelação. Você pode mudar como eu «penso» quando quiser em Configurações (⚙). Me conta algo!",
   ariaShare:"Compartilhar", shareModalTitle:"Compartilhar Constelar",
   shareIntro:"Um app de companheiros IA offline com memória real — sem conta, sem telemetria.",
   shareNativeBtn:"Compartilhar...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
@@ -2827,7 +3022,12 @@ pt: {
   legalBlock3:"<b>Direitos autorais:</b> O código-fonte do Constelar é © Alexandru-Ionuț Chiuță. Os companheiros, textos e lembranças que você cria continuam sendo seus — ninguém os coleta, transmite ou reivindica. Se você conectar um provedor de IA externo, verifique também os termos dele para o conteúdo gerado por aquela API.",
   legalBlock4:"<b>Independência:</b> Constelar não é afiliado, patrocinado ou endossado por Anthropic, OpenAI, Google, Microsoft, Ollama, o projeto MLC/WebLLM, ou qualquer outro provedor mencionado aqui — são simplesmente opções que você pode conectar, à sua escolha. Não tem relação com outros apps de companheiros IA existentes; qualquer semelhança conceitual é coincidência ou inspiração geral da área, não parceria.",
   legalBlock5:"<b>Limites:</b> Nada do que um companheiro diz — local ou conectado a uma IA real — constitui aconselhamento médico, jurídico ou financeiro. Para decisões que realmente importam, converse com um profissional qualificado.",
-  donateCoffee:"☕ Me pague um café", donatePatreon:"✦ Apoiar no Patreon"
+  donateCoffee:"☕ Me pague um café", donatePatreon:"✦ Apoiar no Patreon", fieldCompanionProvider:"IA usada por este companheiro", providerInheritGlobal:"Igual às Configurações (global)", providerBadgePrefix:"IA: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (grátis, sem conta e sem chave)",
+  fieldCompanionBaseUrl:"URL base (opcional)", fieldCompanionModel:"Modelo (opcional)",
+  companionConfigHint:"Se deixados vazios, usam-se os padrões do provedor. A chave API continua sendo a global das Configurações.", ariaRandomCompanion:"Personagem aleatório (gerado localmente)", ariaSpeak:"Ler em voz alta", ariaRecap:"Resumo da conversa", fieldAutoSpeak:"ler as respostas em voz alta",
+  recapTitle:"Resumo da conversa", recapEmpty:"A conversa ainda é curta demais para um resumo.",
+  recapHint:"Extraído localmente por frequência de palavras — sem rede neural, sem conexão.",
+  recapStats:"{N} frases analisadas · temas recorrentes: ", ttsUnavailable:"A voz não está disponível aqui (nenhuma voz instalada).", shareFediverseInvalid:"instância inválida — ex: mastodon.social"
 },
 de: {
   brandTag:"echtes Gedächtnis · 100% lokal", newCompanion:"+ Neuer Begleiter",
@@ -2928,7 +3128,7 @@ de: {
   storageLabel:"Belegter Speicher", storageWarningNear:"Der lokale Speicher wird knapp — exportiere bald ein Backup.",
   exportConvoBtn:"Als Geschichte exportieren", ariaExportConvo:"Dieses Gespräch als lesbaren Text exportieren",
   convoExportHeader:"Gespräch mit {NAME}", convoExportedOn:"Exportiert am", convoExportYou:"Du",
-  memNodeHint:"Tippe auf einen Stern, um diese Erinnerung zu sehen", catActive:"Aktiv", catNew:"Neu", ariaCollapseCat:"Kategorie ein-/ausklappen", welcomeMessage:"Hallo! Ich bin {NAME}. Was du mir erzählst, halte ich in Kategorien geordnet (dauerhaft, sich entwickelnd, entdeckt) — zu sehen im Tab Erinnerung, wie eine Konstellation. Wie ich «denke», kannst du jederzeit in den Einstellungen (⚙) ändern. Erzähl mir etwas!",
+  memNodeHint:"Tippe auf einen Stern, um diese Erinnerung zu sehen", catActive:"Aktiv", catNew:"Neu", ariaCollapseCat:"Kategorie ein-/ausklappen", welcomeMessage:"Hallo! Ich bin {NAME}. {BACKSTORY}Was du mir erzählst, halte ich in Kategorien geordnet (dauerhaft, sich entwickelnd, entdeckt) — zu sehen im Tab Erinnerung, wie eine Konstellation. Wie ich «denke», kannst du jederzeit in den Einstellungen (⚙) ändern. Erzähl mir etwas!",
   ariaShare:"Teilen", shareModalTitle:"Constelar teilen",
   shareIntro:"Eine Offline-KI-Begleiter-App mit echtem Gedächtnis — ohne Konto, ohne Telemetrie.",
   shareNativeBtn:"Teilen...", shareWhatsapp:"WhatsApp", shareTwitter:"X (Twitter)",
@@ -2941,7 +3141,12 @@ de: {
   legalBlock3:"<b>Urheberrecht:</b> Der Quellcode von Constelar ist © Alexandru-Ionuț Chiuță. Die Begleiter, Texte und Erinnerungen, die du erstellst, bleiben deine — sie werden von niemandem gesammelt, übertragen oder beansprucht. Wenn du einen externen KI-Anbieter verbindest, prüfe auch dessen Bedingungen für über diese API generierte Inhalte.",
   legalBlock4:"<b>Unabhängigkeit:</b> Constelar ist weder mit Anthropic, OpenAI, Google, Microsoft, Ollama, dem MLC/WebLLM-Projekt noch mit irgendeinem anderen hier genannten Anbieter verbunden, von ihnen gesponsert oder unterstützt — das sind lediglich Optionen, die du nach Wahl verbinden kannst. Es besteht keine Verbindung zu anderen existierenden KI-Begleiter-Apps; jede konzeptionelle Ähnlichkeit ist Zufall oder allgemeine Inspiration aus dem Bereich, keine Partnerschaft.",
   legalBlock5:"<b>Grenzen:</b> Nichts, was ein Begleiter sagt — lokal oder mit einer echten KI verbunden — stellt medizinische, rechtliche oder finanzielle Beratung dar. Für wirklich wichtige Entscheidungen wende dich an eine qualifizierte Fachperson.",
-  donateCoffee:"☕ Spendier mir einen Kaffee", donatePatreon:"✦ Auf Patreon unterstützen"
+  donateCoffee:"☕ Spendier mir einen Kaffee", donatePatreon:"✦ Auf Patreon unterstützen", fieldCompanionProvider:"KI für diesen Begleiter", providerInheritGlobal:"Wie in den Einstellungen (global)", providerBadgePrefix:"KI: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (kostenlos, ohne Konto und Schlüssel)",
+  fieldCompanionBaseUrl:"Basis-URL (optional)", fieldCompanionModel:"Modell (optional)",
+  companionConfigHint:"Leer gelassen, werden die Standardwerte des Anbieters verwendet. Der API-Schlüssel bleibt der globale aus den Einstellungen.", ariaRandomCompanion:"Zufällige Figur (lokal generiert)", ariaSpeak:"Vorlesen", ariaRecap:"Gesprächszusammenfassung", fieldAutoSpeak:"Antworten vorlesen",
+  recapTitle:"Gesprächszusammenfassung", recapEmpty:"Das Gespräch ist noch zu kurz für eine Zusammenfassung.",
+  recapHint:"Lokal nach Worthäufigkeit extrahiert — kein neuronales Netz, keine Verbindung.",
+  recapStats:"{N} Sätze analysiert · wiederkehrende Themen: ", ttsUnavailable:"Sprachausgabe ist hier nicht verfügbar (keine Stimmen installiert).", shareFediverseInvalid:"ungültige Instanz — z.B. mastodon.social"
 }
 };
 function t(key){
@@ -3242,9 +3447,9 @@ de: {
     { re:/welche anbieter|welche modelle/i,
       a:"Fünf Optionen in den Einstellungen, standardmäßig WebLLM: WebLLM (ein Modell direkt in diesem Tab über WebGPU, einmalig 1-5GB), Anthropic (Claude), OpenAI-kompatibel (mit Presets für Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, plus lokales Ollama), Gemini Nano nativ in Chrome (ohne Schlüssel), oder ich — die regelbasierte Engine, explizit gewählt." }
   ],
-  greeting: /^(hallo|hi|hey|servus|moin)\b/i,
+  greeting: /^(hallo|hi|hey|servus|moin|guten (tag|morgen|abend))\b/i,
   farewell: /\b(tsch[üu]ss|bis (bald|sp[äa]ter)|gute nacht|wir sprechen uns|ich muss los)\b/i,
-  thanks: /\b(danke)\b/i,
+  thanks: /\b(danke|dank)\b/i,
   howAreYou: /wie geht('s| es dir)\??\s*$/i,
   selfStatement: /\b(ich hei[ßs]e|ich bin|ich arbeite als|ich mag)\s+([a-zA-Zäöüß\s]{2,30})/i,
   emotion: [
@@ -3393,7 +3598,7 @@ async function sendMessage(text){
     if (!exists) c.memories.descoperite.push({ id:uid(), text:f, createdAt:Date.now() });
   });
 
-  var provider = state.settings.provider;
+  var provider = effectiveProvider(c);
 
   async function runLocalAI(){
     var ph = { id:uid(), role:"assistant", text:"", ts:Date.now(), simulated:true };
@@ -3426,7 +3631,7 @@ async function sendMessage(text){
     if (provider === "local-simple"){
       reply = await runLocalAI();
     } else if (provider === "webllm"){
-      if (webllmEngine && webllmLoadedModel === state.settings.webllmModel){
+      if (webllmEngine && webllmLoadedModel === effectiveConfig(c).webllmModel){
         reply = await runStreaming(function(onDelta){ return callWebLLMStreaming(c, text.trim(), onDelta); });
       } else {
         reply = await runLocalAI(); // model neîncărcat încă — fără descărcare surpriză, degradează la motorul local
@@ -3442,6 +3647,10 @@ async function sendMessage(text){
       } else {
         reply = await runLocalAI();
       }
+    } else if (provider === "pollinations"){
+      // singurul provider din listă care nu cere nici cont, nici cheie
+      reply = await callProvider(c, text.trim());
+      c.messages.push({ id:uid(), role:"assistant", text:reply, ts:Date.now(), simulated:false });
     } else if ((provider === "anthropic" || provider === "openai") && state.settings.apiKey){
       reply = await callProvider(c, text.trim());
       c.messages.push({ id:uid(), role:"assistant", text:reply, ts:Date.now(), simulated:false });
@@ -3456,7 +3665,11 @@ async function sendMessage(text){
     c.messages = c.messages.filter(function(m){ return !m.streaming; }); // scoate placeholder-ul gol dacă streaming-ul a eșuat pe drum
     c.messages.push({ id:uid(), role:"error", text:t("apiErrorPrefix") + err.message + hint, ts:Date.now() });
   }
-  sendBtn.disabled = false; sendBtn.textContent = "Trimite";
+  if (state.settings.autoSpeak){
+    var lastAi = (c.messages || []).filter(function(m){ return m.role === "assistant" && !m.streaming; }).pop();
+    if (lastAi) ttsSpeak(lastAi.text);
+  }
+  sendBtn.disabled = false; sendBtn.textContent = t("send");
   els.composerInput.disabled = false;
   isSending = false;
   render();
@@ -3468,12 +3681,210 @@ async function sendMessage(text){
 ============================================================ */
 var editingCompanionId = null;
 
+
+/* ============================================================
+   GENERATOR DE PERSONAJE — combinatoriu, pe gramatică, 100% local
+   ------------------------------------------------------------
+   Inspirat de felul în care funcționează pluginurile non-AI de pe
+   Perchance (liste care se combină între ele), dar rulat integral
+   în acest fișier: fără rețea, fără reclame, fără dependențe.
+   Notă onestă: generatoarele *AI* de pe Perchance nu pot fi
+   integrate nicăieri în afara perchance.org — trimit
+   X-Frame-Options: sameorigin și blochează cererile din embed,
+   pentru că modelul lor e susținut din reclame afișate lângă
+   generator. E o decizie deliberată a lor, pe care o respectăm.
+   Ce urmează e ideea lor de generare combinatorie, reimplementată
+   local, nu conținutul lor.
+============================================================ */
+var CHARGEN_NAMES = ["Vera","Nadia","Ilinca","Sorin","Matei","Anca","Dorin","Livia","Tudor","Raluca",
+  "Iona","Sebastian","Ecaterina","Radu","Miruna","Cezar","Oana","Vlad","Ruxandra","Emil",
+  "Kai","Nora","Idris","Yuki","Amara","Teodor","Lior","Saga","Rune","Alma",
+  "Cyrus","Wren","Osian","Zora","Bastian","Neve"];
+
+var CHARGEN_I18N = {
+ro: {
+  adj:["calmă","curioasă","încăpățânată","blândă","ironică","atentă","visătoare","practică","melancolică","exuberantă","rezervată","directă"],
+  quirk:["povestește totul prin metafore","ține un jurnal pe care nu-l citește nimeni","știe numele tuturor stelelor vizibile","adună hărți vechi","nu bea niciodată cafea după prânz","fredonează fără să-și dea seama","are o teorie despre orice","corectează ora ceasurilor din casă","preferă scrisorile mesajelor","numără treptele oriunde merge"],
+  origin:["A crescut într-un oraș de munte","Vine dintr-un port unde nimeni nu rămâne mult","A lucrat ani buni într-o bibliotecă","A călătorit mai mult decât recunoaște","A locuit o vreme singură într-o casă mare","S-a mutat de nouă ori în zece ani","A fost cel mai tăcut copil din familie","A învățat trei limbi din curiozitate"],
+  detail:["și de atunci ascultă mai mult decât vorbește.","și încă păstrează obiceiul de a se trezi înaintea tuturor.","ceea ce explică de ce nu se grăbește niciodată.","și crede că fiecare om are o poveste nespusă.","și a rămas cu o afecțiune pentru zilele ploioase.","de unde a rămas cu o încredere ciudată în coincidențe.","și tratează fiecare conversație ca pe ceva rar.","și n-a scăpat niciodată de dorul de a pleca undeva."]
+},
+en: {
+  adj:["calm","curious","stubborn","gentle","wry","attentive","dreamy","practical","melancholic","exuberant","reserved","direct"],
+  quirk:["explains everything through metaphors","keeps a journal no one reads","knows the name of every visible star","collects old maps","never drinks coffee after noon","hums without noticing","has a theory about everything","resets every clock in the house","prefers letters to messages","counts steps everywhere they go"],
+  origin:["Grew up in a mountain town","Comes from a port where nobody stays long","Worked in a library for years","Has travelled more than they admit","Lived alone in a big house for a while","Moved nine times in ten years","Was the quietest child in the family","Learned three languages out of curiosity"],
+  detail:["and has listened more than spoken ever since.","and still keeps the habit of waking before everyone else.","which explains why they're never in a hurry.","and believes everyone carries an untold story.","and kept a fondness for rainy days.","and came away with an odd trust in coincidences.","and treats every conversation as something rare.","and never quite shook the urge to leave for somewhere."]
+},
+fr: {
+  adj:["calme","curieuse","têtue","douce","ironique","attentive","rêveuse","pratique","mélancolique","exubérante","réservée","directe"],
+  quirk:["explique tout par des métaphores","tient un journal que personne ne lit","connaît le nom de chaque étoile visible","collectionne les vieilles cartes","ne boit jamais de café après midi","fredonne sans s'en rendre compte","a une théorie sur tout","règle toutes les horloges de la maison","préfère les lettres aux messages","compte les marches partout où elle va"],
+  origin:["A grandi dans une ville de montagne","Vient d'un port où personne ne reste longtemps","A travaillé des années dans une bibliothèque","A voyagé plus qu'elle ne l'admet","A vécu seule un temps dans une grande maison","A déménagé neuf fois en dix ans","Était l'enfant le plus silencieux de la famille","A appris trois langues par curiosité"],
+  detail:["et depuis, écoute plus qu'elle ne parle.","et garde encore l'habitude de se lever avant tout le monde.","ce qui explique pourquoi elle n'est jamais pressée.","et pense que chacun porte une histoire non dite.","et en a gardé un goût pour les jours de pluie.","et en a tiré une étrange confiance dans les coïncidences.","et traite chaque conversation comme quelque chose de rare.","et n'a jamais perdu l'envie de partir ailleurs."]
+},
+it: {
+  adj:["calma","curiosa","testarda","gentile","ironica","attenta","sognatrice","pratica","malinconica","esuberante","riservata","diretta"],
+  quirk:["spiega tutto con metafore","tiene un diario che nessuno legge","conosce il nome di ogni stella visibile","colleziona mappe antiche","non beve mai caffè dopo mezzogiorno","canticchia senza accorgersene","ha una teoria su tutto","regola tutti gli orologi di casa","preferisce le lettere ai messaggi","conta i gradini ovunque vada"],
+  origin:["È cresciuta in un paese di montagna","Viene da un porto dove nessuno resta a lungo","Ha lavorato per anni in una biblioteca","Ha viaggiato più di quanto ammetta","Ha vissuto da sola in una grande casa per un po'","Ha traslocato nove volte in dieci anni","Era la bambina più silenziosa della famiglia","Ha imparato tre lingue per curiosità"],
+  detail:["e da allora ascolta più di quanto parli.","e mantiene ancora l'abitudine di svegliarsi prima di tutti.","il che spiega perché non ha mai fretta.","e crede che ognuno porti con sé una storia non detta.","e le è rimasto un affetto per i giorni di pioggia.","e ne ha ricavato una strana fiducia nelle coincidenze.","e tratta ogni conversazione come qualcosa di raro.","e non ha mai perso il desiderio di partire per altrove."]
+},
+es: {
+  adj:["tranquila","curiosa","testaruda","amable","irónica","atenta","soñadora","práctica","melancólica","exuberante","reservada","directa"],
+  quirk:["lo explica todo con metáforas","lleva un diario que nadie lee","conoce el nombre de cada estrella visible","colecciona mapas antiguos","nunca toma café después del mediodía","tararea sin darse cuenta","tiene una teoría sobre todo","ajusta todos los relojes de la casa","prefiere las cartas a los mensajes","cuenta los escalones dondequiera que va"],
+  origin:["Creció en un pueblo de montaña","Viene de un puerto donde nadie se queda mucho","Trabajó años en una biblioteca","Ha viajado más de lo que admite","Vivió sola un tiempo en una casa grande","Se mudó nueve veces en diez años","Era la niña más callada de la familia","Aprendió tres idiomas por curiosidad"],
+  detail:["y desde entonces escucha más de lo que habla.","y aún conserva la costumbre de despertarse antes que todos.","lo que explica por qué nunca tiene prisa.","y cree que cada persona lleva una historia no contada.","y le quedó cariño por los días de lluvia.","y se quedó con una extraña confianza en las coincidencias.","y trata cada conversación como algo poco común.","y nunca se le quitó las ganas de irse a otra parte."]
+},
+pt: {
+  adj:["calma","curiosa","teimosa","gentil","irônica","atenta","sonhadora","prática","melancólica","exuberante","reservada","direta"],
+  quirk:["explica tudo com metáforas","mantém um diário que ninguém lê","sabe o nome de cada estrela visível","coleciona mapas antigos","nunca toma café depois do meio-dia","cantarola sem perceber","tem uma teoria sobre tudo","acerta todos os relógios da casa","prefere cartas a mensagens","conta os degraus por onde passa"],
+  origin:["Cresceu numa cidade de montanha","Vem de um porto onde ninguém fica muito tempo","Trabalhou anos numa biblioteca","Viajou mais do que admite","Morou sozinha por um tempo numa casa grande","Mudou-se nove vezes em dez anos","Era a criança mais quieta da família","Aprendeu três idiomas por curiosidade"],
+  detail:["e desde então escuta mais do que fala.","e ainda mantém o hábito de acordar antes de todo mundo.","o que explica por que nunca tem pressa.","e acredita que cada pessoa carrega uma história não contada.","e ficou com um carinho pelos dias de chuva.","e trouxe de lá uma estranha confiança em coincidências.","e trata cada conversa como algo raro.","e nunca perdeu a vontade de partir para algum lugar."]
+},
+de: {
+  adj:["ruhig","neugierig","stur","sanft","ironisch","aufmerksam","verträumt","praktisch","melancholisch","überschwänglich","zurückhaltend","direkt"],
+  quirk:["erklärt alles mit Metaphern","führt ein Tagebuch, das niemand liest","kennt den Namen jedes sichtbaren Sterns","sammelt alte Landkarten","trinkt nach Mittag nie Kaffee","summt, ohne es zu merken","hat zu allem eine Theorie","stellt alle Uhren im Haus nach","zieht Briefe Nachrichten vor","zählt überall die Stufen"],
+  origin:["Ist in einer Bergstadt aufgewachsen","Kommt aus einem Hafen, in dem niemand lange bleibt","Hat jahrelang in einer Bibliothek gearbeitet","Ist mehr gereist, als sie zugibt","Hat eine Zeit lang allein in einem großen Haus gelebt","Ist in zehn Jahren neunmal umgezogen","War das stillste Kind der Familie","Hat aus Neugier drei Sprachen gelernt"],
+  detail:["und hört seitdem mehr zu, als sie spricht.","und hat sich die Angewohnheit bewahrt, vor allen anderen aufzustehen.","was erklärt, warum sie es nie eilig hat.","und glaubt, dass jeder eine unerzählte Geschichte mit sich trägt.","und hat eine Vorliebe für Regentage behalten.","und daraus ein merkwürdiges Vertrauen in Zufälle mitgenommen.","und behandelt jedes Gespräch als etwas Seltenes.","und ist die Lust, irgendwohin aufzubrechen, nie ganz losgeworden."]
+}
+};
+
+function pickRandom(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+
+/* Generează un personaj complet nou prin combinare. Cu 12 adjective,
+   10 ticuri, 8 origini și 8 detalii per limbă, ies peste 84.000 de
+   combinații distincte — practic nu vezi același personaj de două ori. */
+function generateRandomCompanion(){
+  var lang = state.settings.lang || "en";
+  var g = CHARGEN_I18N[lang] || CHARGEN_I18N.en;
+  var a1 = pickRandom(g.adj), a2 = pickRandom(g.adj);
+  while (a2 === a1) a2 = pickRandom(g.adj);
+  return {
+    name: pickRandom(CHARGEN_NAMES),
+    traits: a1 + ", " + a2 + ", " + pickRandom(g.quirk),
+    backstory: pickRandom(g.origin) + " " + pickRandom(g.detail)
+  };
+}
+
+
+/* ============================================================
+   FUNCȚII "AI" REPLICATE LOCAL — onest, fără rețea neuronală
+   ------------------------------------------------------------
+   1. VORBIRE (text-to-speech): folosește vocile instalate în
+      sistemul de operare prin speechSynthesis. Nu e un model AI
+      și nu pleacă nimic pe rețea — browserul citește textul cu
+      vocile pe care le ai deja pe dispozitiv.
+      Deliberat NU am implementat recunoașterea vocală: în Chrome,
+      SpeechRecognition trimite audio-ul la serverele Google, ceea
+      ce ar rupe exact promisiunea centrală a aplicației.
+   2. REZUMAT EXTRACTIV: alege cele mai reprezentative propoziții
+      din conversație după frecvența cuvintelor de conținut. E un
+      algoritm clasic (de dinaintea rețelelor neuronale), nu o
+      înțelegere reală — dar chiar funcționează și e complet local.
+============================================================ */
+
+var TTS_STATE = { speaking:false };
+function ttsAvailable(){ return typeof window !== "undefined" && "speechSynthesis" in window && typeof SpeechSynthesisUtterance === "function"; }
+function ttsStop(){ try { if (ttsAvailable()) window.speechSynthesis.cancel(); } catch(e){} TTS_STATE.speaking = false; }
+function ttsSpeak(text){
+  if (!ttsAvailable() || !text) return false;
+  try {
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(String(text).slice(0, 5000));
+    var locale = LOCALE_BY_LANG[state.settings.lang || "en"] || "en-US";
+    u.lang = locale;
+    var voices = window.speechSynthesis.getVoices() || [];
+    // caut întâi o voce exact pe locale, apoi una pe limba de bază
+    var base = locale.slice(0,2);
+    var match = voices.filter(function(v){ return v.lang && v.lang.replace("_","-") === locale; })[0]
+             || voices.filter(function(v){ return v.lang && v.lang.slice(0,2) === base; })[0];
+    if (match) u.voice = match;
+    u.onend = function(){ TTS_STATE.speaking = false; };
+    u.onerror = function(){ TTS_STATE.speaking = false; };
+    TTS_STATE.speaking = true;
+    window.speechSynthesis.speak(u);
+    return true;
+  } catch(e){ TTS_STATE.speaking = false; return false; }
+}
+
+/* Cuvinte prea comune ca să spună ceva despre subiect — le scoatem
+   din calculul frecvenței, altfel „și/de/la" ar domina orice rezumat. */
+var STOPWORDS = {
+  ro:"si sa de la in cu pe un o el ea eu tu noi voi ei ele este sunt am ai are avem aveti au fost fi fie ca ce cum cand unde care dar sau nu da mai foarte ma te se ne va le lui ei al ai ale intr din prin pentru dupa fara despre acest acea aceasta acel",
+  en:"the a an and or but if then than that this these those is are was were be been being have has had do does did not no yes to of in on at by for with from as it its he she they we you i me my your our their about into over after before very just so",
+  fr:"le la les un une des et ou mais si donc que qui quoi dont ou est sont etait etaient etre avoir a as ont ne pas plus tres je tu il elle nous vous ils elles ce cet cette ces mon ton son notre votre leur de du au aux en dans sur pour par avec sans sous",
+  it:"il lo la i gli le un uno una e o ma se che chi cui non piu molto sono era erano essere avere ho hai ha abbiamo avete hanno di da in su per con senza tra fra questo questa questi queste mio tuo suo nostro vostro loro io tu lui lei noi voi",
+  es:"el la los las un una unos unas y o pero si que quien cual no mas muy es son era eran ser estar he has ha hemos han de del al a en sobre para por con sin entre este esta estos estas mi tu su nuestro vuestro yo tu el ella nosotros vosotros ellos",
+  pt:"o a os as um uma uns umas e ou mas se que quem qual nao mais muito e sao era eram ser estar tenho tem temos tem de do da em no na sobre para por com sem entre este esta estes estas meu teu seu nosso vosso eu tu ele ela nos vos eles elas",
+  de:"der die das ein eine und oder aber wenn dass wer was wie wo welche nicht mehr sehr ist sind war waren sein haben hat habe hatte von zu in auf an bei fur mit ohne uber unter ich du er sie wir ihr mein dein sein unser euer ihre es man auch noch"
+};
+function splitSentences(text, lang){
+  var locale = LOCALE_BY_LANG[lang] || "en-US";
+  try {
+    if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function"){
+      var seg = new Intl.Segmenter(locale, { granularity: "sentence" });
+      return Array.from(seg.segment(text)).map(function(s){ return s.segment.trim(); }).filter(function(s){ return s.length > 0; });
+    }
+  } catch(e){}
+  return text.split(/(?<=[.!?…])\s+/).map(function(s){ return s.trim(); }).filter(Boolean);
+}
+function normalizeWord(w){
+  return w.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "");
+}
+
+/* Rezumat extractiv clasic: numărăm cuvintele de conținut, dăm fiecărei
+   propoziții un scor = media frecvențelor cuvintelor ei (media, nu suma —
+   altfel propozițiile lungi ar câștiga automat), apoi păstrăm cele mai
+   bune, dar le redăm în ordinea originală, ca să rămână coerente. */
+function summarizeConversation(companion, maxSentences){
+  var lang = state.settings.lang || "en";
+  var stop = {};
+  (STOPWORDS[lang] || STOPWORDS.en).split(/\s+/).forEach(function(w){ stop[w] = true; });
+
+  /* O conversație există doar dacă și persoana a spus ceva. Fără verificarea
+     asta, „rezumatul" ar fi doar mesajul de bun-venit generat de aplicație
+     rezumat pe sine însuși — inutil și ușor înșelător. */
+  var userMsgs = (companion.messages || []).filter(function(m){ return m.role === "user" && !m.streaming; });
+  if (userMsgs.length === 0) return null;
+
+  var units = [];
+  (companion.messages || []).forEach(function(m){
+    if (m.role !== "user" && m.role !== "assistant") return;
+    if (m.streaming) return;
+    splitSentences(m.text || "", lang).forEach(function(s){
+      if (s.length >= 15) units.push({ text:s, role:m.role, ts:m.ts });
+    });
+  });
+  if (units.length < 3) return null;
+
+  var freq = {};
+  units.forEach(function(u){
+    normalizeWord(u.text).length;
+    u.text.split(/\s+/).forEach(function(raw){
+      var w = normalizeWord(raw);
+      if (w.length > 3 && !stop[w]) freq[w] = (freq[w] || 0) + 1;
+    });
+  });
+
+  units.forEach(function(u, i){
+    var words = u.text.split(/\s+/).map(normalizeWord).filter(function(w){ return w.length > 3 && !stop[w]; });
+    var sum = words.reduce(function(acc, w){ return acc + (freq[w] || 0); }, 0);
+    u.score = words.length ? (sum / words.length) : 0;
+    u.index = i;
+  });
+
+  var n = Math.max(2, Math.min(maxSentences || 5, Math.ceil(units.length / 3)));
+  var top = units.slice().sort(function(a,b){ return b.score - a.score; }).slice(0, n);
+  top.sort(function(a,b){ return a.index - b.index; });
+  return { sentences: top, totalSentences: units.length, topWords: Object.keys(freq).sort(function(a,b){ return freq[b]-freq[a]; }).slice(0,6) };
+}
+
 function resetNewCompanionForm(){
   editingCompanionId = null;
   document.getElementById("formNewCompanion").reset();
   Array.prototype.forEach.call(document.querySelectorAll(".type-chip"), function(b){
     b.classList.toggle("active", b.getAttribute("data-type") === "familie");
   });
+  document.getElementById("fCompanionProvider").value = "";
+  document.getElementById("fCompanionBaseUrl").value = "";
+  document.getElementById("fCompanionModel").value = "";
   document.getElementById("companionModalTitle").textContent = t("companionNewTitle");
   document.getElementById("companionModalSubmit").textContent = t("btnCreate");
 }
@@ -3483,6 +3894,9 @@ function openEditCompanion(c){
   document.getElementById("fName").value = c.name;
   document.getElementById("fTraits").value = c.traits || "";
   document.getElementById("fBackstory").value = c.backstory || "";
+  document.getElementById("fCompanionProvider").value = c.provider || "";
+  document.getElementById("fCompanionBaseUrl").value = c.baseUrl || "";
+  document.getElementById("fCompanionModel").value = c.model || "";
   Array.prototype.forEach.call(document.querySelectorAll(".type-chip"), function(b){
     b.classList.toggle("active", b.getAttribute("data-type") === c.type);
   });
@@ -3492,6 +3906,44 @@ function openEditCompanion(c){
 }
 
 function wireEvents(){
+  els.messages.addEventListener("click", function(e){
+    var btn = e.target.closest ? e.target.closest(".msg-speak") : null;
+    if (!btn) return;
+    var mid = btn.getAttribute("data-speak-mid");
+    var ac = getActiveCompanion();
+    if (!ac) return;
+    var msg = (ac.messages || []).filter(function(m){ return m.id === mid; })[0];
+    if (!msg) return;
+    if (TTS_STATE.speaking){ ttsStop(); return; }
+    if (!ttsSpeak(msg.text)) alert(t("ttsUnavailable"));
+  });
+
+  document.getElementById("btnRecap").addEventListener("click", function(){
+    var ac = getActiveCompanion();
+    if (!ac) return;
+    var body = document.getElementById("recapBody");
+    var r = summarizeConversation(ac, 6);
+    if (!r){
+      body.innerHTML = '<div class="about-block">' + escapeHtml(t("recapEmpty")) + '</div>';
+    } else {
+      var html = "";
+      r.sentences.forEach(function(s){
+        html += '<div class="recap-line' + (s.role === "user" ? " recap-user" : "") + '">' + escapeHtml(s.text) + '</div>';
+      });
+      html += '<div class="recap-stats">' + escapeHtml(t("recapStats").replace("{N}", r.totalSentences)) +
+              escapeHtml(r.topWords.join(", ")) + '</div>';
+      body.innerHTML = html;
+    }
+    openModal("modalRecap");
+  });
+
+  document.getElementById("btnRandomCompanion").addEventListener("click", function(){
+    var g = generateRandomCompanion();
+    document.getElementById("fName").value = g.name;
+    document.getElementById("fTraits").value = g.traits;
+    document.getElementById("fBackstory").value = g.backstory;
+  });
+
   document.getElementById("btnNewCompanion").addEventListener("click", function(){ resetNewCompanionForm(); openModal("modalNewCompanion"); });
   document.getElementById("btnEmptyNew").addEventListener("click", function(){ resetNewCompanionForm(); openModal("modalNewCompanion"); });
   document.getElementById("btnEditCompanion").addEventListener("click", function(){
@@ -3535,6 +3987,7 @@ function wireEvents(){
     });
     document.getElementById("fReminder").value = s.reminderMinutes;
     document.getElementById("fAutoMemory").checked = !!s.autoMemory;
+    document.getElementById("fAutoSpeak").checked = !!s.autoSpeak;
     refreshProviderPanels(s.provider);
     document.getElementById("webllmStatus").textContent = "";
     document.getElementById("chromeAiStatus").textContent = "";
@@ -3595,12 +4048,36 @@ function wireEvents(){
 
     openModal("modalShare");
   });
+  /* Validare strictă a instanței Fediverse. Câmpul e text liber, iar rezultatul
+     ajunge direct într-un window.open — fără verificarea de mai jos, o intrare
+     de tip „javascript:..." sau un URL lipit integral („https://https://...")
+     producea un URL malformat. Prins prin audit adversarial. */
+  function normalizeFediverseInstance(raw){
+    var s = String(raw || "").trim().toLowerCase();
+    s = s.replace(/^(?:[a-z][a-z0-9+.\-]*:\/\/)+/i, "");  // scoate orice schemă, chiar repetată
+    s = s.split(/[\/?#\\]/)[0];                            // păstrează doar host-ul, fără cale/query
+    if (!s) return null;
+    if (!/^[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?)+(?::\d{1,5})?$/.test(s)) return null;
+    return s;
+  }
   document.getElementById("btnFediverseGo").addEventListener("click", function(){
-    var instance = document.getElementById("fFediverseInstance").value.trim().replace(/^https?:\/\//,"").replace(/\/+$/,"");
-    if (!instance) return;
+    var input = document.getElementById("fFediverseInstance");
+    var instance = normalizeFediverseInstance(input.value);
+    if (!instance){
+      input.setAttribute("aria-invalid", "true");
+      input.style.borderColor = "var(--danger)";
+      input.value = "";
+      input.placeholder = t("shareFediverseInvalid");
+      input.focus();
+      return;
+    }
+    input.removeAttribute("aria-invalid");
+    input.style.borderColor = "";
     var hasUrl = location.protocol === "http:" || location.protocol === "https:";
     var fullText = t("shareIntro") + (hasUrl ? " " + location.href : "");
-    window.open("https://" + instance + "/share?text=" + encodeURIComponent(fullText), "_blank", "noopener");
+    var target = "https://" + instance + "/share?text=" + encodeURIComponent(fullText);
+    try { var u = new URL(target); if (u.protocol !== "https:") return; } catch(e){ return; }
+    window.open(target, "_blank", "noopener");
   });
 
   document.getElementById("btnLangSwitch").addEventListener("click", function(){
@@ -3716,7 +4193,14 @@ function wireEvents(){
       name: document.getElementById("fName").value.trim() || "Companion",
       type: activeChip ? activeChip.getAttribute("data-type") : "prieten",
       traits: document.getElementById("fTraits").value.trim(),
-      backstory: document.getElementById("fBackstory").value.trim()
+      backstory: document.getElementById("fBackstory").value.trim(),
+      provider: document.getElementById("fCompanionProvider").value,
+      baseUrl: document.getElementById("fCompanionBaseUrl").value.trim(),
+      model: document.getElementById("fCompanionModel").value.trim(),
+      webllmModel: editingCompanionId ? (function(){
+        for (var i=0;i<state.companions.length;i++){ if (state.companions[i].id === editingCompanionId) return state.companions[i].webllmModel || ""; }
+        return "";
+      })() : ""
     };
     if (editingCompanionId) updateCompanion(editingCompanionId, data);
     else createCompanion(data);
@@ -3748,6 +4232,7 @@ function wireEvents(){
     state.settings.webllmModel = document.getElementById("fWebllmModel").value.trim() || "Llama-3.2-3B-Instruct-q4f16_1-MLC";
     state.settings.reminderMinutes = Math.max(0, parseInt(document.getElementById("fReminder").value, 10) || 0);
     state.settings.autoMemory = document.getElementById("fAutoMemory").checked;
+    state.settings.autoSpeak = document.getElementById("fAutoSpeak").checked;
     saveState();
     startReminder();
     closeModals();
