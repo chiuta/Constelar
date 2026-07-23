@@ -16,7 +16,7 @@
  * a datelor, neschimbat.
  *
  * Cum se folosește: pune acest fișier ÎN ACELAȘI FOLDER cu
- * constelar.html, pe un server real (ex. GitHub Pages, Netlify,
+ * index.html, pe un server real (ex. GitHub Pages, Netlify,
  * orice hosting cu HTTPS). Deschis direct ca fișier local
  * (file://), acest worker nu se înregistrează deloc — aplicația
  * funcționează normal mai departe, exact ca înainte, doar fără
@@ -27,7 +27,7 @@
  */
 
 const CACHE_NAME = "constelar-shell-v1";
-const SHELL_URL = "./constelar.html";
+const SHELL_URL = "./index.html";
 
 self.addEventListener("install", (event) => {
   self.skipWaiting();

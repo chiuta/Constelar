@@ -1191,6 +1191,14 @@ function loadState(){
     if (state.activeId && !state.companions.some(function(c){ return c.id === state.activeId; })){
       state.activeId = state.companions.length ? state.companions[0].id : null;
     }
+    /* Migrare pentru stările salvate înainte de firele per limbă: conversația
+       existentă devine firul limbii curente, ca nimic să nu se piardă. */
+    state.companions.forEach(function(cp){
+      if (!cp.threads || typeof cp.threads !== "object") cp.threads = {};
+      if (Object.keys(cp.threads).length === 0 && cp.messages && cp.messages.length){
+        cp.threads[state.settings.lang] = cp.messages.slice();
+      }
+    });
   } catch(e){ state = defaultState(); }
 }
 function saveState(){ storageSet(STORAGE_KEY, JSON.stringify(state)); updateStorageMeter(); }
@@ -1887,8 +1895,34 @@ function normalizeCompanion(raw, preserveId){
       descoperite: (Array.isArray(mem.descoperite) ? mem.descoperite : []).map(normMemItem).filter(Boolean)
     },
     messages: (Array.isArray(raw.messages) ? raw.messages : []).map(normMsg).filter(Boolean),
+    /* Fire de conversație separate per limbă. `messages` rămâne firul limbii
+       ACTIVE (ca tot restul codului să funcționeze neschimbat), iar `threads`
+       păstrează celelalte limbi. La comutare, firul curent se salvează aici și
+       se încarcă cel al limbii noi — sau unul gol, care primește automat
+       mesajul de bun venit în limba respectivă. */
+    threads: (function(){
+      var out = {};
+      var t = (raw.threads && typeof raw.threads === "object") ? raw.threads : {};
+      VALID_LANGS.forEach(function(lg){
+        if (Array.isArray(t[lg])) out[lg] = t[lg].map(normMsg).filter(Boolean);
+      });
+      return out;
+    })(),
     createdAt: typeof raw.createdAt === "number" ? raw.createdAt : Date.now()
   };
+}
+
+/* Comută firele de conversație de la limba curentă la cea nouă.
+   Se apelează ÎNAINTE de a schimba state.settings.lang, ca să știm
+   sub ce limbă arhivăm firul care tocmai se închide. */
+function switchThreadsTo(newLang){
+  var oldLang = state.settings.lang;
+  if (oldLang === newLang) return;
+  state.companions.forEach(function(c){
+    if (!c.threads || typeof c.threads !== "object") c.threads = {};
+    c.threads[oldLang] = (c.messages || []).slice();
+    c.messages = Array.isArray(c.threads[newLang]) ? c.threads[newLang].slice() : [];
+  });
 }
 
 /* Providerul efectiv al unui companion: al lui propriu dacă are unul,
@@ -1930,6 +1964,7 @@ function createCompanion(data){
     type: data.type,
     provider: (VALID_PROVIDERS.indexOf(data.provider) !== -1) ? data.provider : null,
     baseUrl: data.baseUrl || "", model: data.model || "", webllmModel: data.webllmModel || "",
+    threads: {},
     traits: data.traits,
     backstory: data.backstory,
     memories: { permanente:[], evolutive:[], descoperite:[] },
@@ -3997,12 +4032,12 @@ function wireEvents(){
 
   function setLanguage(lang){
     if (VALID_LANGS.indexOf(lang) === -1) return;
+    if (lang === state.settings.lang) return;
+    ttsStop();
+    switchThreadsTo(lang);      // arhivează firul curent, încarcă-l pe cel al limbii noi
     state.settings.lang = lang;
-    saveState();
     applyTranslations();
-    renderRoster();
-    var active = getActiveCompanion();
-    if (active) document.getElementById("topType").textContent = translateType(active.type);
+    render();                   // render() declanșează și mesajul de bun venit în limba nouă
   }
 
   document.getElementById("fLang").addEventListener("change", function(e){
