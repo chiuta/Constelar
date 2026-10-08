@@ -26,7 +26,8 @@
  * vrei — Constelar funcționează identic fără el.
  */
 
-const CACHE_NAME = "constelar-shell-v1";
+const CACHE_PREFIX = "constelar-shell-";
+const CACHE_NAME = CACHE_PREFIX + "v2";
 const SHELL_URL = "./index.html";
 
 self.addEventListener("install", (event) => {
@@ -44,7 +45,9 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((names) =>
       Promise.all(
-        names.filter((n) => n !== CACHE_NAME).map((n) => caches.delete(n))
+        // ȘTERGE DOAR cache-urile acestui worker: pe același origin (github.io) trăiesc și cache-urile
+        // altor aplicații și ale WebLLM („webllm/model" etc., gigaocteți) — nu le atingem
+        names.filter((n) => n.indexOf(CACHE_PREFIX) === 0 && n !== CACHE_NAME).map((n) => caches.delete(n))
       )
     ).then(() => self.clients.claim())
   );
@@ -52,19 +55,30 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  // doar resurse de pe același origin: CDN-ul WebLLM / greutățile modelului (alt origin, uneori
+  // GB) nu trebuie interceptate sau duplicate în cache-ul shell-ului
+  var url;
+  try { url = new URL(event.request.url); } catch (e) { return; }
+  if (url.origin !== self.location.origin) return;
 
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // rețea disponibilă: răspundem cu ce vine din rețea și
-        // actualizăm cache-ul silențios pentru viitor, offline
-        var copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => {});
+        // rețea disponibilă: răspundem cu ce vine din rețea și actualizăm cache-ul
+        // silențios — doar răspunsuri 200 de bază (nu 404/5xx, nu 206 parțiale)
+        if (response && response.ok && response.status === 200 && response.type === "basic") {
+          var copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)).catch(() => {});
+        }
         return response;
       })
       .catch(() => {
-        // rețea indisponibilă: incercăm cache-ul exact, apoi shell-ul ca fallback general
-        return caches.match(event.request).then((cached) => cached || caches.match(SHELL_URL));
+        // rețea indisponibilă: cache-ul exact; shell-ul doar ca fallback pentru navigări
+        return caches.match(event.request).then((cached) => {
+          if (cached) return cached;
+          if (event.request.mode === "navigate") return caches.match(SHELL_URL);
+          return Response.error();
+        });
       })
   );
 });
