@@ -52,6 +52,10 @@ Descărcați `index.html` (opțional și `sw.js`, pentru instalare ca aplicație
 
 Licența nu este încă declarată explicit în acest repository; vezi nota din aplicație. Aplicația afirmă: „Codul sursă al Constelar este © Alexandru-Ionuț Chiuță"; conținutul creat de utilizator rămâne al acestuia.
 
+## Audit
+
+Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conținut (mesaje, memorii, rezumat) folosesc `escapeHtml` (testat cu payload `<img onerror>`); exportul de date golește cheia API. Corectat: bara de sus pe ecran îngust (fila „Memory" ieșea din ecran). Atenție: descrierea „100% locală" din GitHub nu e valabilă dacă alegeți un furnizor AI extern sau WebLLM (vezi mai sus).
+
 ## Autor
 
 Alexio — Alexandru-Ionuț Chiuță. Contact: alexio@trom.tf
