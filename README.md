@@ -50,11 +50,11 @@ Descărcați `index.html` (opțional și `sw.js`, pentru instalare ca aplicație
 
 ## Licență
 
-Licența nu este încă declarată explicit în acest repository; vezi nota din aplicație. Aplicația afirmă: „Codul sursă al Constelar este © Alexandru-Ionuț Chiuță"; conținutul creat de utilizator rămâne al acestuia.
+Licența nu este declarată explicit în acest repository (decizie rămasă la autor); vezi nota din aplicație. Aplicația afirmă: „Codul sursă al Constelar este © Alexandru-Ionuț Chiuță"; conținutul creat de utilizator rămâne al acestuia.
 
 ## Audit
 
-Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conținut (mesaje, memorii, rezumat) folosesc `escapeHtml` (testat cu payload `<img onerror>`); exportul de date golește cheia API. Corectat: bara de sus pe ecran îngust (fila „Memory" ieșea din ecran). Atenție: descrierea „100% locală" din GitHub nu e valabilă dacă alegeți un furnizor AI extern sau WebLLM (vezi mai sus).
+Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conținut (mesaje, memorii, rezumat) folosesc `escapeHtml` (testat cu payload `<img onerror>`); exportul de date golește cheia API. Corectat: bara de sus pe ecran îngust (fila „Memory" ieșea din ecran). Rundă 2 (2026-10-11): formularea „100% locală” apărea doar în câmpul „About” de pe GitHub, nu în pagină; textul paginii (meta description, „stored locally”, setări) este exact: datele rămân în browser, iar textul pleacă spre un AI extern, spre Pollinations sau spre CDN-ul `esm.run` (WebLLM) doar dacă alegeți acel furnizor. Text corect pentru „About” (de aplicat manual pe GitHub): „Companioni AI cu memorie stocată local în browser; mesajele pleacă spre un furnizor extern doar dacă îl alegi tu.” Fără CSP și fără SRI pe WebLLM: `import()` dinamic de pe `esm.run` nu poate purta atribut `integrity`, iar `connect-src` ar trebui să permită orice gazdă aleasă de utilizator (Base URL liber), deci o CSP utilă ar fi la fel de largă ca absența ei.
 
 ## Autor
 
