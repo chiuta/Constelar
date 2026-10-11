@@ -20,6 +20,7 @@ Constelar este o aplicație (PWA opțională) în care creați unul sau mai mul�
 - „Test connection", reamintire „It's AI" la interval configurabil (minute; 0 = oprit), citire cu voce tare a răspunsurilor (speechSynthesis).
 - Rezumat al conversației („Conversation recap", calculat local după frecvența cuvintelor) și export al unei conversații.
 - Export / import al tuturor datelor (⇩ / ⇧).
+- Buton „Copiază mesajul” (⧉) la fiecare mesaj; ciornele din câmpul de mesaj se păstrează per companion (și după reîncărcare).
 - Resurse de criză accesibile din bara laterală și dialog de siguranță când sunt detectate anumite expresii.
 - Meniu „Share" (link, WhatsApp, X, Facebook, LinkedIn, Fediverse).
 - Interfață în 7 limbi: engleză, română, franceză, italiană, spaniolă, portugheză, germană.
@@ -37,13 +38,13 @@ Constelar este o aplicație (PWA opțională) în care creați unul sau mai mul�
 
 ## Confidențialitate și rețea
 
-- **Stocare locală:** `localStorage`, cheia `constelar_state_v1` (companioni, memorii, conversații, setări; inclusiv cheia API dacă o introduceți). Aplicația testează disponibilitatea `localStorage` și avertizează dacă nu funcționează. Fără cookie-uri.
+- **Stocare locală:** `localStorage`, cheia `constelar_state_v1` (companioni, memorii, conversații, setări; inclusiv cheia API dacă o introduceți). Ciornele mesajelor netrimise se păstrează separat, în cheia `constelar_drafts_v1` (se șterg la trimitere). Aplicația testează disponibilitatea `localStorage` și avertizează dacă nu funcționează. Fără cookie-uri.
 - **Hosturi contactate, doar la acțiunea dumneavoastră:**
   - furnizorul AI ales: `api.anthropic.com`, `api.openai.com` sau alt Base URL (inclusiv `openrouter.ai` în presetări), cu mesajele și cheia trimise direct din browser;
   - `text.pollinations.ai`, dacă alegeți Pollinations (aplicația cere acordul o singură dată);
   - `esm.run` (CDN), pentru încărcarea bibliotecii `@mlc-ai/web-llm@0.2.84`, și apoi descărcarea modelului ales, dacă folosiți WebLLM;
   - linkurile către `iasp.info` (resurse de criză) și butoanele „Share" se deschid doar la clic.
-- Fără analitice. Pagina are politică CSP (meta); `connect-src` permite `https:` deoarece URL-ul furnizorului compatibil OpenAI este ales de utilizator. Numele modelelor din presetări (Groq, OpenRouter, Together, Mistral etc.) se schimbă des și nu au putut fi verificate la 11.10.2026: editați câmpul „Model” dacă un furnizor răspunde cu eroare. Cu furnizorul implicit „motor local simplu" sau cu modele deja descărcate, conversațiile nu părăsesc dispozitivul.
+- Fără analitice. Pagina are politică CSP (meta), cu `script-src` pe hash SHA-256 pentru scriptul propriu (fără `'unsafe-inline'`); `connect-src` permite `https:` deoarece URL-ul furnizorului compatibil OpenAI este ales de utilizator. Numele modelelor din presetări (Groq, OpenRouter, Together, Mistral etc.) se schimbă des și nu au putut fi verificate la 11.10.2026: editați câmpul „Model” dacă un furnizor răspunde cu eroare. Cu furnizorul implicit „motor local simplu" sau cu modele deja descărcate, conversațiile nu părăsesc dispozitivul.
 - Când este servit prin HTTPS, `sw.js` (opțional) se înregistrează și păstrează în cache „app shell"-ul; nu atinge `localStorage`.
 
 ## Rulare locală / offline
@@ -59,6 +60,10 @@ Licența nu este declarată explicit în acest repository (decizie rămasă la a
 Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conținut (mesaje, memorii, rezumat) folosesc `escapeHtml` (testat cu payload `<img onerror>`); exportul de date golește cheia API. Corectat: bara de sus pe ecran îngust (fila „Memory" ieșea din ecran). Rundă 2 (2026-10-11): formularea „100% locală” apărea doar în câmpul „About” de pe GitHub, nu în pagină; textul paginii (meta description, „stored locally”, setări) este exact: datele rămân în browser, iar textul pleacă spre un AI extern, spre Pollinations sau spre CDN-ul `esm.run` (WebLLM) doar dacă alegeți acel furnizor. Text corect pentru „About” (de aplicat manual pe GitHub): „Companioni AI cu memorie stocată local în browser; mesajele pleacă spre un furnizor extern doar dacă îl alegi tu.” Fără CSP și fără SRI pe WebLLM: `import()` dinamic de pe `esm.run` nu poate purta atribut `integrity`, iar `connect-src` ar trebui să permită orice gazdă aleasă de utilizator (Base URL liber), deci o CSP utilă ar fi la fel de largă ca absența ei.
 
 ## Istoric / Changelog
+
+### 11 octombrie 2026 (runda 6)
+- Adăugat: buton de copiere pe fiecare mesaj (traducere în 7 limbi), ciorne persistente per companion.
+- Securitate: CSP cu `script-src` pe hash în locul `'unsafe-inline'` (surse externe neschimbate: `esm.run`, `cdn.jsdelivr.net`).
 
 ### 11 octombrie 2026
 - Reparat: motorul local pe reguli răspunde acum la întrebări despre utilizator („What is my name?”, „Cine sunt?”, „Que sais-tu de moi ?” etc., în toate cele 7 limbi) cu faptele „descoperite” din memorie; fără fapte, spune explicit că nu are nimic reținut.

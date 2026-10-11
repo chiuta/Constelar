@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://esm.run https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' https://esm.run https://cdn.jsdelivr.net 'sha256-5kz9uDef4SjhIz2k0guXmxCvJvyaS6VrDLIfizTUdc4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'">
 <title>Constelar — companioni AI cu memorie reală, stocată local</title>
 <meta name="description" content="Companioni AI cu memorie persistentă. Fără cont, fără server, fără telemetrie — memoria și conversațiile rămân pe dispozitivul tău; textul pleacă spre un AI extern doar dacă îl alegi tu.">
 <meta name="theme-color" content="#0e0b16">
@@ -261,6 +261,10 @@ ul{list-style:none; margin:0; padding:0;}
 .divider{border:none; border-top:1px solid var(--twilight); margin:18px 0;}
 .about-block{font-size:13px; color:var(--mist); margin-bottom:12px;}
 .legal-block{font-size:12px;}
+.msg-copy{background:none; border:none; color:var(--mist-dim); font-size:12px; padding:2px 4px; margin-left:2px; opacity:0; cursor:pointer;}
+.msg:hover .msg-copy, .msg:focus-within .msg-copy{opacity:.7;}
+.msg-copy:hover{opacity:1 !important; color:var(--starlight);}
+@media (hover:none),(pointer:coarse){ .msg-copy{opacity:.55;} }
 .msg-speak{background:none; border:none; color:var(--mist-dim); font-size:12px; padding:2px 4px; margin-left:2px; opacity:0; cursor:pointer;}
 .msg:hover .msg-speak, .msg:focus-within .msg-speak{opacity:.7;}
 .msg-speak:hover{opacity:1 !important; color:var(--starlight);}
@@ -1732,6 +1736,7 @@ function renderMessages(companion){
     }
     var cls = m.role === "user" ? "msg-user" : "msg-ai";
     html += '<div class="msg '+cls+'" data-mid="'+escapeHtml(m.id)+'"><span class="msg-text">'+escapeHtml(m.text)+'</span>' +
+      '<button type="button" class="msg-copy" data-copy-mid="'+escapeHtml(m.id)+'" aria-label="'+escapeHtml(t("ariaCopy"))+'" title="'+escapeHtml(t("ariaCopy"))+'">⧉</button>' +
       (m.role === "assistant" ? '<button type="button" class="msg-speak" data-speak-mid="'+escapeHtml(m.id)+'" aria-label="'+escapeHtml(t("ariaSpeak"))+'" title="'+escapeHtml(t("ariaSpeak"))+'">🔊</button>' : '') +
       (m.simulated ? '<span class="msg-sim-tag">'+escapeHtml(t("simTag"))+'</span>' : '') +
       '<span class="msg-time">'+fmtTime(m.ts)+'</span></div>';
@@ -1848,10 +1853,41 @@ document.addEventListener("keydown", function(e){
 /* ============================================================
    COMPANION CRUD
 ============================================================ */
+/* Ciorne: textul nescris încă din câmpul de mesaj se păstrează per companion (localStorage, cheia constelar_drafts_v1). */
+var DRAFT_KEY = "constelar_drafts_v1", drafts = {}, draftTimer = null;
+function loadDrafts(){
+  try {
+    var o = JSON.parse(localStorage.getItem(DRAFT_KEY) || "{}");
+    if (o && typeof o === "object") Object.keys(o).forEach(function(k){ if (typeof o[k] === "string" && o[k]) drafts[k] = o[k].slice(0, 4000); });
+  } catch (e) { drafts = {}; }
+}
+function saveDrafts(){
+  try {
+    if (Object.keys(drafts).length) localStorage.setItem(DRAFT_KEY, JSON.stringify(drafts));
+    else localStorage.removeItem(DRAFT_KEY);
+  } catch (e) { /* stocare indisponibilă: ciornele rămân doar în memorie */ }
+}
+function stashDraft(){
+  var c = getActiveCompanion();
+  if (!c || !els.composerInput) return;
+  var v = els.composerInput.value;
+  if (v && v.trim()) drafts[c.id] = v.slice(0, 4000); else delete drafts[c.id];
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(saveDrafts, 400);
+}
+function restoreDraft(){
+  var c = getActiveCompanion();
+  if (!els.composerInput) return;
+  els.composerInput.value = (c && drafts[c.id]) ? drafts[c.id] : "";
+  els.composerInput.style.height = "auto";
+  if (els.composerInput.value) els.composerInput.style.height = Math.min(140, els.composerInput.scrollHeight) + "px";
+}
 function selectCompanion(id){
   ttsStop();
+  stashDraft();
   state.activeId = id;
   render();
+  restoreDraft();
 }
 
 var VALID_TYPES = ["familie","prieten","romantic","poveste"];
@@ -2545,7 +2581,7 @@ ro: {
   legalBlock5:"<b>Limite:</b> Nimic din ce spune un companion — local sau conectat la un AI real — nu constituie sfat medical, juridic sau financiar. Pentru decizii care contează cu adevărat, vorbește cu un profesionist calificat.",
   donateCoffee:"☕ Cumpără-mi o cafea", donatePatreon:"✦ Susține pe Patreon", fieldCompanionProvider:"AI folosit de acest companion", providerInheritGlobal:"Ca în Setări (global)", providerBadgePrefix:"AI: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (gratuit, fără cont și fără cheie)",
   fieldCompanionBaseUrl:"URL de bază (opțional)", fieldCompanionModel:"Model (opțional)",
-  companionConfigHint:"Lăsate goale, se folosesc valorile implicite ale providerului. Cheia API rămâne cea globală din Setări.", ariaRandomCompanion:"Personaj aleatoriu (generat local)", ariaSpeak:"Citește cu voce tare", ariaRecap:"Rezumatul conversației", fieldAutoSpeak:"citește răspunsurile cu voce tare",
+  companionConfigHint:"Lăsate goale, se folosesc valorile implicite ale providerului. Cheia API rămâne cea globală din Setări.", ariaRandomCompanion:"Personaj aleatoriu (generat local)", ariaSpeak:"Citește cu voce tare", ariaCopy:"Copiază mesajul", ariaRecap:"Rezumatul conversației", fieldAutoSpeak:"citește răspunsurile cu voce tare",
   recapTitle:"Rezumatul conversației", recapEmpty:"Conversația e încă prea scurtă pentru un rezumat.",
   recapHint:"Extras local, prin frecvența cuvintelor — nicio rețea neuronală, nicio conexiune.",
   recapStats:"{N} propoziții analizate · teme recurente: ", ttsUnavailable:"Vocea nu e disponibilă aici (niciun sistem de voci instalat).", shareFediverseInvalid:"instanță invalidă — ex: mastodon.social"
@@ -2666,7 +2702,7 @@ en: {
   legalBlock5:"<b>Limitations:</b> Nothing a companion says — local or connected to a real AI — constitutes medical, legal, or financial advice. For decisions that really matter, talk to a qualified professional.",
   donateCoffee:"☕ Buy me a coffee", donatePatreon:"✦ Support on Patreon", fieldCompanionProvider:"AI used by this companion", providerInheritGlobal:"Same as Settings (global)", providerBadgePrefix:"AI: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (free, no account, no key)",
   fieldCompanionBaseUrl:"Base URL (optional)", fieldCompanionModel:"Model (optional)",
-  companionConfigHint:"Left empty, the provider's defaults are used. The API key stays the global one from Settings.", ariaRandomCompanion:"Random character (generated locally)", ariaSpeak:"Read aloud", ariaRecap:"Conversation recap", fieldAutoSpeak:"read replies aloud",
+  companionConfigHint:"Left empty, the provider's defaults are used. The API key stays the global one from Settings.", ariaRandomCompanion:"Random character (generated locally)", ariaSpeak:"Read aloud", ariaCopy:"Copy message", ariaRecap:"Conversation recap", fieldAutoSpeak:"read replies aloud",
   recapTitle:"Conversation recap", recapEmpty:"The conversation is still too short to summarize.",
   recapHint:"Extracted locally by word frequency — no neural network, no connection.",
   recapStats:"{N} sentences analyzed · recurring themes: ", ttsUnavailable:"Speech isn't available here (no voices installed).", shareFediverseInvalid:"invalid instance — e.g. mastodon.social"
@@ -2787,7 +2823,7 @@ fr: {
   legalBlock5:"<b>Limites :</b> Rien de ce que dit un compagnon — local ou connecté à une vraie IA — ne constitue un conseil médical, juridique ou financier. Pour les décisions qui comptent vraiment, parle à un professionnel qualifié.",
   donateCoffee:"☕ Offre-moi un café", donatePatreon:"✦ Soutenir sur Patreon", fieldCompanionProvider:"IA utilisée par ce compagnon", providerInheritGlobal:"Comme dans les Paramètres (global)", providerBadgePrefix:"IA : ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (gratuit, sans compte ni clé)",
   fieldCompanionBaseUrl:"URL de base (facultatif)", fieldCompanionModel:"Modèle (facultatif)",
-  companionConfigHint:"Laissés vides, les valeurs par défaut du fournisseur sont utilisées. La clé API reste celle globale des Paramètres.", ariaRandomCompanion:"Personnage aléatoire (généré localement)", ariaSpeak:"Lire à voix haute", ariaRecap:"Résumé de la conversation", fieldAutoSpeak:"lire les réponses à voix haute",
+  companionConfigHint:"Laissés vides, les valeurs par défaut du fournisseur sont utilisées. La clé API reste celle globale des Paramètres.", ariaRandomCompanion:"Personnage aléatoire (généré localement)", ariaSpeak:"Lire à voix haute", ariaCopy:"Copier le message", ariaRecap:"Résumé de la conversation", fieldAutoSpeak:"lire les réponses à voix haute",
   recapTitle:"Résumé de la conversation", recapEmpty:"La conversation est encore trop courte pour un résumé.",
   recapHint:"Extrait localement par fréquence des mots — aucun réseau de neurones, aucune connexion.",
   recapStats:"{N} phrases analysées · thèmes récurrents : ", ttsUnavailable:"La voix n'est pas disponible ici (aucune voix installée).", shareFediverseInvalid:"instance invalide — ex : mastodon.social"
@@ -2908,7 +2944,7 @@ it: {
   legalBlock5:"<b>Limiti:</b> Nulla di ciò che dice un compagno — locale o collegato a un'IA reale — costituisce consulenza medica, legale o finanziaria. Per le decisioni che contano davvero, parla con un professionista qualificato.",
   donateCoffee:"☕ Offrimi un caffè", donatePatreon:"✦ Sostieni su Patreon", fieldCompanionProvider:"IA usata da questo compagno", providerInheritGlobal:"Come nelle Impostazioni (globale)", providerBadgePrefix:"IA: ", providerBadgeGlobal:"globale", providerPollinations:"Pollinations (gratuito, senza account né chiave)",
   fieldCompanionBaseUrl:"URL di base (opzionale)", fieldCompanionModel:"Modello (opzionale)",
-  companionConfigHint:"Se lasciati vuoti, si usano i valori predefiniti del provider. La chiave API resta quella globale nelle Impostazioni.", ariaRandomCompanion:"Personaggio casuale (generato in locale)", ariaSpeak:"Leggi ad alta voce", ariaRecap:"Riepilogo della conversazione", fieldAutoSpeak:"leggi le risposte ad alta voce",
+  companionConfigHint:"Se lasciati vuoti, si usano i valori predefiniti del provider. La chiave API resta quella globale nelle Impostazioni.", ariaRandomCompanion:"Personaggio casuale (generato in locale)", ariaSpeak:"Leggi ad alta voce", ariaCopy:"Copia il messaggio", ariaRecap:"Riepilogo della conversazione", fieldAutoSpeak:"leggi le risposte ad alta voce",
   recapTitle:"Riepilogo della conversazione", recapEmpty:"La conversazione è ancora troppo breve per un riepilogo.",
   recapHint:"Estratto localmente per frequenza delle parole — nessuna rete neurale, nessuna connessione.",
   recapStats:"{N} frasi analizzate · temi ricorrenti: ", ttsUnavailable:"La voce non è disponibile qui (nessuna voce installata).", shareFediverseInvalid:"istanza non valida — es: mastodon.social"
@@ -3029,7 +3065,7 @@ es: {
   legalBlock5:"<b>Límites:</b> Nada de lo que diga un compañero — local o conectado a una IA real — constituye asesoría médica, legal o financiera. Para decisiones que de verdad importan, habla con un profesional cualificado.",
   donateCoffee:"☕ Invítame un café", donatePatreon:"✦ Apoyar en Patreon", fieldCompanionProvider:"IA usada por este compañero", providerInheritGlobal:"Igual que en Ajustes (global)", providerBadgePrefix:"IA: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (gratis, sin cuenta ni clave)",
   fieldCompanionBaseUrl:"URL base (opcional)", fieldCompanionModel:"Modelo (opcional)",
-  companionConfigHint:"Si se dejan vacíos, se usan los valores por defecto del proveedor. La clave API sigue siendo la global de Ajustes.", ariaRandomCompanion:"Personaje aleatorio (generado localmente)", ariaSpeak:"Leer en voz alta", ariaRecap:"Resumen de la conversación", fieldAutoSpeak:"leer las respuestas en voz alta",
+  companionConfigHint:"Si se dejan vacíos, se usan los valores por defecto del proveedor. La clave API sigue siendo la global de Ajustes.", ariaRandomCompanion:"Personaje aleatorio (generado localmente)", ariaSpeak:"Leer en voz alta", ariaCopy:"Copiar el mensaje", ariaRecap:"Resumen de la conversación", fieldAutoSpeak:"leer las respuestas en voz alta",
   recapTitle:"Resumen de la conversación", recapEmpty:"La conversación aún es demasiado corta para resumirla.",
   recapHint:"Extraído localmente por frecuencia de palabras — sin red neuronal, sin conexión.",
   recapStats:"{N} frases analizadas · temas recurrentes: ", ttsUnavailable:"La voz no está disponible aquí (ninguna voz instalada).", shareFediverseInvalid:"instancia inválida — ej: mastodon.social"
@@ -3150,7 +3186,7 @@ pt: {
   legalBlock5:"<b>Limites:</b> Nada do que um companheiro diz — local ou conectado a uma IA real — constitui aconselhamento médico, jurídico ou financeiro. Para decisões que realmente importam, converse com um profissional qualificado.",
   donateCoffee:"☕ Me pague um café", donatePatreon:"✦ Apoiar no Patreon", fieldCompanionProvider:"IA usada por este companheiro", providerInheritGlobal:"Igual às Configurações (global)", providerBadgePrefix:"IA: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (grátis, sem conta e sem chave)",
   fieldCompanionBaseUrl:"URL base (opcional)", fieldCompanionModel:"Modelo (opcional)",
-  companionConfigHint:"Se deixados vazios, usam-se os padrões do provedor. A chave API continua sendo a global das Configurações.", ariaRandomCompanion:"Personagem aleatório (gerado localmente)", ariaSpeak:"Ler em voz alta", ariaRecap:"Resumo da conversa", fieldAutoSpeak:"ler as respostas em voz alta",
+  companionConfigHint:"Se deixados vazios, usam-se os padrões do provedor. A chave API continua sendo a global das Configurações.", ariaRandomCompanion:"Personagem aleatório (gerado localmente)", ariaSpeak:"Ler em voz alta", ariaCopy:"Copiar a mensagem", ariaRecap:"Resumo da conversa", fieldAutoSpeak:"ler as respostas em voz alta",
   recapTitle:"Resumo da conversa", recapEmpty:"A conversa ainda é curta demais para um resumo.",
   recapHint:"Extraído localmente por frequência de palavras — sem rede neural, sem conexão.",
   recapStats:"{N} frases analisadas · temas recorrentes: ", ttsUnavailable:"A voz não está disponível aqui (nenhuma voz instalada).", shareFediverseInvalid:"instância inválida — ex: mastodon.social"
@@ -3271,7 +3307,7 @@ de: {
   legalBlock5:"<b>Grenzen:</b> Nichts, was ein Begleiter sagt — lokal oder mit einer echten KI verbunden — stellt medizinische, rechtliche oder finanzielle Beratung dar. Für wirklich wichtige Entscheidungen wende dich an eine qualifizierte Fachperson.",
   donateCoffee:"☕ Spendier mir einen Kaffee", donatePatreon:"✦ Auf Patreon unterstützen", fieldCompanionProvider:"KI für diesen Begleiter", providerInheritGlobal:"Wie in den Einstellungen (global)", providerBadgePrefix:"KI: ", providerBadgeGlobal:"global", providerPollinations:"Pollinations (kostenlos, ohne Konto und Schlüssel)",
   fieldCompanionBaseUrl:"Basis-URL (optional)", fieldCompanionModel:"Modell (optional)",
-  companionConfigHint:"Leer gelassen, werden die Standardwerte des Anbieters verwendet. Der API-Schlüssel bleibt der globale aus den Einstellungen.", ariaRandomCompanion:"Zufällige Figur (lokal generiert)", ariaSpeak:"Vorlesen", ariaRecap:"Gesprächszusammenfassung", fieldAutoSpeak:"Antworten vorlesen",
+  companionConfigHint:"Leer gelassen, werden die Standardwerte des Anbieters verwendet. Der API-Schlüssel bleibt der globale aus den Einstellungen.", ariaRandomCompanion:"Zufällige Figur (lokal generiert)", ariaSpeak:"Vorlesen", ariaCopy:"Nachricht kopieren", ariaRecap:"Gesprächszusammenfassung", fieldAutoSpeak:"Antworten vorlesen",
   recapTitle:"Gesprächszusammenfassung", recapEmpty:"Das Gespräch ist noch zu kurz für eine Zusammenfassung.",
   recapHint:"Lokal nach Worthäufigkeit extrahiert — kein neuronales Netz, keine Verbindung.",
   recapStats:"{N} Sätze analysiert · wiederkehrende Themen: ", ttsUnavailable:"Sprachausgabe ist hier nicht verfügbar (keine Stimmen installiert).", shareFediverseInvalid:"ungültige Instanz — z.B. mastodon.social"
@@ -4079,6 +4115,22 @@ function openEditCompanion(c){
 
 function wireEvents(){
   els.messages.addEventListener("click", function(e){
+    var cb = e.target.closest ? e.target.closest(".msg-copy") : null;
+    if (!cb) return;
+    var cac = getActiveCompanion();
+    if (!cac) return;
+    var cm = (cac.messages || []).filter(function(m){ return m.id === cb.getAttribute("data-copy-mid"); })[0];
+    if (!cm) return;
+    function flash(ok){
+      cb.textContent = ok ? "✓" : "✕";
+      setTimeout(function(){ cb.textContent = "⧉"; }, 1200);
+    }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(cm.text).then(function(){ flash(true); }, function(){ flash(false); });
+      else flash(false);
+    } catch (err) { flash(false); }
+  });
+  els.messages.addEventListener("click", function(e){
     var btn = e.target.closest ? e.target.closest(".msg-speak") : null;
     if (!btn) return;
     var mid = btn.getAttribute("data-speak-mid");
@@ -4429,6 +4481,7 @@ function wireEvents(){
     var val = els.composerInput.value;
     if (!val.trim()) return;
     els.composerInput.value = "";
+    stashDraft();
     els.composerInput.style.height = "auto";
     sendMessage(val);
   });
@@ -4440,6 +4493,7 @@ function wireEvents(){
     }
   });
   els.composerInput.addEventListener("input", function(){
+    stashDraft();
     this.style.height = "auto";
     this.style.height = Math.min(140, this.scrollHeight) + "px";
   });
@@ -4599,6 +4653,8 @@ function init(){
   applyTranslations();
   wireEvents();
   render();
+  loadDrafts();
+  restoreDraft();
   updateStorageMeter();
   startReminder();
   setupPWA();
