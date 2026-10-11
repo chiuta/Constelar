@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://esm.run https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'">
 <title>Constelar — companioni AI cu memorie reală, stocată local</title>
 <meta name="description" content="Companioni AI cu memorie persistentă. Fără cont, fără server, fără telemetrie — memoria și conversațiile rămân pe dispozitivul tău; textul pleacă spre un AI extern doar dacă îl alegi tu.">
 <meta name="theme-color" content="#0e0b16">
@@ -19,7 +20,7 @@
   --twilight:#332c56; --twilight-2:#443a6e;
   --starlight:#f2c879; --starlight-dim:#c9a25f;
   --rose:#c77da6; --rose-dim:#9c6183;
-  --paper:#ede7f6; --mist:#a19bc0; --mist-dim:#8b84ad;
+  --paper:#ede7f6; --mist:#a19bc0; --mist-dim:#a39dc4;
   --danger:#e0685f; --safe:#7fb69a;
   --font-display: Georgia,'Iowan Old Style','Palatino Linotype','Book Antiqua',serif;
   --font-body: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;
@@ -130,7 +131,7 @@ ul{list-style:none; margin:0; padding:0;}
   color:var(--mist); text-align:center; padding:30px;
 }
 .empty-state .brand-mark{font-size:40px; display:block; margin-bottom:6px;}
-.empty-state h2{color:var(--paper);}
+.empty-state h1{color:var(--paper); font-size:1.5em;}
 .empty-state p{max-width:420px; font-size:13.5px;}
 
 .companion-view{display:flex; flex-direction:column; height:100%;}
@@ -141,7 +142,7 @@ ul{list-style:none; margin:0; padding:0;}
 }
 .topbar-left{display:flex; align-items:center; gap:10px; min-width:0; flex:1 1 auto; overflow:hidden;}
 .topbar-left > div:last-child{min-width:0; overflow:hidden;}
-.top-name{font-family:var(--font-display); font-size:17px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.top-name{margin:0; font-family:var(--font-display); font-size:17px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .top-type{font-size:11.5px; color:var(--mist); text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .top-provider{font-size:10px; color:var(--mist-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px;}
 .topbar-right{display:flex; align-items:center; gap:8px; flex-shrink:0;}
@@ -162,7 +163,7 @@ ul{list-style:none; margin:0; padding:0;}
 .msg-user{align-self:flex-end; background:var(--twilight-2); color:var(--paper); border-bottom-right-radius:4px;}
 .msg-ai{align-self:flex-start; background:var(--dusk); border:1px solid var(--twilight); border-bottom-left-radius:4px;}
 .msg-sim-tag{display:block; font-size:10px; color:var(--mist-dim); margin-top:4px; font-family:var(--font-mono);}
-.msg-time{font-size:10px; color:var(--mist-dim); margin-top:3px; font-family:var(--font-mono);}
+.msg-time{font-size:10px; color:#cfc9e8; margin-top:3px; font-family:var(--font-mono);}
 .msg-error{align-self:center; background:rgba(224,104,95,.12); border:1px solid var(--danger); color:#ffb8b2; font-size:12.5px; border-radius:10px;}
 
 .reminder-banner{
@@ -212,9 +213,9 @@ ul{list-style:none; margin:0; padding:0;}
 .memory-layout{flex:1; display:grid; grid-template-columns:1fr 340px; gap:0; min-height:0;}
 #constellationCanvas{width:100%; height:100%; display:block;}
 .memory-lists{border-left:1px solid var(--twilight); overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:20px;}
-.memory-group h3{font-size:13px; letter-spacing:.4px; color:var(--mist); text-transform:uppercase; font-family:var(--font-body); font-weight:700;}
-.memory-group[data-cat="permanente"] h3{color:var(--starlight);}
-.memory-group[data-cat="romantic"] h3{color:var(--rose);}
+.memory-group h2{font-size:13px; letter-spacing:.4px; color:var(--mist); text-transform:uppercase; font-family:var(--font-body); font-weight:700;}
+.memory-group[data-cat="permanente"] h2{color:var(--starlight);}
+.memory-group[data-cat="romantic"] h2{color:var(--rose);}
 .mem-item{
   display:flex; justify-content:space-between; gap:8px; align-items:flex-start;
   background:var(--dusk); border:1px solid var(--twilight); border-radius:9px; padding:8px 10px; margin-bottom:6px; font-size:12.5px;
@@ -334,7 +335,7 @@ ul{list-style:none; margin:0; padding:0;}
 </head>
 <body>
 
-<canvas id="stars"></canvas>
+<canvas id="stars" aria-hidden="true"></canvas>
 <button id="railToggle" data-i18n-aria="ariaMenu" data-i18n-title="titleMenu" aria-label="Open menu" title="Menu">☰</button>
 <div id="storageWarning" class="storage-warning" role="alert" hidden>
   ⚠ <span data-i18n="storageWarningText">Local browser storage doesn't seem to be working right now (possibly a privacy extension or strict private mode). Everything you write this session <b>will not be saved</b> once you close or reload the page. You can export manually at the end from ⇩.</span>
@@ -376,7 +377,7 @@ ul{list-style:none; margin:0; padding:0;}
   <main id="stage">
     <div id="emptyState" class="empty-state">
       <span class="brand-mark">✦</span>
-      <h2 data-i18n="emptyTitle">No conversation open</h2>
+      <h1 data-i18n="emptyTitle">No conversation open</h1>
       <p data-i18n="emptyBody">Create a new companion on the left. Each has its own memory, shown as a constellation — and nothing you write leaves this device unless you connect your own API key.</p>
       <button id="btnEmptyNew" class="btn-primary" data-i18n="emptyCta">+ Create your first companion</button>
     </div>
@@ -386,7 +387,7 @@ ul{list-style:none; margin:0; padding:0;}
         <div class="topbar-left">
           <div id="topAvatar" class="avatar avatar-sm"></div>
           <div>
-            <div id="topName" class="top-name"></div>
+            <h1 id="topName" class="top-name"></h1>
             <div id="topType" class="top-type"></div>
             <div id="topProvider" class="top-provider"></div>
           </div>
@@ -419,17 +420,17 @@ ul{list-style:none; margin:0; padding:0;}
           <div class="memory-lists">
             <div class="mem-node-hint" data-i18n="memNodeHint">Tap a star to see that memory</div>
             <div class="memory-group" data-cat="permanente">
-              <h3 data-i18n="memPermanent">Permanent</h3>
+              <h2 data-i18n="memPermanent">Permanent</h2>
               <ul id="listPermanente"></ul>
               <form class="add-memory-form" data-cat="permanente"><input required data-i18n-placeholder="memPermPlaceholder" placeholder="e.g. his name is Andrew, from Iași"><button type="submit">+</button></form>
             </div>
             <div class="memory-group" data-cat="evolutive">
-              <h3 data-i18n="memEvolving">Evolving</h3>
+              <h2 data-i18n="memEvolving">Evolving</h2>
               <ul id="listEvolutive"></ul>
               <form class="add-memory-form" data-cat="evolutive"><input required data-i18n-placeholder="memEvolPlaceholder" placeholder="e.g. now working on a new project"><button type="submit">+</button></form>
             </div>
             <div class="memory-group" data-cat="descoperite">
-              <h3 data-i18n="memDiscovered">Discovered</h3>
+              <h2 data-i18n="memDiscovered">Discovered</h2>
               <ul id="listDescoperite"></ul>
               <form class="add-memory-form" data-cat="descoperite"><input required data-i18n-placeholder="memDiscPlaceholder" placeholder="observation — automatic or manual"><button type="submit">+</button></form>
             </div>
@@ -440,9 +441,9 @@ ul{list-style:none; margin:0; padding:0;}
   </main>
 </div>
 
-<div id="modalOverlay" class="modal-overlay" role="dialog" aria-modal="true" hidden>
+<div id="modalOverlay" class="modal-overlay" hidden>
 
-  <div id="modalNewCompanion" class="modal" hidden>
+  <div id="modalNewCompanion" class="modal" role="dialog" aria-modal="true" aria-labelledby="companionModalTitle" hidden>
     <h2 id="companionModalTitle" data-i18n="companionNewTitle">New companion</h2>
     <div class="modal-sub" data-i18n="companionSub">Define them now; you can edit anything, anytime.</div>
     <form id="formNewCompanion">
@@ -500,8 +501,8 @@ ul{list-style:none; margin:0; padding:0;}
     </form>
   </div>
 
-  <div id="modalSettings" class="modal" hidden>
-    <h2 data-i18n="settingsTitle">AI Settings</h2>
+  <div id="modalSettings" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalSettingsTitle" hidden>
+    <h2 id="modalSettingsTitle" data-i18n="settingsTitle">AI Settings</h2>
     <div class="modal-sub" data-i18n="settingsSub">Your key stays only in this browser (localStorage) and is sent directly to the provider you choose — never through our servers, for the simple reason that none exist.</div>
     <form id="formSettings" autocomplete="off">
       <div class="field">
@@ -606,8 +607,8 @@ ul{list-style:none; margin:0; padding:0;}
     </form>
   </div>
 
-  <div id="modalAbout" class="modal" hidden>
-    <h2 data-i18n="aboutTitle">About Constelar</h2>
+  <div id="modalAbout" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalAboutTitle" hidden>
+    <h2 id="modalAboutTitle" data-i18n="aboutTitle">About Constelar</h2>
     <div class="about-block" data-i18n-html="aboutBlock1">...</div>
     <div class="about-block" data-i18n-html="aboutBlock2">...</div>
     <div class="about-block" data-i18n-html="aboutBlock3">...</div>
@@ -632,8 +633,8 @@ ul{list-style:none; margin:0; padding:0;}
     </div>
   </div>
 
-  <div id="modalShare" class="modal" hidden>
-    <h2 data-i18n="shareModalTitle">Share Constelar</h2>
+  <div id="modalShare" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalShareTitle" hidden>
+    <h2 id="modalShareTitle" data-i18n="shareModalTitle">Share Constelar</h2>
     <div class="modal-sub" data-i18n="shareIntro">An offline AI companion app with real memory...</div>
     <button type="button" class="btn-primary btn-block" id="btnShareNative" style="margin:4px 0 14px;" data-i18n="shareNativeBtn" hidden>Share...</button>
     <div class="share-grid">
@@ -655,8 +656,8 @@ ul{list-style:none; margin:0; padding:0;}
     </div>
   </div>
 
-  <div id="modalCrisis" class="modal modal-crisis" hidden>
-    <h2 data-i18n="crisisTitle">Are you safe right now?</h2>
+  <div id="modalCrisis" class="modal modal-crisis" role="dialog" aria-modal="true" aria-labelledby="modalCrisisTitle" hidden>
+    <h2 id="modalCrisisTitle" data-i18n="crisisTitle">Are you safe right now?</h2>
     <div class="modal-sub" data-i18n="crisisSub">I noticed words that suggest you're going through something hard...</div>
     <div class="crisis-list" id="crisisModalList"></div>
     <div class="modal-actions">
@@ -664,7 +665,7 @@ ul{list-style:none; margin:0; padding:0;}
     </div>
   </div>
 
-  <div id="modalConfirm" class="modal" hidden>
+  <div id="modalConfirm" class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" hidden>
     <h2 id="confirmTitle" data-i18n="confirmTitle">Are you sure?</h2>
     <div class="modal-sub" id="confirmBody"></div>
     <div class="modal-actions">
@@ -673,8 +674,8 @@ ul{list-style:none; margin:0; padding:0;}
     </div>
   </div>
 
-  <div id="modalRecap" class="modal" hidden>
-    <h2 data-i18n="recapTitle">Conversation recap</h2>
+  <div id="modalRecap" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalRecapTitle" hidden>
+    <h2 id="modalRecapTitle" data-i18n="recapTitle">Conversation recap</h2>
     <div class="modal-sub" data-i18n="recapHint">Extracted locally by word frequency.</div>
     <div id="recapBody"></div>
     <div class="modal-actions">
@@ -682,8 +683,8 @@ ul{list-style:none; margin:0; padding:0;}
     </div>
   </div>
 
-  <div id="modalLangSwitch" class="modal" hidden>
-    <h2 data-i18n="langSwitchTitle">Choose your language</h2>
+  <div id="modalLangSwitch" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalLangSwitchTitle" hidden>
+    <h2 id="modalLangSwitchTitle" data-i18n="langSwitchTitle">Choose your language</h2>
     <div class="type-picker" id="langSwitchPicker" style="margin-top:6px;">
       <button type="button" class="type-chip" data-lang="en">English</button>
       <button type="button" class="type-chip" data-lang="ro">Română</button>
@@ -2076,44 +2077,44 @@ function deleteMemory(companion, cat, id){
 var FACT_PATTERNS_I18N = {
   ro: [
     { re: /m[ăa] cheam[ăa]\s+([a-zA-ZăâîșțĂÂÎȘȚ\-]+)/i, tpl: function(m){ return "se numește " + m[1]; } },
-    { re: /(sunt|lucrez ca)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{3,30})/i, tpl: function(m){ return "ocupație/rol: " + m[2].trim(); } },
-    { re: /(îmi place|imi place)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{3,30})/i, tpl: function(m){ return "îi place: " + m[2].trim(); } },
+    { re: /(sunt|lucrez ca)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{3,60})/i, tpl: function(m){ return "ocupație/rol: " + m[2].trim(); } },
+    { re: /(îmi place|imi place)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{3,60})/i, tpl: function(m){ return "îi place: " + m[2].trim(); } },
     { re: /locuiesc în\s+([a-zA-ZăâîșțĂÂÎȘȚ\-]+)/i, tpl: function(m){ return "locuiește în " + m[1]; } }
   ],
   en: [
     { re: /my name is\s+([a-zA-Z\-]+)/i, tpl: function(m){ return "is named " + m[1]; } },
-    { re: /\bi work as\s+([a-zA-Z\s]{3,30})/i, tpl: function(m){ return "occupation/role: " + m[1].trim(); } },
-    { re: /\bi like\s+([a-zA-Z\s]{3,30})/i, tpl: function(m){ return "likes: " + m[1].trim(); } },
+    { re: /\bi work as\s+([a-zA-Z\s]{3,60})/i, tpl: function(m){ return "occupation/role: " + m[1].trim(); } },
+    { re: /\bi like\s+([a-zA-Z\s]{3,60})/i, tpl: function(m){ return "likes: " + m[1].trim(); } },
     { re: /\bi live in\s+([a-zA-Z\-]+)/i, tpl: function(m){ return "lives in " + m[1]; } }
   ],
   fr: [
     { re: /je m'appelle\s+([a-zA-Zàâéèêëîïôùûç\-]+)/i, tpl: function(m){ return "s'appelle " + m[1]; } },
-    { re: /je travaille comme\s+([a-zA-Zàâéèêëîïôùûç\s]{3,30})/i, tpl: function(m){ return "occupation/rôle : " + m[1].trim(); } },
-    { re: /j'aime\s+([a-zA-Zàâéèêëîïôùûç\s]{3,30})/i, tpl: function(m){ return "aime : " + m[1].trim(); } },
+    { re: /je travaille comme\s+([a-zA-Zàâéèêëîïôùûç\s]{3,60})/i, tpl: function(m){ return "occupation/rôle : " + m[1].trim(); } },
+    { re: /j'aime\s+([a-zA-Zàâéèêëîïôùûç\s]{3,60})/i, tpl: function(m){ return "aime : " + m[1].trim(); } },
     { re: /j'habite [àa]\s+([a-zA-Zàâéèêëîïôùûç\-]+)/i, tpl: function(m){ return "habite à " + m[1]; } }
   ],
   it: [
     { re: /mi chiamo\s+([a-zA-Zàèéìòù\-]+)/i, tpl: function(m){ return "si chiama " + m[1]; } },
-    { re: /lavoro come\s+([a-zA-Zàèéìòù\s]{3,30})/i, tpl: function(m){ return "occupazione/ruolo: " + m[1].trim(); } },
-    { re: /mi piace\s+([a-zA-Zàèéìòù\s]{3,30})/i, tpl: function(m){ return "gli piace: " + m[1].trim(); } },
+    { re: /lavoro come\s+([a-zA-Zàèéìòù\s]{3,60})/i, tpl: function(m){ return "occupazione/ruolo: " + m[1].trim(); } },
+    { re: /mi piace\s+([a-zA-Zàèéìòù\s]{3,60})/i, tpl: function(m){ return "gli piace: " + m[1].trim(); } },
     { re: /vivo a\s+([a-zA-Zàèéìòù\-]+)/i, tpl: function(m){ return "vive a " + m[1]; } }
   ],
   es: [
     { re: /me llamo\s+([a-zA-Záéíóúñ\-]+)/i, tpl: function(m){ return "se llama " + m[1]; } },
-    { re: /trabajo (?:de|como)\s+([a-zA-Záéíóúñ\s]{3,30})/i, tpl: function(m){ return "ocupación/rol: " + m[1].trim(); } },
-    { re: /me gusta\s+([a-zA-Záéíóúñ\s]{3,30})/i, tpl: function(m){ return "le gusta: " + m[1].trim(); } },
+    { re: /trabajo (?:de|como)\s+([a-zA-Záéíóúñ\s]{3,60})/i, tpl: function(m){ return "ocupación/rol: " + m[1].trim(); } },
+    { re: /me gusta\s+([a-zA-Záéíóúñ\s]{3,60})/i, tpl: function(m){ return "le gusta: " + m[1].trim(); } },
     { re: /vivo en\s+([a-zA-Záéíóúñ\-]+)/i, tpl: function(m){ return "vive en " + m[1]; } }
   ],
   pt: [
     { re: /me chamo\s+([a-zA-Záâãéêíóôõú\-]+)/i, tpl: function(m){ return "se chama " + m[1]; } },
-    { re: /trabalho como\s+([a-zA-Záâãéêíóôõú\s]{3,30})/i, tpl: function(m){ return "ocupação/papel: " + m[1].trim(); } },
-    { re: /gosto de\s+([a-zA-Záâãéêíóôõú\s]{3,30})/i, tpl: function(m){ return "gosta de: " + m[1].trim(); } },
+    { re: /trabalho como\s+([a-zA-Záâãéêíóôõú\s]{3,60})/i, tpl: function(m){ return "ocupação/papel: " + m[1].trim(); } },
+    { re: /gosto de\s+([a-zA-Záâãéêíóôõú\s]{3,60})/i, tpl: function(m){ return "gosta de: " + m[1].trim(); } },
     { re: /moro em\s+([a-zA-Záâãéêíóôõú\-]+)/i, tpl: function(m){ return "mora em " + m[1]; } }
   ],
   de: [
     { re: /ich hei[ßs]e\s+([a-zA-Zäöüß\-]+)/i, tpl: function(m){ return "heißt " + m[1]; } },
-    { re: /ich arbeite als\s+([a-zA-Zäöüß\s]{3,30})/i, tpl: function(m){ return "Beruf/Rolle: " + m[1].trim(); } },
-    { re: /ich mag\s+([a-zA-Zäöüß\s]{3,30})/i, tpl: function(m){ return "mag: " + m[1].trim(); } },
+    { re: /ich arbeite als\s+([a-zA-Zäöüß\s]{3,60})/i, tpl: function(m){ return "Beruf/Rolle: " + m[1].trim(); } },
+    { re: /ich mag\s+([a-zA-Zäöüß\s]{3,60})/i, tpl: function(m){ return "mag: " + m[1].trim(); } },
     { re: /ich wohne in\s+([a-zA-Zäöüß\-]+)/i, tpl: function(m){ return "wohnt in " + m[1]; } }
   ]
 };
@@ -2123,7 +2124,12 @@ function extractFactsHeuristic(text){
   var facts = [];
   patterns.forEach(function(p){
     var m = text.match(p.re);
-    if (m) facts.push(p.tpl(m));
+    if (m){
+      // plafonul de lungime nu trebuie să taie un cuvânt la mijloc
+      var li = m.length - 1;
+      if (/[A-Za-zÀ-ž]/.test(text.charAt(m.index + m[0].length) || "") && m[li]) m[li] = m[li].replace(/\s*\S*$/, "");
+      if (m[li] && m[li].trim()) facts.push(p.tpl(m));
+    }
   });
   return facts;
 }
@@ -3295,7 +3301,7 @@ ro: {
   farewell: /\b(pa|la revedere|noapte bun[ăa]|ne vedem|gata pe azi)\b/i,
   thanks: /\b(mul[țt]umesc|mersi)\b/i,
   howAreYou: /ce mai faci|cum e[șs]ti\??\s*$/i,
-  selfStatement: /\b(m[ăa] numesc|sunt|lucrez ca|[îi]mi place)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{2,30})/i,
+  selfStatement: /\b(m[ăa] numesc|sunt|lucrez ca|[îi]mi place)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s'’]{2,80})/i,
   emotion: [
     { re:/\b(trist[ăa]?|dezam[ăa]git[ăa]?|sup[ăa]rat[ăa]?)\b/i, tag:"sad" },
     { re:/\b(obosit[ăa]?|epuizat[ăa]?|extenuat[ăa]?|frânt[ăa]?|frant[ăa]?)\b/i, tag:"tired" },
@@ -3321,7 +3327,10 @@ ro: {
     [/\bmele\b/gi, "tale"], [/\beu\b/gi, "tu"], [/\bam\b/gi, "ai"], [/\b[îi]mi\b/gi, "îți"]
   ],
   crisisReply: "Îmi pare rău că treci prin asta. Nu sunt un AI real și cu atât mai puțin un profesionist — te rog uită-te la resursele de mai sus, sunt oameni pregătiți exact pentru asta.",
-  memRef: function(fact){ return "Mi-ai zis înainte că " + fact + " — mai e valabil? "; }
+  memRef: function(fact){ return "Mi-ai zis înainte că " + fact + " — mai e valabil? "; },
+  askMem: /(cum m[ăa] cheam[ăa]|ce (mai )?[țt]ii (minte )?despre mine|ce [țt]i-am spus|cine sunt)/i,
+  recall: function(facts){ return "Din ce îmi amintesc despre tine: " + facts.join("; ") + "."; },
+  recallNone: "Încă nu am nimic reținut despre tine — spune-mi câte ceva și îmi notez."
 },
 
 en: {
@@ -3341,7 +3350,7 @@ en: {
   farewell: /\b(bye|goodbye|see you|good night|talk later|gotta go)\b/i,
   thanks: /\b(thanks|thank you|thx)\b/i,
   howAreYou: /how are you\??\s*$|how('s| is) it going\??\s*$/i,
-  selfStatement: /\b(my name is|i'?m|i am|i work as|i like)\s+([a-zA-Z\s]{2,30})/i,
+  selfStatement: /\b(my name is|i'?m|i am|i work as|i like)\s+([a-zA-Z\s'’]{2,80})/i,
   emotion: [
     { re:/\b(sad|down|disappointed|upset|hurt)\b/i, tag:"sad" },
     { re:/\b(tired|exhausted|drained|worn out|burnt out)\b/i, tag:"tired" },
@@ -3367,7 +3376,10 @@ en: {
     [/\bmy\b/gi, "your"], [/\bme\b/gi, "you"], [/\bi\b/gi, "you"]
   ],
   crisisReply: "I'm sorry you're going through this. I'm not a real AI, let alone a professional — please look at the resources above, there are people trained exactly for this.",
-  memRef: function(fact){ return "You mentioned before that " + fact + " — still true? "; }
+  memRef: function(fact){ return "You mentioned before that " + fact + " — still true? "; },
+  askMem: /(what('?s| is) my name|who am i|what do you (remember|know)( about me)?|do you remember (me|anything))/i,
+  recall: function(facts){ return "From what I remember about you: " + facts.join("; ") + "."; },
+  recallNone: "I don't have anything stored about you yet — tell me a bit and I'll note it down."
 },
 
 fr: {
@@ -3387,7 +3399,7 @@ fr: {
   farewell: /\b(au revoir|[àa] bient[ôo]t|bonne nuit|on se parle|je dois y aller)\b/i,
   thanks: /\b(merci)\b/i,
   howAreYou: /(comment )?[çc]a va\??\s*$|comment (vas-tu|tu vas)\??\s*$/i,
-  selfStatement: /\b(je m'appelle|je suis|je travaille comme|j'aime)\s+([a-zA-Zàâéèêëîïôùûç\s]{2,30})/i,
+  selfStatement: /\b(je m'appelle|je suis|je travaille comme|j'aime)\s+([a-zA-Zàâéèêëîïôùûç\s'’]{2,80})/i,
   emotion: [
     { re:/\b(triste|d[ée][çc]u|d[ée][çc]ue|bless[ée]|vex[ée]?)\b/i, tag:"sad" },
     { re:/\b(fatigu[ée]|[ée]puis[ée]|[ée]puis[ée]e|[ àa] bout)\b/i, tag:"tired" },
@@ -3414,7 +3426,10 @@ fr: {
     [/\bmoi\b/gi, "toi"], [/\bj'\b/gi, "tu "], [/\bje\b/gi, "tu"]
   ],
   crisisReply: "Je suis désolé que tu traverses ça. Je ne suis pas une vraie IA, encore moins un professionnel — regarde les ressources ci-dessus, il y a des gens formés exactement pour ça.",
-  memRef: function(fact){ return "Tu m'avais dit que " + fact + " — c'est toujours le cas ? "; }
+  memRef: function(fact){ return "Tu m'avais dit que " + fact + " — c'est toujours le cas ? "; },
+  askMem: /(comment je m'appelle|qui suis-je|que sais-tu de moi|tu te souviens)/i,
+  recall: function(facts){ return "Voici ce dont je me souviens sur toi : " + facts.join("; ") + "."; },
+  recallNone: "Je n'ai encore rien retenu sur toi — dis-m'en un peu et je le note."
 },
 
 it: {
@@ -3434,7 +3449,7 @@ it: {
   farewell: /\b(arrivederci|ci vediamo|buonanotte|a presto|devo andare)\b/i,
   thanks: /\b(grazie)\b/i,
   howAreYou: /come stai\??\s*$|come va\??\s*$/i,
-  selfStatement: /\b(mi chiamo|sono|lavoro come|mi piace)\s+([a-zA-Zàèéìòù\s]{2,30})/i,
+  selfStatement: /\b(mi chiamo|sono|lavoro come|mi piace)\s+([a-zA-Zàèéìòù\s'’]{2,80})/i,
   emotion: [
     { re:/\b(triste|deluso|delusa|amareggiat[oa])\b/i, tag:"sad" },
     { re:/\b(stanco|stanca|esaurit[oa]|sfinit[oa])\b/i, tag:"tired" },
@@ -3460,7 +3475,10 @@ it: {
     [/\bmiei\b/gi, "tuoi"], [/\bmie\b/gi, "tue"], [/\bme\b/gi, "te"], [/\bio\b/gi, "tu"]
   ],
   crisisReply: "Mi dispiace che tu stia attraversando questo momento. Non sono una vera IA, tanto meno un professionista — guarda le risorse qui sopra, ci sono persone preparate proprio per questo.",
-  memRef: function(fact){ return "Mi avevi detto che " + fact + " — è ancora così? "; }
+  memRef: function(fact){ return "Mi avevi detto che " + fact + " — è ancora così? "; },
+  askMem: /(come mi chiamo|chi sono|cosa sai di me|ti ricordi)/i,
+  recall: function(facts){ return "Ecco cosa ricordo di te: " + facts.join("; ") + "."; },
+  recallNone: "Non ho ancora nulla memorizzato su di te — raccontami qualcosa e lo annoto."
 },
 
 es: {
@@ -3480,7 +3498,7 @@ es: {
   farewell: /\b(adi[óo]s|hasta luego|buenas noches|nos hablamos|me tengo que ir)\b/i,
   thanks: /\b(gracias)\b/i,
   howAreYou: /c[óo]mo est[áa]s\??\s*$|qu[ée] tal\??\s*$/i,
-  selfStatement: /\b(me llamo|soy|trabajo (de|como)|me gusta)\s+([a-zA-Záéíóúñ\s]{2,30})/i,
+  selfStatement: /\b(me llamo|soy|trabajo (de|como)|me gusta)\s+([a-zA-Záéíóúñ\s'’]{2,80})/i,
   emotion: [
     { re:/\b(triste|decepcionad[oa]|dolid[oa])\b/i, tag:"sad" },
     { re:/\b(cansad[oa]|agotad[oa]|exhaust[oa])\b/i, tag:"tired" },
@@ -3506,7 +3524,10 @@ es: {
     [/\bmi\b/gi, "tu"], [/\bmis\b/gi, "tus"], [/\bm[íi]\b/gi, "ti"], [/\byo\b/gi, "tú"]
   ],
   crisisReply: "Siento que estés pasando por esto. No soy una IA real, y mucho menos un profesional — por favor mira los recursos de arriba, hay personas preparadas exactamente para esto.",
-  memRef: function(fact){ return "Me dijiste antes que " + fact + " — ¿sigue siendo así? "; }
+  memRef: function(fact){ return "Me dijiste antes que " + fact + " — ¿sigue siendo así? "; },
+  askMem: /(c[oó]mo me llamo|qui[eé]n soy|qu[eé] sabes de m[ií]|te acuerdas)/i,
+  recall: function(facts){ return "Esto es lo que recuerdo de ti: " + facts.join("; ") + "."; },
+  recallNone: "Todavía no tengo nada guardado sobre ti — cuéntame algo y lo anoto."
 },
 
 pt: {
@@ -3526,7 +3547,7 @@ pt: {
   farewell: /\b(tchau|at[ée] logo|boa noite|falamos depois|preciso ir)\b/i,
   thanks: /\b(obrigad[oa]|valeu)\b/i,
   howAreYou: /como voc[êe] est[áa]\??\s*$|tudo bem\??\s*$/i,
-  selfStatement: /\b(me chamo|sou|trabalho como|gosto de)\s+([a-zA-Záâãéêíóôõú\s]{2,30})/i,
+  selfStatement: /\b(me chamo|sou|trabalho como|gosto de)\s+([a-zA-Záâãéêíóôõú\s'’]{2,80})/i,
   emotion: [
     { re:/\b(triste|decepcionad[oa]|magoad[oa])\b/i, tag:"sad" },
     { re:/\b(cansad[oa]|exaust[oa]|esgotad[oa])\b/i, tag:"tired" },
@@ -3553,7 +3574,10 @@ pt: {
     [/\beu\b/gi, "você"]
   ],
   crisisReply: "Sinto muito que você esteja passando por isso. Não sou uma IA real, muito menos um profissional — por favor, veja os recursos acima, há pessoas preparadas exatamente para isso.",
-  memRef: function(fact){ return "Você me disse antes que " + fact + " — ainda é assim? "; }
+  memRef: function(fact){ return "Você me disse antes que " + fact + " — ainda é assim? "; },
+  askMem: /(como me chamo|quem sou eu|o que voc[eê] sabe sobre mim|voc[eê] se lembra)/i,
+  recall: function(facts){ return "Isto é o que me lembro sobre você: " + facts.join("; ") + "."; },
+  recallNone: "Ainda não tenho nada guardado sobre você — conte-me algo e eu anoto."
 },
 
 de: {
@@ -3573,7 +3597,7 @@ de: {
   farewell: /\b(tsch[üu]ss|bis (bald|sp[äa]ter)|gute nacht|wir sprechen uns|ich muss los)\b/i,
   thanks: /\b(danke|dank)\b/i,
   howAreYou: /wie geht('s| es dir)\??\s*$/i,
-  selfStatement: /\b(ich hei[ßs]e|ich bin|ich arbeite als|ich mag)\s+([a-zA-Zäöüß\s]{2,30})/i,
+  selfStatement: /\b(ich hei[ßs]e|ich bin|ich arbeite als|ich mag)\s+([a-zA-Zäöüß\s'’]{2,80})/i,
   emotion: [
     { re:/\b(traurig|entt[äa]uscht|verletzt)\b/i, tag:"sad" },
     { re:/\b(m[üu]de|ersch[öo]pft|ausgelaugt)\b/i, tag:"tired" },
@@ -3600,7 +3624,10 @@ de: {
     [/\bmich\b/gi, "dich"], [/\bmir\b/gi, "dir"], [/\bich\b/gi, "du"]
   ],
   crisisReply: "Es tut mir leid, dass du das gerade durchmachst. Ich bin keine echte KI, geschweige denn eine Fachperson — bitte schau dir die Ressourcen oben an, dort gibt es Menschen, die genau dafür ausgebildet sind.",
-  memRef: function(fact){ return "Du hast mir erzählt, dass " + fact + " — stimmt das noch? "; }
+  memRef: function(fact){ return "Du hast mir erzählt, dass " + fact + " — stimmt das noch? "; },
+  askMem: /(wie hei[ßs]e ich|wer bin ich|was wei[ßs]t du (über|ueber) mich|erinnerst du dich)/i,
+  recall: function(facts){ return "Das weiß ich noch über dich: " + facts.join("; ") + "."; },
+  recallNone: "Ich habe noch nichts über dich gespeichert — erzähl mir etwas, dann notiere ich es."
 }
 
 };
@@ -3624,6 +3651,13 @@ function localAIReply(companion, userText){
 
   if (checkCrisis(t)) return L.crisisReply;
 
+  // Întrebări despre ce ține minte companionul („What is my name?”): răspuns direct din memorie
+  if (L.askMem && L.askMem.test(t)){
+    // faptele despre utilizator sunt cele „descoperite” din conversație (cele permanente/evolutive descriu companionul)
+    var recalled = companion.memories.descoperite.map(function(m){ return m.text; });
+    return recalled.length ? L.recall(recalled.slice(-8)) : L.recallNone;
+  }
+
   for (var i=0;i<L.aboutApp.length;i++){
     if (L.aboutApp[i].re.test(t)) return L.aboutApp[i].a.replace("{NAME}", companion.name);
   }
@@ -3637,7 +3671,12 @@ function localAIReply(companion, userText){
   }
 
   var selfMatch = t.match(L.selfStatement);
-  if (selfMatch) return pick(L.templates.selfAck, seed) + reflectPhrase(selfMatch[0], lang).trim() + ".";
+  if (selfMatch){
+    var frag = selfMatch[0];
+    // dacă după potrivire urmează o literă, plafonul a tăiat un cuvânt: renunțăm la cuvântul parțial
+    if (/[A-Za-zÀ-ž]/.test(t.charAt(selfMatch.index + frag.length) || "")) frag = frag.replace(/\s*\S*$/, "");
+    return pick(L.templates.selfAck, seed) + reflectPhrase(frag, lang).trim() + ".";
+  }
 
   var allMem = [].concat(companion.memories.permanente, companion.memories.evolutive, companion.memories.descoperite);
   for (var j=0;j<allMem.length;j++){

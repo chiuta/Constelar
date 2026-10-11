@@ -6,6 +6,8 @@ Companioni AI cu memorie reală, stocată local în browser, într-un singur fi�
 
 ![Captura de ecran](screenshot.png)
 
+**Ultima actualizare:** 11 octombrie 2026
+
 ## Ce este
 
 Constelar este o aplicație (PWA opțională) în care creați unul sau mai mulți „companioni" AI (familie, prieten, romantic, poveste / roleplay), fiecare cu personalitate, context și o memorie proprie vizualizată ca o constelație. Datele rămân în browser; nimic nu pleacă de pe dispozitiv decât dacă alegeți un furnizor AI extern sau descărcați un model WebLLM. Aplicația este concepută pentru adulți și nu înlocuiește relațiile umane sau terapia (notă din aplicație).
@@ -41,7 +43,7 @@ Constelar este o aplicație (PWA opțională) în care creați unul sau mai mul�
   - `text.pollinations.ai`, dacă alegeți Pollinations (aplicația cere acordul o singură dată);
   - `esm.run` (CDN), pentru încărcarea bibliotecii `@mlc-ai/web-llm@0.2.84`, și apoi descărcarea modelului ales, dacă folosiți WebLLM;
   - linkurile către `iasp.info` (resurse de criză) și butoanele „Share" se deschid doar la clic.
-- Fără analitice. Cu furnizorul implicit „motor local simplu" sau cu modele deja descărcate, conversațiile nu părăsesc dispozitivul.
+- Fără analitice. Pagina are politică CSP (meta); `connect-src` permite `https:` deoarece URL-ul furnizorului compatibil OpenAI este ales de utilizator. Numele modelelor din presetări (Groq, OpenRouter, Together, Mistral etc.) se schimbă des și nu au putut fi verificate la 11.10.2026: editați câmpul „Model” dacă un furnizor răspunde cu eroare. Cu furnizorul implicit „motor local simplu" sau cu modele deja descărcate, conversațiile nu părăsesc dispozitivul.
 - Când este servit prin HTTPS, `sw.js` (opțional) se înregistrează și păstrează în cache „app shell"-ul; nu atinge `localStorage`.
 
 ## Rulare locală / offline
@@ -55,6 +57,14 @@ Licența nu este declarată explicit în acest repository (decizie rămasă la a
 ## Audit
 
 Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conținut (mesaje, memorii, rezumat) folosesc `escapeHtml` (testat cu payload `<img onerror>`); exportul de date golește cheia API. Corectat: bara de sus pe ecran îngust (fila „Memory" ieșea din ecran). Rundă 2 (2026-10-11): formularea „100% locală” apărea doar în câmpul „About” de pe GitHub, nu în pagină; textul paginii (meta description, „stored locally”, setări) este exact: datele rămân în browser, iar textul pleacă spre un AI extern, spre Pollinations sau spre CDN-ul `esm.run` (WebLLM) doar dacă alegeți acel furnizor. Text corect pentru „About” (de aplicat manual pe GitHub): „Companioni AI cu memorie stocată local în browser; mesajele pleacă spre un furnizor extern doar dacă îl alegi tu.” Fără CSP și fără SRI pe WebLLM: `import()` dinamic de pe `esm.run` nu poate purta atribut `integrity`, iar `connect-src` ar trebui să permită orice gazdă aleasă de utilizator (Base URL liber), deci o CSP utilă ar fi la fel de largă ca absența ei.
+
+## Istoric / Changelog
+
+### 11 octombrie 2026
+- Reparat: motorul local pe reguli răspunde acum la întrebări despre utilizator („What is my name?”, „Cine sunt?”, „Que sais-tu de moi ?” etc., în toate cele 7 limbi) cu faptele „descoperite” din memorie; fără fapte, spune explicit că nu are nimic reținut.
+- Reparat: rezumatele de fapte (confirmarea „Good to know …” și faptele extrase automat) nu mai sunt tăiate la mijloc de cuvânt sau la apostrof (limita 30 → 80/60 de caractere, cu retragere la ultimul cuvânt întreg).
+- Adăugat: politică CSP (connect-src `'self'`, `https:` pentru furnizorii AI configurabili de utilizator și loopback HTTP pentru Ollama/LM Studio; scripturi doar de la `esm.run`/`cdn.jsdelivr.net` pentru WebLLM).
+- Reparat: accesibilitate: titlu h1, ferestre modale cu nume, contrast pentru ora mesajelor; 0 violări axe-core la 1280 și 360 px.
 
 ## Autor
 
