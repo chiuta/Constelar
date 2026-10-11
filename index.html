@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' https://esm.run https://cdn.jsdelivr.net 'sha256-5kz9uDef4SjhIz2k0guXmxCvJvyaS6VrDLIfizTUdc4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' https://esm.run https://cdn.jsdelivr.net 'sha256-vunTrHRlYo3gQxqyyO/wm7BEJnC17x9cNedyNG7aYPk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'">
 <title>Constelar — companioni AI cu memorie reală, stocată local</title>
 <meta name="description" content="Companioni AI cu memorie persistentă. Fără cont, fără server, fără telemetrie — memoria și conversațiile rămân pe dispozitivul tău; textul pleacă spre un AI extern doar dacă îl alegi tu.">
 <meta name="theme-color" content="#0e0b16">
@@ -1168,10 +1168,20 @@ var DEMO_CONFIG_BY_NAME = {
   "Sofia":  { provider:"webllm", webllmModel:"Llama-3.2-1B-Instruct-q4f16_1-MLC" },         // în browser, cel mai ușor
   "Akasha": { provider:"webllm", webllmModel:"Llama-3.1-8B-Instruct-q4f32_1-MLC" }          // în browser, cel mai capabil
 };
+/* Nota de bun venit din „Discovered” a companionilor demo (în orice limbă; și la datele salvate înainte de marcajul `hint`)
+   nu este un fapt despre utilizator: nu intră în „ce îmi amintesc”, în prompt sau în referirile motorului local. */
+function isHintMem(m){
+  if (!m) return false;
+  if (m.hint === true) return true;
+  for (var lg in DEMO_COMPANIONS_I18N){
+    if (DEMO_COMPANIONS_I18N[lg].some(function(d){ return d.discMem && d.discMem === m.text; })) return true;
+  }
+  return false;
+}
 function buildDemoCompanions(lang){
   var list = DEMO_COMPANIONS_I18N[lang] || DEMO_COMPANIONS_I18N.en;
   return list.map(function(d){
-    var descoperite = d.discMem ? [{ id: uid(), text: d.discMem, createdAt: Date.now() }] : [];
+    var descoperite = d.discMem ? [{ id: uid(), text: d.discMem, createdAt: Date.now(), hint: true }] : [];
     return {
       id: uid(), name: d.name, type: d.type, traits: d.traits, backstory: d.backstory,
       provider: (DEMO_CONFIG_BY_NAME[d.name] || {}).provider || null,
@@ -1900,7 +1910,9 @@ var VALID_TYPES = ["familie","prieten","romantic","poveste"];
 function normalizeMemoryItem(raw, preserveId){
   if (!raw || typeof raw.text !== "string" || !raw.text.trim()) return null;
   var validExistingId = preserveId && typeof raw.id === "string" && raw.id.length > 0 && raw.id.length <= 100;
-  return { id: validExistingId ? raw.id : uid(), text: safeTruncate(raw.text, 500), createdAt: (typeof raw.createdAt === "number" ? raw.createdAt : Date.now()) };
+  var item = { id: validExistingId ? raw.id : uid(), text: safeTruncate(raw.text, 500), createdAt: (typeof raw.createdAt === "number" ? raw.createdAt : Date.now()) };
+  if (raw.hint === true) item.hint = true;
+  return item;
 }
 function normalizeMessage(raw, preserveId){
   if (!raw || typeof raw.text !== "string") return null;
@@ -2115,44 +2127,75 @@ var FACT_PATTERNS_I18N = {
     { re: /m[ăa] cheam[ăa]\s+([a-zA-ZăâîșțĂÂÎȘȚ\-]+)/i, tpl: function(m){ return "se numește " + m[1]; } },
     { re: /(sunt|lucrez ca)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{3,60})/i, tpl: function(m){ return "ocupație/rol: " + m[2].trim(); } },
     { re: /(îmi place|imi place)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{3,60})/i, tpl: function(m){ return "îi place: " + m[2].trim(); } },
-    { re: /locuiesc în\s+([a-zA-ZăâîșțĂÂÎȘȚ\-]+)/i, tpl: function(m){ return "locuiește în " + m[1]; } }
+    { re: /locuiesc în\s+([a-zA-ZăâîșțĂÂÎȘȚ\-]+)/i, tpl: function(m){ return "locuiește în " + m[1]; } },
+    { re: /(?:iubesc|ador)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{3,60})/i, tpl: function(m){ return "îi place: " + m[1].trim(); } },
+    { re: /(?:mi-e frică de|mi-e teamă de|mă tem de|am frică de)\s+([a-zA-ZăâîșțĂÂÎȘȚ\s]{3,60})/i, tpl: function(m){ return "îi este frică de: " + m[1].trim(); } },
+    { re: /\b([Pp]rietenul meu|[Pp]rietena mea|[Ss]ora mea|[Ff]ratele meu|[Tt]atăl meu|[Mm]ama mea|[Ss]oția mea|[Ss]oțul meu|[Cc]âinele meu|[Pp]isica mea)(?: se numește| se cheamă| este| e)?\s+([A-ZĂÂÎȘȚ][a-zăâîșț\-]+)/, tpl: function(m){ return "menționează: " + m[1] + " " + m[2]; } }
   ],
   en: [
     { re: /my name is\s+([a-zA-Z\-]+)/i, tpl: function(m){ return "is named " + m[1]; } },
     { re: /\bi work as\s+([a-zA-Z\s]{3,60})/i, tpl: function(m){ return "occupation/role: " + m[1].trim(); } },
     { re: /\bi like\s+([a-zA-Z\s]{3,60})/i, tpl: function(m){ return "likes: " + m[1].trim(); } },
-    { re: /\bi live in\s+([a-zA-Z\-]+)/i, tpl: function(m){ return "lives in " + m[1]; } }
+    { re: /\bi live in\s+([a-zA-Z\-]+)/i, tpl: function(m){ return "lives in " + m[1]; } },
+    { re: /\bi (?:love|enjoy|adore)\s+([a-zA-Z\s]{3,60})/i, tpl: function(m){ return "likes: " + m[1].trim(); } },
+    { re: /\bi(?:'m| am) (?:afraid|scared|terrified) of\s+([a-zA-Z\s]{3,60})/i, tpl: function(m){ return "afraid of: " + m[1].trim(); } },
+    { re: /\b[Mm]y (friend|sister|brother|mother|mom|father|dad|wife|husband|partner|dog|cat)(?: is| named| called)?\s+([A-Z][a-zA-Z\-]+)/, tpl: function(m){ return "mentions: my " + m[1] + " " + m[2]; } }
   ],
   fr: [
     { re: /je m'appelle\s+([a-zA-Zàâéèêëîïôùûç\-]+)/i, tpl: function(m){ return "s'appelle " + m[1]; } },
     { re: /je travaille comme\s+([a-zA-Zàâéèêëîïôùûç\s]{3,60})/i, tpl: function(m){ return "occupation/rôle : " + m[1].trim(); } },
     { re: /j'aime\s+([a-zA-Zàâéèêëîïôùûç\s]{3,60})/i, tpl: function(m){ return "aime : " + m[1].trim(); } },
-    { re: /j'habite [àa]\s+([a-zA-Zàâéèêëîïôùûç\-]+)/i, tpl: function(m){ return "habite à " + m[1]; } }
+    { re: /j'habite [àa]\s+([a-zA-Zàâéèêëîïôùûç\-]+)/i, tpl: function(m){ return "habite à " + m[1]; } },
+    { re: /(?:j'adore|j'apprécie)\s+([a-zA-Zàâéèêëîïôùûç\s]{3,60})/i, tpl: function(m){ return "aime : " + m[1].trim(); } },
+    { re: /j'ai peur (?:de |des |du |d')\s*([a-zA-Zàâéèêëîïôùûç\s]{3,60})/i, tpl: function(m){ return "a peur de : " + m[1].trim(); } },
+    { re: /\b(?:[Mm]on|[Mm]a) (ami|amie|frère|sœur|soeur|père|mère|chien|chat|mari|femme|copine|compagnon|compagne)(?: s'appelle| est)?\s+([A-ZÀÂÉÈÊÎÔÛÇ][a-zàâéèêëîïôùûç\-]+)/, tpl: function(m){ return "mentionne : " + m[1] + " " + m[2]; } }
   ],
   it: [
     { re: /mi chiamo\s+([a-zA-Zàèéìòù\-]+)/i, tpl: function(m){ return "si chiama " + m[1]; } },
     { re: /lavoro come\s+([a-zA-Zàèéìòù\s]{3,60})/i, tpl: function(m){ return "occupazione/ruolo: " + m[1].trim(); } },
     { re: /mi piace\s+([a-zA-Zàèéìòù\s]{3,60})/i, tpl: function(m){ return "gli piace: " + m[1].trim(); } },
-    { re: /vivo a\s+([a-zA-Zàèéìòù\-]+)/i, tpl: function(m){ return "vive a " + m[1]; } }
+    { re: /vivo a\s+([a-zA-Zàèéìòù\-]+)/i, tpl: function(m){ return "vive a " + m[1]; } },
+    { re: /(?:adoro|amo)\s+([a-zA-Zàèéìòù\s]{3,60})/i, tpl: function(m){ return "gli piace: " + m[1].trim(); } },
+    { re: /ho paura (?:di |del |della |dei |delle |dell')\s*([a-zA-Zàèéìòù\s]{3,60})/i, tpl: function(m){ return "ha paura di: " + m[1].trim(); } },
+    { re: /\b(?:[Mm]io|[Mm]ia) (amico|amica|fratello|sorella|padre|madre|marito|moglie|cane|gatto|compagno|compagna)(?: si chiama| è)?\s+([A-ZÀÈÉÌÒÙ][a-zàèéìòù\-]+)/, tpl: function(m){ return "menziona: " + m[1] + " " + m[2]; } }
   ],
   es: [
     { re: /me llamo\s+([a-zA-Záéíóúñ\-]+)/i, tpl: function(m){ return "se llama " + m[1]; } },
     { re: /trabajo (?:de|como)\s+([a-zA-Záéíóúñ\s]{3,60})/i, tpl: function(m){ return "ocupación/rol: " + m[1].trim(); } },
     { re: /me gusta\s+([a-zA-Záéíóúñ\s]{3,60})/i, tpl: function(m){ return "le gusta: " + m[1].trim(); } },
-    { re: /vivo en\s+([a-zA-Záéíóúñ\-]+)/i, tpl: function(m){ return "vive en " + m[1]; } }
+    { re: /vivo en\s+([a-zA-Záéíóúñ\-]+)/i, tpl: function(m){ return "vive en " + m[1]; } },
+    { re: /(?:me encanta|adoro)\s+([a-zA-Záéíóúñ\s]{3,60})/i, tpl: function(m){ return "le gusta: " + m[1].trim(); } },
+    { re: /tengo miedo (?:de |a )\s*([a-zA-Záéíóúñ\s]{3,60})/i, tpl: function(m){ return "tiene miedo de: " + m[1].trim(); } },
+    { re: /\b[Mm]i (amigo|amiga|hermano|hermana|padre|madre|esposo|esposa|marido|mujer|perro|gato|pareja)(?: se llama| es)?\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ\-]+)/, tpl: function(m){ return "menciona: " + m[1] + " " + m[2]; } }
   ],
   pt: [
     { re: /me chamo\s+([a-zA-Záâãéêíóôõú\-]+)/i, tpl: function(m){ return "se chama " + m[1]; } },
     { re: /trabalho como\s+([a-zA-Záâãéêíóôõú\s]{3,60})/i, tpl: function(m){ return "ocupação/papel: " + m[1].trim(); } },
     { re: /gosto de\s+([a-zA-Záâãéêíóôõú\s]{3,60})/i, tpl: function(m){ return "gosta de: " + m[1].trim(); } },
-    { re: /moro em\s+([a-zA-Záâãéêíóôõú\-]+)/i, tpl: function(m){ return "mora em " + m[1]; } }
+    { re: /moro em\s+([a-zA-Záâãéêíóôõú\-]+)/i, tpl: function(m){ return "mora em " + m[1]; } },
+    { re: /(?:eu )?(?:adoro|amo)\s+([a-zA-Záâãéêíóôõú\s]{3,60})/i, tpl: function(m){ return "gosta de: " + m[1].trim(); } },
+    { re: /tenho medo (?:de |do |da |dos |das )\s*([a-zA-Záâãéêíóôõú\s]{3,60})/i, tpl: function(m){ return "tem medo de: " + m[1].trim(); } },
+    { re: /\b(?:[Mm]eu|[Mm]inha) (amigo|amiga|irmão|irmã|pai|mãe|marido|esposa|mulher|cachorro|cão|gato|parceiro|parceira)(?: se chama| é| chama-se)?\s+([A-ZÁÂÃÉÊÍÓÔÕÚ][a-záâãéêíóôõú\-]+)/, tpl: function(m){ return "menciona: " + m[1] + " " + m[2]; } }
   ],
   de: [
     { re: /ich hei[ßs]e\s+([a-zA-Zäöüß\-]+)/i, tpl: function(m){ return "heißt " + m[1]; } },
     { re: /ich arbeite als\s+([a-zA-Zäöüß\s]{3,60})/i, tpl: function(m){ return "Beruf/Rolle: " + m[1].trim(); } },
     { re: /ich mag\s+([a-zA-Zäöüß\s]{3,60})/i, tpl: function(m){ return "mag: " + m[1].trim(); } },
-    { re: /ich wohne in\s+([a-zA-Zäöüß\-]+)/i, tpl: function(m){ return "wohnt in " + m[1]; } }
+    { re: /ich wohne in\s+([a-zA-Zäöüß\-]+)/i, tpl: function(m){ return "wohnt in " + m[1]; } },
+    { re: /ich liebe\s+([a-zA-Zäöüß\s]{3,60})/i, tpl: function(m){ return "liebt: " + m[1].trim(); } },
+    { re: /ich habe Angst vor\s+([a-zA-Zäöüß\s]{3,60})/i, tpl: function(m){ return "hat Angst vor: " + m[1].trim(); } },
+    { re: /\b[Mm]ein(?:e)? (Freund|Freundin|Bruder|Schwester|Vater|Mutter|Mann|Frau|Hund|Katze|Partner|Partnerin)(?: heißt| ist)?\s+([A-ZÄÖÜ][a-zäöüß\-]+)/, tpl: function(m){ return "erwähnt: " + m[1] + " " + m[2]; } }
   ]
+};
+/* taie fraza reținută la prima conjuncție („hiking and I'm afraid…” → „hiking”), ca amintirea să fie un fapt, nu o jumătate de propoziție */
+var FACT_CUT_I18N = {
+  ro: /\s+(?:și|dar|iar|deoarece|pentru că|când)(?=\s|$).*$/i,
+  en: /\s+(?:and|but|because|so|while|with|when|though)(?=\s|$).*$/i,
+  fr: /\s+(?:et|mais|parce que|quand|avec)(?=\s|$).*$/i,
+  it: /\s+(?:e|ma|perché|quando|con)(?=\s|$).*$/i,
+  es: /\s+(?:y|pero|porque|cuando|con)(?=\s|$).*$/i,
+  pt: /\s+(?:e|mas|porque|quando|com)(?=\s|$).*$/i,
+  de: /\s+(?:und|aber|weil|wenn|mit)(?=\s|$).*$/i
 };
 function extractFactsHeuristic(text){
   var lang = (state && state.settings && state.settings.lang) || "en";
@@ -2164,6 +2207,7 @@ function extractFactsHeuristic(text){
       // plafonul de lungime nu trebuie să taie un cuvânt la mijloc
       var li = m.length - 1;
       if (/[A-Za-zÀ-ž]/.test(text.charAt(m.index + m[0].length) || "") && m[li]) m[li] = m[li].replace(/\s*\S*$/, "");
+      if (m[li] && FACT_CUT_I18N[lang]) m[li] = m[li].replace(FACT_CUT_I18N[lang], "");
       if (m[li] && m[li].trim()) facts.push(p.tpl(m));
     }
   });
@@ -2201,7 +2245,7 @@ function buildSystemPrompt(c){
 
   var memLines = [];
   ["permanente","evolutive","descoperite"].forEach(function(cat){
-    (c.memories[cat]||[]).forEach(function(m){ memLines.push("- ("+cat+") "+flat(m.text)); });
+    (c.memories[cat]||[]).forEach(function(m){ if (isHintMem(m)) return; memLines.push("- ("+cat+") "+flat(m.text)); });
   });
 
   var out = safetyRules + "\n\n" + t("sysPersonaHeader") + "\n" + personaLines.join("\n");
@@ -3690,7 +3734,7 @@ function localAIReply(companion, userText){
   // Întrebări despre ce ține minte companionul („What is my name?”): răspuns direct din memorie
   if (L.askMem && L.askMem.test(t)){
     // faptele despre utilizator sunt cele „descoperite” din conversație (cele permanente/evolutive descriu companionul)
-    var recalled = companion.memories.descoperite.map(function(m){ return m.text; });
+    var recalled = companion.memories.descoperite.filter(function(m){ return !isHintMem(m); }).map(function(m){ return m.text; });
     return recalled.length ? L.recall(recalled.slice(-8)) : L.recallNone;
   }
 
@@ -3714,7 +3758,7 @@ function localAIReply(companion, userText){
     return pick(L.templates.selfAck, seed) + reflectPhrase(frag, lang).trim() + ".";
   }
 
-  var allMem = [].concat(companion.memories.permanente, companion.memories.evolutive, companion.memories.descoperite);
+  var allMem = [].concat(companion.memories.permanente, companion.memories.evolutive, companion.memories.descoperite).filter(function(m){ return !isHintMem(m); });
   for (var j=0;j<allMem.length;j++){
     var words = allMem[j].text.toLowerCase().split(/\s+/).filter(function(w){ return w.length > 4; });
     if (words.some(function(w){ return t.toLowerCase().indexOf(w) !== -1; })){

@@ -18,6 +18,7 @@ Constelar este o aplicație (PWA opțională) în care creați unul sau mai mul�
 - Două file pentru fiecare companion: **Chat** și **Memory**. Memoria are trei categorii: *Permanent*, *Evolving*, *Discovered* (aceasta din urmă cu auto-extragere opțională), afișate ca stele pe care le puteți atinge pentru detalii.
 - Furnizori AI în Setări: WebLLM (model rulat în tab prin WebGPU, descărcat o dată, variante 1B / 3B / 8B), Anthropic (Claude), compatibil OpenAI (presetări Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama), Pollinations (fără cont), Gemini Nano nativ din Chrome și un motor local simplu bazat pe reguli (nu este o rețea neurală; etichetat ca atare în chat).
 - „Test connection", reamintire „It's AI" la interval configurabil (minute; 0 = oprit), citire cu voce tare a răspunsurilor (speechSynthesis).
+- Extragere locală de fapte din mesaje (preferințe, frici, persoane și animale apropiate, ocupație, locuință) în cele 7 limbi, afișate în „Discovered”.
 - Rezumat al conversației („Conversation recap", calculat local după frecvența cuvintelor) și export al unei conversații.
 - Export / import al tuturor datelor (⇩ / ⇧).
 - Buton „Copiază mesajul” (⧉) la fiecare mesaj; ciornele din câmpul de mesaj se păstrează per companion (și după reîncărcare).
@@ -60,6 +61,10 @@ Licența nu este declarată explicit în acest repository (decizie rămasă la a
 Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conținut (mesaje, memorii, rezumat) folosesc `escapeHtml` (testat cu payload `<img onerror>`); exportul de date golește cheia API. Corectat: bara de sus pe ecran îngust (fila „Memory" ieșea din ecran). Rundă 2 (2026-10-11): formularea „100% locală” apărea doar în câmpul „About” de pe GitHub, nu în pagină; textul paginii (meta description, „stored locally”, setări) este exact: datele rămân în browser, iar textul pleacă spre un AI extern, spre Pollinations sau spre CDN-ul `esm.run` (WebLLM) doar dacă alegeți acel furnizor. Text corect pentru „About” (de aplicat manual pe GitHub): „Companioni AI cu memorie stocată local în browser; mesajele pleacă spre un furnizor extern doar dacă îl alegi tu.” Fără CSP și fără SRI pe WebLLM: `import()` dinamic de pe `esm.run` nu poate purta atribut `integrity`, iar `connect-src` ar trebui să permită orice gazdă aleasă de utilizator (Base URL liber), deci o CSP utilă ar fi la fel de largă ca absența ei.
 
 ## Istoric / Changelog
+
+### 11 octombrie 2026 (runda 7)
+- Reparat: la „ce îți amintești despre mine?” motorul local citează acum doar fapte reale despre utilizator; nota de bun venit a companionului demo din „Discovered” („Right now she's chatting through the instant local engine…”) a fost marcată ca indiciu (`hint`) și exclusă din răspunsul de reamintire, din promptul trimis către AI și din referirile motorului local (inclusiv pentru date salvate înainte, recunoscută după text). Reprodus și verificat în browser.
+- Îmbunătățit: extragerea euristică a faptelor, în toate cele 7 limbi: „iubesc/I love/j'adore…”, „mi-e frică de/I'm afraid of/j'ai peur de…”, relații și animale numite („my friend Maria”), iar fraza reținută se taie la prima conjuncție („hiking and I'm afraid…” → „hiking”). Motorul rămâne euristic și limitat.
 
 ### 11 octombrie 2026 (runda 6)
 - Adăugat: buton de copiere pe fiecare mesaj (traducere în 7 limbi), ciorne persistente per companion.
