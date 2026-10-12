@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' https://esm.run https://cdn.jsdelivr.net 'sha256-vunTrHRlYo3gQxqyyO/wm7BEJnC17x9cNedyNG7aYPk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'">
+<meta name="application-version" content="1.0.0">
+<meta name="last-updated" content="2026-10-12">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' https://esm.run https://cdn.jsdelivr.net 'sha256-lfOqI8C9Vtt4CA6EuIFC2iW299Bg0lJzUdBuc9fBRvs='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' blob: data:; worker-src 'self' blob:; connect-src 'self' https: http://localhost:* http://127.0.0.1:*; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'">
 <title>Constelar — companioni AI cu memorie reală, stocată local</title>
 <meta name="description" content="Companioni AI cu memorie persistentă. Fără cont, fără server, fără telemetrie — memoria și conversațiile rămân pe dispozitivul tău; textul pleacă spre un AI extern doar dacă îl alegi tu.">
 <meta name="theme-color" content="#0e0b16">
@@ -618,6 +620,7 @@ ul{list-style:none; margin:0; padding:0;}
     <div class="about-block" data-i18n-html="aboutBlock3">...</div>
     <div class="about-block" data-i18n-html="aboutBlock4">...</div>
     <div class="about-block" data-i18n-html="aboutBlock5">...</div>
+    <div class="about-block" style="font-size:12px"><span data-i18n="versionLabel">Version</span> <span id="app-version">v 1.0.0 · 2026-10-12</span></div>
     <hr class="divider">
     <div class="about-block"><b data-i18n="aboutCrisisLabel">Crisis resources (always available from the sidebar):</b></div>
     <div class="crisis-list" id="aboutCrisisList"></div>
@@ -2558,6 +2561,7 @@ ro: {
   aboutBlock3:"<b>Fără cheie API:</b> aplicația funcționează implicit — un AI local simplu, pe bază de reguli și reflectare (marcat clar în conversație), recunoaște câteva tipare uzuale și folosește memoria companionului. Nu e o rețea neuronală și nu înțelege cu adevărat ce scrii; pentru asta, conectează un provider real din Setări.",
   aboutBlock4:"<b>5 opțiuni în Setări, implicit WebLLM:</b> WebLLM (model direct în tab, WebGPU, 1-5GB descărcați o dată), Anthropic (Claude), OpenAI/compatibil (cu presete pentru Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, plus Ollama local cu model românesc RoLlama/RoMistral), Gemini Nano (nativ în Chrome, fără cheie, fără descărcare de la mine), și AI local simplu pe reguli (ales explicit). Niciunul dintre modelele generale nu e specializat pe română — pentru asta, presetul Ollama + RoLlama/RoMistral.",
   aboutBlock5:"<b>Vârstă:</b> gândită pentru adulți. Nu înlocuiește relațiile umane reale sau terapia.",
+  versionLabel:"Versiune",
   aboutCrisisLabel:"Resurse de criză (mereu disponibile din bara laterală):", btnUnderstood:"Am înțeles",
   crisisTitle:"Ești în siguranță acum?",
   crisisSub:"Am observat cuvinte care sugerează că treci prin ceva greu. Nu ești singur/ă — vorbește cu oameni reali, pregătiți pentru exact asta:",
@@ -2679,6 +2683,7 @@ en: {
   aboutBlock3:"<b>No API key:</b> the app works by default — a simple rule-based, reflection-driven local AI (clearly labeled in the chat) recognizes a few common patterns and uses the companion's memory. It's not a neural network and doesn't truly understand what you write; for that, connect a real provider in Settings.",
   aboutBlock4:"<b>5 options in Settings, WebLLM by default:</b> WebLLM (a model right in the tab, WebGPU, 1-5GB downloaded once), Anthropic (Claude), OpenAI-compatible (with presets for Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, plus local Ollama with the Romanian RoLlama/RoMistral model), Gemini Nano (native in Chrome, no key, no download from me), and simple rule-based local AI (chosen explicitly). None of the general models is specialized for Romanian — for that, the Ollama + RoLlama/RoMistral preset.",
   aboutBlock5:"<b>Age:</b> built for adults. Doesn't replace real human relationships or therapy.",
+  versionLabel:"Version",
   aboutCrisisLabel:"Crisis resources (always available from the sidebar):", btnUnderstood:"Got it",
   crisisTitle:"Are you safe right now?",
   crisisSub:"I noticed words that suggest you're going through something hard. You're not alone — talk to real people, trained for exactly this:",
@@ -2800,6 +2805,7 @@ fr: {
   aboutBlock3:"<b>Sans clé API :</b> l'application fonctionne par défaut — une IA locale simple, à règles et réflexion (clairement indiquée dans la conversation), reconnaît quelques schémas courants et utilise la mémoire du compagnon. Ce n'est pas un réseau de neurones et elle ne comprend pas vraiment ce que tu écris ; pour ça, connecte un vrai fournisseur dans les Paramètres.",
   aboutBlock4:"<b>5 options dans les Paramètres, WebLLM par défaut :</b> WebLLM (un modèle directement dans l'onglet, WebGPU, 1-5 Go téléchargés une fois), Anthropic (Claude), compatible OpenAI (avec préréglages pour Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, plus Ollama local avec le modèle roumain RoLlama/RoMistral), Gemini Nano (natif dans Chrome, sans clé, sans téléchargement de ma part), et l'IA locale simple à règles (choisie explicitement). Aucun des modèles généraux n'est spécialisé en roumain — pour ça, le préréglage Ollama + RoLlama/RoMistral.",
   aboutBlock5:"<b>Âge :</b> conçue pour les adultes. Ne remplace pas les vraies relations humaines ni la thérapie.",
+  versionLabel:"Version",
   aboutCrisisLabel:"Ressources de crise (toujours disponibles depuis la barre latérale) :", btnUnderstood:"Compris",
   crisisTitle:"Es-tu en sécurité en ce moment ?",
   crisisSub:"J'ai remarqué des mots qui suggèrent que tu traverses quelque chose de difficile. Tu n'es pas seul(e) — parle à de vraies personnes, formées exactement pour ça :",
@@ -2921,6 +2927,7 @@ it: {
   aboutBlock3:"<b>Senza chiave API:</b> l'app funziona di default — un'IA locale semplice, basata su regole e riflessione (indicata chiaramente in conversazione), riconosce alcuni schemi comuni e usa la memoria del compagno. Non è una rete neurale e non capisce davvero cosa scrivi; per quello, collega un provider vero nelle Impostazioni.",
   aboutBlock4:"<b>5 opzioni nelle Impostazioni, WebLLM di default:</b> WebLLM (un modello direttamente nella scheda, WebGPU, 1-5GB scaricati una volta), Anthropic (Claude), compatibile OpenAI (con preset per Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, più Ollama locale con il modello rumeno RoLlama/RoMistral), Gemini Nano (nativo in Chrome, senza chiave, senza download da parte mia), e IA locale semplice a regole (scelta esplicitamente). Nessuno dei modelli generali è specializzato in rumeno — per quello, il preset Ollama + RoLlama/RoMistral.",
   aboutBlock5:"<b>Età:</b> pensata per adulti. Non sostituisce relazioni umane reali o terapia.",
+  versionLabel:"Versione",
   aboutCrisisLabel:"Risorse di crisi (sempre disponibili dalla barra laterale):", btnUnderstood:"Ho capito",
   crisisTitle:"Sei al sicuro adesso?",
   crisisSub:"Ho notato parole che suggeriscono che stai attraversando un momento difficile. Non sei solo/a — parla con persone reali, preparate proprio per questo:",
@@ -3042,6 +3049,7 @@ es: {
   aboutBlock3:"<b>Sin clave API:</b> la app funciona por defecto — una IA local simple, basada en reglas y reflejo (claramente indicada en la conversación), reconoce algunos patrones comunes y usa la memoria del compañero. No es una red neuronal y no entiende de verdad lo que escribes; para eso, conecta un proveedor real en Ajustes.",
   aboutBlock4:"<b>5 opciones en Ajustes, WebLLM por defecto:</b> WebLLM (un modelo directo en la pestaña, WebGPU, 1-5GB descargados una vez), Anthropic (Claude), compatible con OpenAI (con ajustes rápidos para Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, más Ollama local con el modelo rumano RoLlama/RoMistral), Gemini Nano (nativo en Chrome, sin clave, sin descarga de mi parte), e IA local simple por reglas (elegida explícitamente). Ninguno de los modelos generales está especializado en rumano — para eso, el ajuste Ollama + RoLlama/RoMistral.",
   aboutBlock5:"<b>Edad:</b> pensada para adultos. No reemplaza relaciones humanas reales ni terapia.",
+  versionLabel:"Versión",
   aboutCrisisLabel:"Recursos de crisis (siempre disponibles en la barra lateral):", btnUnderstood:"Entendido",
   crisisTitle:"¿Estás a salvo ahora mismo?",
   crisisSub:"He notado palabras que sugieren que estás pasando por algo difícil. No estás solo/a — habla con personas reales, preparadas exactamente para esto:",
@@ -3163,6 +3171,7 @@ pt: {
   aboutBlock3:"<b>Sem chave API:</b> o app funciona por padrão — uma IA local simples, baseada em regras e reflexo (claramente indicada na conversa), reconhece alguns padrões comuns e usa a memória do companheiro. Não é uma rede neural e não entende de verdade o que você escreve; para isso, conecte um provedor real em Configurações.",
   aboutBlock4:"<b>5 opções em Configurações, WebLLM por padrão:</b> WebLLM (um modelo direto na aba, WebGPU, 1-5GB baixados uma vez), Anthropic (Claude), compatível com OpenAI (com atalhos para Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, além do Ollama local com o modelo romeno RoLlama/RoMistral), Gemini Nano (nativo no Chrome, sem chave, sem download da minha parte), e IA local simples por regras (escolhida explicitamente). Nenhum dos modelos gerais é especializado em romeno — para isso, a predefinição Ollama + RoLlama/RoMistral.",
   aboutBlock5:"<b>Idade:</b> feita para adultos. Não substitui relações humanas reais ou terapia.",
+  versionLabel:"Versão",
   aboutCrisisLabel:"Recursos de crise (sempre disponíveis na barra lateral):", btnUnderstood:"Entendi",
   crisisTitle:"Você está seguro agora?",
   crisisSub:"Notei palavras que sugerem que você está passando por algo difícil. Você não está sozinho(a) — converse com pessoas reais, preparadas exatamente para isso:",
@@ -3284,6 +3293,7 @@ de: {
   aboutBlock3:"<b>Ohne API-Schlüssel:</b> die App funktioniert standardmäßig — eine einfache regelbasierte, reflexionsgesteuerte lokale KI (im Gespräch klar gekennzeichnet) erkennt einige gängige Muster und nutzt das Gedächtnis des Begleiters. Sie ist kein neuronales Netz und versteht nicht wirklich, was du schreibst; verbinde dafür einen echten Anbieter in den Einstellungen.",
   aboutBlock4:"<b>5 Optionen in den Einstellungen, standardmäßig WebLLM:</b> WebLLM (ein Modell direkt im Tab, WebGPU, einmalig 1-5GB), Anthropic (Claude), OpenAI-kompatibel (mit Presets für Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, plus lokales Ollama mit dem rumänischen RoLlama/RoMistral-Modell), Gemini Nano (nativ in Chrome, ohne Schlüssel, ohne Download von mir), und einfache regelbasierte lokale KI (explizit gewählt). Keines der allgemeinen Modelle ist auf Rumänisch spezialisiert — dafür das Ollama + RoLlama/RoMistral-Preset.",
   aboutBlock5:"<b>Alter:</b> für Erwachsene gedacht. Ersetzt keine echten menschlichen Beziehungen oder Therapie.",
+  versionLabel:"Version",
   aboutCrisisLabel:"Krisenressourcen (immer über die Seitenleiste verfügbar):", btnUnderstood:"Verstanden",
   crisisTitle:"Bist du gerade in Sicherheit?",
   crisisSub:"Ich habe Worte bemerkt, die darauf hindeuten, dass du gerade etwas Schweres durchmachst. Du bist nicht allein — sprich mit echten Menschen, die genau dafür ausgebildet sind:",
