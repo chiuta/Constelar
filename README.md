@@ -54,7 +54,7 @@ Descărcați `index.html` (opțional și `sw.js`, pentru instalare ca aplicație
 
 ## Licență
 
-Licența nu este declarată explicit în acest repository (decizie rămasă la autor); vezi nota din aplicație. Aplicația afirmă: „Codul sursă al Constelar este © Alexandru-Ionuț Chiuță"; conținutul creat de utilizator rămâne al acestuia.
+CC0 1.0 Universal (domeniu public) pentru codul și structura aplicației — vezi fișierul `LICENSE`. Eventualele biblioteci terțe incluse în fișier își păstrează licențele proprii. Conținutul creat de utilizator rămâne al acestuia.
 
 ## Audit
 
