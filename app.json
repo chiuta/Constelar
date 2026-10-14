@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "slug": "constelar",
+  "name": "Constelar — companioni AI cu memorie reală, stocată local",
+  "version": "1.1.0",
+  "updated": "2026-10-14",
+  "description": "Companioni AI cu memorie persistentă. Fără cont, fără server, fără telemetrie — memoria și conversațiile rămân pe dispozitivul tău; textul pleacă spre un AI extern doar dacă îl alegi tu.",
+  "egress": [
+    {
+      "host": "127.0.0.1",
+      "via": [
+        "csp:connect-src"
+      ]
+    },
+    {
+      "host": "cdn.jsdelivr.net",
+      "via": [
+        "csp:script-src"
+      ]
+    },
+    {
+      "host": "esm.run",
+      "via": [
+        "csp:script-src",
+        "import",
+        "import()"
+      ]
+    },
+    {
+      "host": "https:(orice gazdă)",
+      "via": [
+        "csp:connect-src"
+      ]
+    },
+    {
+      "host": "localhost",
+      "via": [
+        "csp:connect-src"
+      ]
+    }
+  ],
+  "permissions": [
+    "navigator.share",
+    "speechSynthesis",
+    "SpeechRecognition",
+    "clipboard",
+    "serviceWorker",
+    "localStorage",
+    "WebGPU",
+    "Worker"
+  ],
+  "storageKeys": [],
+  "sizeBytes": 460766,
+  "sha256": "e5cb043f90cd2d76155c8bd925ab98bbfbfaa1ca5f43df6c682d84eddda4250d",
+  "csp": {
+    "present": true,
+    "directives": {
+      "default-src": "'none'",
+      "script-src": "'self' 'wasm-unsafe-eval' https://esm.run https://cdn.jsdelivr.net sha256×2",
+      "style-src": "'self' 'unsafe-inline'",
+      "img-src": "'self' data: blob:",
+      "font-src": "'self' data:",
+      "media-src": "'self' blob: data:",
+      "worker-src": "'self' blob:",
+      "connect-src": "'self' https: http://localhost:* http://127.0.0.1:*",
+      "manifest-src": "'self'",
+      "object-src": "'none'",
+      "frame-src": "'none'",
+      "base-uri": "'none'",
+      "form-action": "'self'"
+    },
+    "scriptInline": "hash",
+    "connect": "'self' https: http://localhost:* http://127.0.0.1:*"
+  },
+  "features": {
+    "export": true,
+    "import": true,
+    "i18n": [
+      "ro",
+      "en",
+      "fr",
+      "it",
+      "es",
+      "pt",
+      "de"
+    ],
+    "pwa": {
+      "manifest": false,
+      "serviceWorker": true
+    },
+    "modules": [
+      "core",
+      "label",
+      "bundle"
+    ]
+  },
+  "kit": {
+    "version": "1.0.0",
+    "modules": [
+      "core",
+      "label",
+      "bundle"
+    ]
+  },
+  "selfSerializing": false
+}
