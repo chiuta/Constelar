@@ -54,7 +54,7 @@ Descărcați `index.html` (opțional și `sw.js`, pentru instalare ca aplicație
 
 ## Licență
 
-CC0 1.0 Universal (domeniu public) pentru codul și structura aplicației — vezi fișierul `LICENSE`. Eventualele biblioteci terțe incluse în fișier își păstrează licențele proprii. Conținutul creat de utilizator rămâne al acestuia.
+MIT pentru codul și structura aplicației — vezi fișierul `LICENSE`. Eventualele biblioteci terțe incluse în fișier își păstrează licențele proprii. Conținutul creat de utilizator rămâne al acestuia.
 
 ## Audit
 
