@@ -49,9 +49,13 @@
     "WebGPU",
     "Worker"
   ],
-  "storageKeys": [],
-  "sizeBytes": 461862,
-  "sha256": "50f390130136e6131c67f15decae59e53ebdd308e15c60b14c842855293727bc",
+  "storageKeys": [
+    "constelar_drafts_v1",
+    "constelar_pollinations_ok_v1",
+    "constelar_state_v1"
+  ],
+  "sizeBytes": 461935,
+  "sha256": "bc73437595ccfcb72c5d674128cc4f006c7135a315f6921ece6c0d4a65f286e4",
   "csp": {
     "present": true,
     "directives": {
