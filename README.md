@@ -1,95 +1,97 @@
 # Constelar
 
-Companioni AI cu memorie reală, stocată local în browser, într-un singur fișier HTML.
+**English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Live:** https://chiuta.github.io/Constelar/
+**Version:** 1.2.0 · **Last updated:** 2026-10-18
 
-![Captura de ecran](screenshot.png)
+AI companions with real memory, stored locally in the browser, in a single HTML file.
 
-**Versiune:** 1.2.0 · **Ultima actualizare:** 18 octombrie 2026
+**Live app:** https://chiuta.github.io/Constelar/
 
-## Ce este
+![Screenshot](screenshot.png)
 
-Constelar este o aplicație (PWA opțională) în care creați unul sau mai mulți „companioni" AI (familie, prieten, romantic, poveste / roleplay), fiecare cu personalitate, context și o memorie proprie vizualizată ca o constelație. Datele rămân în browser; nimic nu pleacă de pe dispozitiv decât dacă alegeți un furnizor AI extern sau descărcați un model WebLLM. Aplicația este concepută pentru adulți și nu înlocuiește relațiile umane sau terapia (notă din aplicație).
+## What it is
 
-## Funcții
+Constelar is an app (optionally a PWA) in which you create one or more AI "companions" (family, friend, romantic, story / roleplay), each with its own personality, context and a memory of its own visualised as a constellation. The data stays in the browser; nothing leaves the device unless you choose an external AI provider or download a WebLLM model. The app is designed for adults and does not replace human relationships or therapy (note in the app).
 
-- Companioni multipli: nume, tip de relație, trăsături, context / backstory, furnizor AI propriu sau cel global; buton de generare aleatoare a unui companion.
-- Două file pentru fiecare companion: **Chat** și **Memory**. Memoria are trei categorii: *Permanent*, *Evolving*, *Discovered* (aceasta din urmă cu auto-extragere opțională), afișate ca stele pe care le puteți atinge pentru detalii.
-- Furnizori AI în Setări: WebLLM (model rulat în tab prin WebGPU, descărcat o dată, variante 1B / 3B / 8B), Anthropic (Claude), compatibil OpenAI (presetări Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama), Pollinations (fără cont), Gemini Nano nativ din Chrome și un motor local simplu bazat pe reguli (nu este o rețea neurală; etichetat ca atare în chat).
-- „Test connection", reamintire „It's AI" la interval configurabil (minute; 0 = oprit), citire cu voce tare a răspunsurilor (speechSynthesis).
-- Extragere locală de fapte din mesaje (preferințe, frici, persoane și animale apropiate, ocupație, locuință) în cele 7 limbi, afișate în „Discovered”.
-- Rezumat al conversației („Conversation recap", calculat local după frecvența cuvintelor) și export al unei conversații.
-- Export / import al tuturor datelor (⇩ / ⇧).
-- Buton „Copiază mesajul” (⧉) la fiecare mesaj; ciornele din câmpul de mesaj se păstrează per companion (și după reîncărcare).
-- Resurse de criză accesibile din bara laterală și dialog de siguranță când sunt detectate anumite expresii.
-- Meniu „Share" (link, WhatsApp, X, Facebook, LinkedIn, Fediverse).
-- Interfață în 7 limbi: engleză, română, franceză, italiană, spaniolă, portugheză, germană.
+## Features
 
-## Manual de utilizare
+- Multiple companions: name, relationship type, traits, context / backstory, own AI provider or the global one; a button to generate a companion at random.
+- Two tabs for each companion: **Chat** and **Memory**. The memory has three categories: *Permanent*, *Evolving*, *Discovered* (the latter with optional auto-extraction), displayed as stars that you can tap for details.
+- AI providers in Settings: WebLLM (a model run in the tab through WebGPU, downloaded once, 1B / 3B / 8B variants), Anthropic (Claude), OpenAI-compatible (presets Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama), Pollinations (no account), Chrome's native Gemini Nano and a simple rule-based local engine (not a neural network; labelled as such in the chat).
+- "Test connection", "It's AI" reminder at a configurable interval (minutes; 0 = off), reading the replies aloud (speechSynthesis).
+- Local extraction of facts from messages (preferences, fears, close people and animals, occupation, home) in the 7 languages, displayed in "Discovered".
+- Conversation summary ("Conversation recap", computed locally by word frequency) and export of a conversation.
+- Export / import of all the data (⇩ / ⇧).
+- "Copy message" button (⧉) on every message; drafts in the message field are kept per companion (and after reload).
+- Crisis resources accessible from the sidebar and a safety dialog when certain expressions are detected.
+- "Share" menu (link, WhatsApp, X, Facebook, LinkedIn, Fediverse).
+- Interface in 7 languages: English, Romanian, French, Italian, Spanish, Portuguese, German.
 
-1. Deschideți pagina și apăsați „+ New companion" (sau „+ Create your first companion").
-2. Completați numele, tipul relației, trăsăturile și contextul; alegeți furnizorul AI („Same as Settings (global)" sau altul), apoi „Create".
-3. În fila **Chat** scrieți mesajul și apăsați „Send" sau `Enter` (`Shift+Enter` pentru rând nou).
-4. În fila **Memory** adăugați amintiri cu „+" în categoriile Permanent / Evolving / Discovered.
-5. Pentru un AI real, deschideți ⚙ (AI Settings), alegeți „Provider", introduceți cheia API (și, dacă e cazul, „Base URL" / „Model"), folosiți „Test connection", apoi „Save". Pentru WebLLM apăsați „Download and start the model".
-6. Schimbați limba din butonul 🌐 sau din selectorul „Language" din Setări.
-7. Salvați datele cu ⇩ (export) și le restaurați cu ⇧ (import).
-8. `Esc` închide ferestrele modale. ℹ deschide „About Constelar" și termenii/confidențialitatea.
+## User guide
 
-## Confidențialitate și rețea
+1. Open the page and press "+ New companion" (or "+ Create your first companion").
+2. Fill in the name, relationship type, traits and context; choose the AI provider ("Same as Settings (global)" or another), then "Create".
+3. In the **Chat** tab write the message and press "Send" or `Enter` (`Shift+Enter` for a new line).
+4. In the **Memory** tab add memories with "+" in the categories Permanent / Evolving / Discovered.
+5. For a real AI, open ⚙ (AI Settings), choose "Provider", enter the API key (and, if needed, "Base URL" / "Model"), use "Test connection", then "Save". For WebLLM press "Download and start the model".
+6. Change the language from the 🌐 button or from the "Language" selector in Settings.
+7. Save the data with ⇩ (export) and restore it with ⇧ (import).
+8. `Esc` closes the modal windows. ℹ opens "About Constelar" and the terms/privacy.
 
-- **Stocare locală:** `localStorage`, cheia `constelar_state_v1` (companioni, memorii, conversații, setări; inclusiv cheia API dacă o introduceți). Ciornele mesajelor netrimise se păstrează separat, în cheia `constelar_drafts_v1` (se șterg la trimitere). Aplicația testează disponibilitatea `localStorage` și avertizează dacă nu funcționează. Fără cookie-uri.
-- **Hosturi contactate, doar la acțiunea dumneavoastră:**
-  - furnizorul AI ales: `api.anthropic.com`, `api.openai.com` sau alt Base URL (inclusiv `openrouter.ai` în presetări), cu mesajele și cheia trimise direct din browser;
-  - `text.pollinations.ai`, dacă alegeți Pollinations (aplicația cere acordul o singură dată);
-  - `esm.run` (CDN), pentru încărcarea bibliotecii `@mlc-ai/web-llm@0.2.84`, și apoi descărcarea modelului ales, dacă folosiți WebLLM;
-  - linkurile către `iasp.info` (resurse de criză) și butoanele „Share" se deschid doar la clic.
-- Fără analitice. Pagina are politică CSP (meta), cu `script-src` pe hash SHA-256 pentru scriptul propriu (fără `'unsafe-inline'`); `connect-src` permite `https:` deoarece URL-ul furnizorului compatibil OpenAI este ales de utilizator. Numele modelelor din presetări (Groq, OpenRouter, Together, Mistral etc.) se schimbă des și nu au putut fi verificate la 11.10.2026: editați câmpul „Model” dacă un furnizor răspunde cu eroare. Cu furnizorul implicit „motor local simplu" sau cu modele deja descărcate, conversațiile nu părăsesc dispozitivul.
-- Când este servit prin HTTPS, `sw.js` (opțional) se înregistrează și păstrează în cache „app shell"-ul; nu atinge `localStorage`.
+## Privacy and network
 
-## Rulare locală / offline
+- **Local storage:** `localStorage`, key `constelar_state_v1` (companions, memories, conversations, settings; including the API key if you enter it). Drafts of unsent messages are kept separately, in the key `constelar_drafts_v1` (deleted on sending). The app tests the availability of `localStorage` and warns if it does not work. No cookies.
+- **Hosts contacted, only on your action:**
+  - the chosen AI provider: `api.anthropic.com`, `api.openai.com` or another Base URL (including `openrouter.ai` in the presets), with the messages and the key sent directly from the browser;
+  - `text.pollinations.ai`, if you choose Pollinations (the app asks for consent once);
+  - `esm.run` (CDN), for loading the library `@mlc-ai/web-llm@0.2.84`, and then downloading the chosen model, if you use WebLLM;
+  - the links to `iasp.info` (crisis resources) and the "Share" buttons open only on click.
+- No analytics. The page has a CSP policy (meta), with `script-src` by SHA-256 hash for its own script (no `'unsafe-inline'`); `connect-src` allows `https:` because the URL of the OpenAI-compatible provider is chosen by the user. The model names in the presets (Groq, OpenRouter, Together, Mistral, etc.) change often and could not be verified on 11.10.2026: edit the "Model" field if a provider answers with an error. With the default provider "simple local engine" or with models already downloaded, the conversations do not leave the device.
+- When served over HTTPS, `sw.js` (optional) registers and caches the "app shell"; it does not touch `localStorage`.
 
-Descărcați `index.html` (opțional și `sw.js`, pentru instalare ca aplicație pe un server HTTPS) și deschideți-l în browser. Fără internet funcționează motorul local simplu și modelele WebLLM deja descărcate în cache; furnizorii externi și prima descărcare WebLLM necesită internet.
+## Running locally / offline
 
-## Licență
+Download `index.html` (optionally also `sw.js`, for installing as an app on an HTTPS server) and open it in the browser. Without internet the simple local engine and the WebLLM models already downloaded to the cache work; external providers and the first WebLLM download require internet.
 
-MIT pentru codul și structura aplicației — vezi fișierul `LICENSE`. Eventualele biblioteci terțe incluse în fișier își păstrează licențele proprii. Conținutul creat de utilizator rămâne al acestuia.
+## License
+
+MIT for the code and structure of the app — see the `LICENSE` file. Any third-party libraries included in the file keep their own licenses. Content created by the user remains theirs.
 
 ## Audit
 
-Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conținut (mesaje, memorii, rezumat) folosesc `escapeHtml` (testat cu payload `<img onerror>`); exportul de date golește cheia API. Corectat: bara de sus pe ecran îngust (fila „Memory" ieșea din ecran). Rundă 2 (2026-10-11): formularea „100% locală” apărea doar în câmpul „About” de pe GitHub, nu în pagină; textul paginii (meta description, „stored locally”, setări) este exact: datele rămân în browser, iar textul pleacă spre un AI extern, spre Pollinations sau spre CDN-ul `esm.run` (WebLLM) doar dacă alegeți acel furnizor. Text corect pentru „About” (de aplicat manual pe GitHub): „Companioni AI cu memorie stocată local în browser; mesajele pleacă spre un furnizor extern doar dacă îl alegi tu.” Fără CSP și fără SRI pe WebLLM: `import()` dinamic de pe `esm.run` nu poate purta atribut `integrity`, iar `connect-src` ar trebui să permită orice gazdă aleasă de utilizator (Base URL liber), deci o CSP utilă ar fi la fel de largă ca absența ei.
+Audit: 2026-10-10 — verified with Playwright and axe-core; content rendering (messages, memories, summary) uses `escapeHtml` (tested with an `<img onerror>` payload); the data export blanks the API key. Fixed: the top bar on a narrow screen (the "Memory" tab went off-screen). Round 2 (2026-10-11): the wording "100% local" appeared only in the "About" field on GitHub, not on the page; the page text (meta description, "stored locally", settings) is accurate: the data stays in the browser, and the text goes to an external AI, to Pollinations or to the `esm.run` CDN (WebLLM) only if you choose that provider. Correct text for "About" (to be applied manually on GitHub): "AI companions with memory stored locally in the browser; messages go to an external provider only if you choose it." No CSP and no SRI on WebLLM: the dynamic `import()` from `esm.run` cannot carry an `integrity` attribute, and `connect-src` would have to allow any host chosen by the user (free Base URL), so a useful CSP would be as wide as having none.
 
-## Istoric / Changelog
+## History / Changelog
 
 ### 1.2.0 — 2026-10-18
-- Reparat: importul unui fișier de companioni fără `settings` nu mai resetează limba, providerul și modelul (rămân cele curente).
-- Copia de siguranță necriptată (kit 1.1.0) nu mai conține cheia API; cea criptată cu parolă o păstrează. La restaurarea unei copii necriptate, cheia se reintroduce.
+- Fixed: importing a companions file without `settings` no longer resets the language, provider and model (the current ones stay).
+- The unencrypted backup (kit 1.1.0) no longer contains the API key; the password-encrypted one keeps it. When restoring an unencrypted backup, the key is re-entered.
 
 ### 1.1.0 — 2026-10-14
-- Copie de rezervă și etichetare date (fff-kit).
+- Backup and data labelling (fff-kit).
 
 ### 1.0.0 — 2026-10-12
-- Versiunea și data ultimei actualizări sunt afișate în aplicație (fereastra „Despre”, în 7 limbi).
+- The version and the date of the last update are shown in the app ("About" window, in 7 languages).
 
-### 11 octombrie 2026 (runda 7)
-- Reparat: la „ce îți amintești despre mine?” motorul local citează acum doar fapte reale despre utilizator; nota de bun venit a companionului demo din „Discovered” („Right now she's chatting through the instant local engine…”) a fost marcată ca indiciu (`hint`) și exclusă din răspunsul de reamintire, din promptul trimis către AI și din referirile motorului local (inclusiv pentru date salvate înainte, recunoscută după text). Reprodus și verificat în browser.
-- Îmbunătățit: extragerea euristică a faptelor, în toate cele 7 limbi: „iubesc/I love/j'adore…”, „mi-e frică de/I'm afraid of/j'ai peur de…”, relații și animale numite („my friend Maria”), iar fraza reținută se taie la prima conjuncție („hiking and I'm afraid…” → „hiking”). Motorul rămâne euristic și limitat.
+### 11 October 2026 (round 7)
+- Fixed: for "what do you remember about me?" the local engine now quotes only real facts about the user; the welcome note of the demo companion in "Discovered" ("Right now she's chatting through the instant local engine…") was marked as a hint (`hint`) and excluded from the recall answer, from the prompt sent to the AI and from the local engine's references (including for data saved earlier, recognised by its text). Reproduced and verified in the browser.
+- Improved: heuristic fact extraction, in all 7 languages: "iubesc/I love/j'adore…", "mi-e frică de/I'm afraid of/j'ai peur de…", named relations and animals ("my friend Maria"), and the retained phrase is cut at the first conjunction ("hiking and I'm afraid…" → "hiking"). The engine remains heuristic and limited.
 
-### 11 octombrie 2026 (runda 6)
-- Adăugat: buton de copiere pe fiecare mesaj (traducere în 7 limbi), ciorne persistente per companion.
-- Securitate: CSP cu `script-src` pe hash în locul `'unsafe-inline'` (surse externe neschimbate: `esm.run`, `cdn.jsdelivr.net`).
+### 11 October 2026 (round 6)
+- Added: copy button on every message (translated into 7 languages), persistent drafts per companion.
+- Security: CSP with `script-src` by hash instead of `'unsafe-inline'` (external sources unchanged: `esm.run`, `cdn.jsdelivr.net`).
 
-### 11 octombrie 2026
-- Reparat: motorul local pe reguli răspunde acum la întrebări despre utilizator („What is my name?”, „Cine sunt?”, „Que sais-tu de moi ?” etc., în toate cele 7 limbi) cu faptele „descoperite” din memorie; fără fapte, spune explicit că nu are nimic reținut.
-- Reparat: rezumatele de fapte (confirmarea „Good to know …” și faptele extrase automat) nu mai sunt tăiate la mijloc de cuvânt sau la apostrof (limita 30 → 80/60 de caractere, cu retragere la ultimul cuvânt întreg).
-- Adăugat: politică CSP (connect-src `'self'`, `https:` pentru furnizorii AI configurabili de utilizator și loopback HTTP pentru Ollama/LM Studio; scripturi doar de la `esm.run`/`cdn.jsdelivr.net` pentru WebLLM).
-- Reparat: accesibilitate: titlu h1, ferestre modale cu nume, contrast pentru ora mesajelor; 0 violări axe-core la 1280 și 360 px.
+### 11 October 2026
+- Fixed: the rule-based local engine now answers questions about the user ("What is my name?", "Cine sunt?", "Que sais-tu de moi ?", etc., in all 7 languages) with the "discovered" facts from memory; without facts, it says explicitly that it has nothing remembered.
+- Fixed: fact summaries (the "Good to know …" confirmation and the automatically extracted facts) are no longer cut in the middle of a word or at an apostrophe (limit 30 → 80/60 characters, with fallback to the last whole word).
+- Added: CSP policy (connect-src `'self'`, `https:` for user-configurable AI providers and loopback HTTP for Ollama/LM Studio; scripts only from `esm.run`/`cdn.jsdelivr.net` for WebLLM).
+- Fixed: accessibility: h1 heading, named modal windows, contrast for message time; 0 axe-core violations at 1280 and 360 px.
 
-## Autor
+## Author
 
 Alexio — Alexandru-Ionuț Chiuță. Contact: alexio@trom.tf
 
-## English summary
+## Summary
 
 Constelar is a single-file app for AI companions with local, visible memory (permanent / evolving / discovered). Data lives in localStorage (`constelar_state_v1`). AI providers: in-tab WebLLM, Anthropic, OpenAI-compatible, Pollinations, Chrome's Gemini Nano, or a simple rule-based local engine. External hosts are contacted only when you pick them (provider APIs, esm.run CDN for WebLLM, Pollinations). UI in 7 languages.
