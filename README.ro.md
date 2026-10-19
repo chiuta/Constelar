@@ -94,6 +94,6 @@ Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conți
 
 Alexio — Alexandru-Ionuț Chiuță. Contact: alexio@trom.tf
 
-## English summary
+## Rezumat
 
-Constelar is a single-file app for AI companions with local, visible memory (permanent / evolving / discovered). Data lives in localStorage (`constelar_state_v1`). AI providers: in-tab WebLLM, Anthropic, OpenAI-compatible, Pollinations, Chrome's Gemini Nano, or a simple rule-based local engine. External hosts are contacted only when you pick them (provider APIs, esm.run CDN for WebLLM, Pollinations). UI in 8 languages.
+Constelar este o aplicație într-un singur fișier pentru companioni AI cu memorie locală, vizibilă (permanentă / în evoluție / descoperită). Datele se păstrează în localStorage (`constelar_state_v1`). Furnizori AI: WebLLM în filă, Anthropic, compatibil OpenAI, Pollinations, Gemini Nano din Chrome sau un motor local simplu bazat pe reguli. Gazdele externe sunt contactate doar când le alegi (API-urile furnizorilor, CDN-ul esm.run pentru WebLLM, Pollinations). Interfață în 8 limbi.
