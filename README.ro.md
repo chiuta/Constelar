@@ -10,7 +10,7 @@ Companioni AI cu memorie reală, stocată local în browser, într-un singur fi�
 
 **Live:** https://chiuta.github.io/Constelar/
 
-![Captura de ecran](screenshot.png)
+![Captura de ecran](screenshot.ro.png)
 
 ## Ce este
 

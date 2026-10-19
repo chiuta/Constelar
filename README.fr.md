@@ -10,7 +10,7 @@ Des compagnons IA dotés d'une vraie mémoire, stockée localement dans le navig
 
 **Application en ligne :** https://chiuta.github.io/Constelar/
 
-![Capture d'écran](screenshot.png)
+![Capture d'écran](screenshot.fr.png)
 
 ## De quoi s'agit-il
 

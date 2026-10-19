@@ -10,7 +10,7 @@ AI companions with real memory, stored locally in the browser, in a single HTML 
 
 **Live app:** https://chiuta.github.io/Constelar/
 
-![Screenshot](screenshot.png)
+![Screenshot](screenshot.en.png)
 
 ## What it is
 

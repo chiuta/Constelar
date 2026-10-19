@@ -10,7 +10,7 @@ Compagni IA con una memoria reale, archiviata localmente nel browser, in un unic
 
 **Applicazione online:** https://chiuta.github.io/Constelar/
 
-![Schermata](screenshot.png)
+![Schermata](screenshot.it.png)
 
 ## Che cos'è
 

@@ -10,7 +10,7 @@ MI-társak valódi memóriával, helyben, a böngészőben tárolva, egyetlen HT
 
 **Online alkalmazás:** https://chiuta.github.io/Constelar/
 
-![Képernyőkép](screenshot.png)
+![Képernyőkép](screenshot.hu.png)
 
 ## Mi ez
 

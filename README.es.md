@@ -10,7 +10,7 @@ Compañeros de IA con memoria real, almacenada localmente en el navegador, en un
 
 **Aplicación en línea:** https://chiuta.github.io/Constelar/
 
-![Captura de pantalla](screenshot.png)
+![Captura de pantalla](screenshot.es.png)
 
 ## Qué es
 

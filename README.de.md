@@ -10,7 +10,7 @@ KI-Begleiter mit echtem Gedächtnis, lokal im Browser gespeichert, in einer einz
 
 **Online-Anwendung:** https://chiuta.github.io/Constelar/
 
-![Screenshot](screenshot.png)
+![Screenshot](screenshot.de.png)
 
 ## Was es ist
 
