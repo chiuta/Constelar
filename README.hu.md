@@ -2,7 +2,9 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió:** 1.2.0 · **Utolsó frissítés:** 2026-10-18
+**Verzió:** 1.3.0 · **Utolsó frissítés:** 2026-10-19
+
+A felület nyelvei: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
 MI-társak valódi memóriával, helyben, a böngészőben tárolva, egyetlen HTML-fájlban.
 
@@ -20,13 +22,13 @@ A Constelar egy alkalmazás (opcionálisan PWA), amelyben egy vagy több MI-„t
 - Két lap minden társhoz: **Chat** és **Memory**. A memóriának három kategóriája van: *Permanent*, *Evolving*, *Discovered* (utóbbi opcionális automatikus kinyeréssel), csillagokként megjelenítve, amelyekre koppintva részleteket láthatsz.
 - MI-szolgáltatók a Beállításokban: WebLLM (a lapon WebGPU-n futó modell, egyszer letöltve, 1B / 3B / 8B változatok), Anthropic (Claude), OpenAI-kompatibilis (Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama előbeállítások), Pollinations (fiók nélkül), a Chrome natív Gemini Nano modellje és egy egyszerű, szabályalapú helyi motor (nem neurális háló; a csevegésben ennek megfelelően jelölve).
 - „Test connection”, „It's AI” emlékeztető beállítható időközzel (percek; 0 = kikapcsolva), a válaszok felolvasása (speechSynthesis).
-- Tények helyi kinyerése az üzenetekből (preferenciák, félelmek, közeli személyek és állatok, foglalkozás, lakóhely) a 7 nyelven, a „Discovered” alatt megjelenítve.
+- Tények helyi kinyerése az üzenetekből (preferenciák, félelmek, közeli személyek és állatok, foglalkozás, lakóhely) a 8 nyelven, a „Discovered” alatt megjelenítve.
 - A beszélgetés összefoglalója („Conversation recap”, helyben, a szógyakoriság alapján számolva) és egy beszélgetés exportálása.
 - Az összes adat exportja / importja (⇩ / ⇧).
 - „Üzenet másolása” gomb (⧉) minden üzenetnél; az üzenetmezőben lévő piszkozatok társanként megmaradnak (újratöltés után is).
 - Az oldalsávból elérhető krízisforrások, valamint biztonsági párbeszédablak, ha bizonyos kifejezéseket észlel.
 - „Share” menü (hivatkozás, WhatsApp, X, Facebook, LinkedIn, Fediverse).
-- Felület 7 nyelven: angol, román, francia, olasz, spanyol, portugál, német.
+- Felület 8 nyelven: angol, román, francia, olasz, spanyol, portugál, német, magyar.
 
 ## Használati útmutató
 
@@ -94,4 +96,4 @@ Alexio — Alexandru-Ionuț Chiuță. Kapcsolat: alexio@trom.tf
 
 ## Összefoglaló
 
-A Constelar egyetlen fájlból álló alkalmazás MI-társakhoz helyi, látható memóriával (permanent / evolving / discovered). Az adatok a localStorage-ban élnek (`constelar_state_v1`). MI-szolgáltatók: a lapon futó WebLLM, Anthropic, OpenAI-kompatibilis, Pollinations, a Chrome Gemini Nano modellje, vagy egy egyszerű, szabályalapú helyi motor. Külső gazdagépekkel csak akkor veszi fel a kapcsolatot, ha te azokat választod (szolgáltatói API-k, esm.run CDN a WebLLM-hez, Pollinations). Felület 7 nyelven.
+A Constelar egyetlen fájlból álló alkalmazás MI-társakhoz helyi, látható memóriával (permanent / evolving / discovered). Az adatok a localStorage-ban élnek (`constelar_state_v1`). MI-szolgáltatók: a lapon futó WebLLM, Anthropic, OpenAI-kompatibilis, Pollinations, a Chrome Gemini Nano modellje, vagy egy egyszerű, szabályalapú helyi motor. Külső gazdagépekkel csak akkor veszi fel a kapcsolatot, ha te azokat választod (szolgáltatói API-k, esm.run CDN a WebLLM-hez, Pollinations). Felület 8 nyelven.

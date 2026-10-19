@@ -2,7 +2,9 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 1.2.0 · **Last updated:** 2026-10-18
+**Version:** 1.3.0 · **Last updated:** 2026-10-19
+
+Interface languages: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
 AI companions with real memory, stored locally in the browser, in a single HTML file.
 
@@ -20,13 +22,13 @@ Constelar is an app (optionally a PWA) in which you create one or more AI "compa
 - Two tabs for each companion: **Chat** and **Memory**. The memory has three categories: *Permanent*, *Evolving*, *Discovered* (the latter with optional auto-extraction), displayed as stars that you can tap for details.
 - AI providers in Settings: WebLLM (a model run in the tab through WebGPU, downloaded once, 1B / 3B / 8B variants), Anthropic (Claude), OpenAI-compatible (presets Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama), Pollinations (no account), Chrome's native Gemini Nano and a simple rule-based local engine (not a neural network; labelled as such in the chat).
 - "Test connection", "It's AI" reminder at a configurable interval (minutes; 0 = off), reading the replies aloud (speechSynthesis).
-- Local extraction of facts from messages (preferences, fears, close people and animals, occupation, home) in the 7 languages, displayed in "Discovered".
+- Local extraction of facts from messages (preferences, fears, close people and animals, occupation, home) in the 8 languages, displayed in "Discovered".
 - Conversation summary ("Conversation recap", computed locally by word frequency) and export of a conversation.
 - Export / import of all the data (⇩ / ⇧).
 - "Copy message" button (⧉) on every message; drafts in the message field are kept per companion (and after reload).
 - Crisis resources accessible from the sidebar and a safety dialog when certain expressions are detected.
 - "Share" menu (link, WhatsApp, X, Facebook, LinkedIn, Fediverse).
-- Interface in 7 languages: English, Romanian, French, Italian, Spanish, Portuguese, German.
+- Interface in 8 languages: English, Romanian, French, Italian, Spanish, Portuguese, German, Hungarian.
 
 ## User guide
 
@@ -94,4 +96,4 @@ Alexio — Alexandru-Ionuț Chiuță. Contact: alexio@trom.tf
 
 ## Summary
 
-Constelar is a single-file app for AI companions with local, visible memory (permanent / evolving / discovered). Data lives in localStorage (`constelar_state_v1`). AI providers: in-tab WebLLM, Anthropic, OpenAI-compatible, Pollinations, Chrome's Gemini Nano, or a simple rule-based local engine. External hosts are contacted only when you pick them (provider APIs, esm.run CDN for WebLLM, Pollinations). UI in 7 languages.
+Constelar is a single-file app for AI companions with local, visible memory (permanent / evolving / discovered). Data lives in localStorage (`constelar_state_v1`). AI providers: in-tab WebLLM, Anthropic, OpenAI-compatible, Pollinations, Chrome's Gemini Nano, or a simple rule-based local engine. External hosts are contacted only when you pick them (provider APIs, esm.run CDN for WebLLM, Pollinations). UI in 8 languages.

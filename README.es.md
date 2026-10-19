@@ -2,7 +2,9 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión:** 1.2.0 · **Última actualización:** 2026-10-18
+**Versión:** 1.3.0 · **Última actualización:** 2026-10-19
+
+Idiomas de la interfaz: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
 Compañeros de IA con memoria real, almacenada localmente en el navegador, en un único archivo HTML.
 
@@ -20,13 +22,13 @@ Constelar es una aplicación (PWA opcional) en la que creas uno o varios «compa
 - Dos pestañas para cada compañero: **Chat** y **Memory**. La memoria tiene tres categorías: *Permanent*, *Evolving*, *Discovered* (esta última con extracción automática opcional), mostradas como estrellas que puedes tocar para ver los detalles.
 - Proveedores de IA en Ajustes: WebLLM (modelo ejecutado en la pestaña mediante WebGPU, descargado una vez, variantes 1B / 3B / 8B), Anthropic (Claude), compatible con OpenAI (preajustes Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama), Pollinations (sin cuenta), Gemini Nano nativo de Chrome y un motor local simple basado en reglas (no es una red neuronal; etiquetado como tal en el chat).
 - «Test connection», recordatorio «It's AI» a intervalo configurable (minutos; 0 = desactivado), lectura en voz alta de las respuestas (speechSynthesis).
-- Extracción local de hechos a partir de los mensajes (preferencias, miedos, personas y animales cercanos, ocupación, vivienda) en los 7 idiomas, mostrados en «Discovered».
+- Extracción local de hechos a partir de los mensajes (preferencias, miedos, personas y animales cercanos, ocupación, vivienda) en los 8 idiomas, mostrados en «Discovered».
 - Resumen de la conversación («Conversation recap», calculado localmente según la frecuencia de las palabras) y exportación de una conversación.
 - Exportación / importación de todos los datos (⇩ / ⇧).
 - Botón «Copiar el mensaje» (⧉) en cada mensaje; los borradores del campo de mensaje se conservan por compañero (y tras recargar).
 - Recursos de crisis accesibles desde la barra lateral y diálogo de seguridad cuando se detectan ciertas expresiones.
 - Menú «Share» (enlace, WhatsApp, X, Facebook, LinkedIn, Fediverso).
-- Interfaz en 7 idiomas: inglés, rumano, francés, italiano, español, portugués, alemán.
+- Interfaz en 8 idiomas: inglés, rumano, francés, italiano, español, portugués, alemán, húngaro.
 
 ## Manual de uso
 
@@ -94,4 +96,4 @@ Alexio — Alexandru-Ionuț Chiuță. Contacto: alexio@trom.tf
 
 ## Resumen
 
-Constelar es una aplicación de un solo archivo para compañeros de IA con memoria local y visible (permanent / evolving / discovered). Los datos residen en localStorage (`constelar_state_v1`). Proveedores de IA: WebLLM en la pestaña, Anthropic, compatible con OpenAI, Pollinations, Gemini Nano de Chrome o un motor local simple basado en reglas. Los hosts externos solo se contactan cuando los eliges (API de los proveedores, CDN esm.run para WebLLM, Pollinations). Interfaz en 7 idiomas.
+Constelar es una aplicación de un solo archivo para compañeros de IA con memoria local y visible (permanent / evolving / discovered). Los datos residen en localStorage (`constelar_state_v1`). Proveedores de IA: WebLLM en la pestaña, Anthropic, compatible con OpenAI, Pollinations, Gemini Nano de Chrome o un motor local simple basado en reglas. Los hosts externos solo se contactan cuando los eliges (API de los proveedores, CDN esm.run para WebLLM, Pollinations). Interfaz en 8 idiomas.

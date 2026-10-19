@@ -2,7 +2,9 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 1.2.0 · **Zuletzt aktualisiert:** 2026-10-18
+**Version:** 1.3.0 · **Zuletzt aktualisiert:** 2026-10-19
+
+Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
 KI-Begleiter mit echtem Gedächtnis, lokal im Browser gespeichert, in einer einzigen HTML-Datei.
 
@@ -20,13 +22,13 @@ Constelar ist eine Anwendung (optional als PWA), in der du einen oder mehrere KI
 - Zwei Tabs für jeden Begleiter: **Chat** und **Memory**. Das Gedächtnis hat drei Kategorien: *Permanent*, *Evolving*, *Discovered* (Letztere mit optionaler automatischer Extraktion), dargestellt als Sterne, die du für Details antippen kannst.
 - KI-Anbieter in den Einstellungen: WebLLM (im Tab über WebGPU ausgeführtes Modell, einmal heruntergeladen, Varianten 1B / 3B / 8B), Anthropic (Claude), OpenAI-kompatibel (Voreinstellungen Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama), Pollinations (ohne Konto), natives Gemini Nano von Chrome und eine einfache regelbasierte lokale Engine (kein neuronales Netz; im Chat entsprechend gekennzeichnet).
 - „Test connection“, „It's AI“-Erinnerung in konfigurierbarem Abstand (Minuten; 0 = aus), Vorlesen der Antworten (speechSynthesis).
-- Lokale Extraktion von Fakten aus Nachrichten (Vorlieben, Ängste, nahestehende Personen und Tiere, Beruf, Wohnort) in den 7 Sprachen, angezeigt unter „Discovered“.
+- Lokale Extraktion von Fakten aus Nachrichten (Vorlieben, Ängste, nahestehende Personen und Tiere, Beruf, Wohnort) in den 8 Sprachen, angezeigt unter „Discovered“.
 - Zusammenfassung der Unterhaltung („Conversation recap“, lokal nach Worthäufigkeit berechnet) und Export einer Unterhaltung.
 - Export / Import aller Daten (⇩ / ⇧).
 - Schaltfläche „Nachricht kopieren“ (⧉) bei jeder Nachricht; Entwürfe im Nachrichtenfeld werden pro Begleiter gespeichert (auch nach dem Neuladen).
 - Krisenressourcen über die Seitenleiste erreichbar und ein Sicherheitsdialog, wenn bestimmte Ausdrücke erkannt werden.
 - Menü „Share“ (Link, WhatsApp, X, Facebook, LinkedIn, Fediverse).
-- Oberfläche in 7 Sprachen: Englisch, Rumänisch, Französisch, Italienisch, Spanisch, Portugiesisch, Deutsch.
+- Oberfläche in 8 Sprachen: Englisch, Rumänisch, Französisch, Italienisch, Spanisch, Portugiesisch, Deutsch, Ungarisch.
 
 ## Bedienungsanleitung
 
@@ -94,4 +96,4 @@ Alexio — Alexandru-Ionuț Chiuță. Kontakt: alexio@trom.tf
 
 ## Zusammenfassung
 
-Constelar ist eine Anwendung in einer einzigen Datei für KI-Begleiter mit lokalem, sichtbarem Gedächtnis (permanent / evolving / discovered). Die Daten liegen in localStorage (`constelar_state_v1`). KI-Anbieter: WebLLM im Tab, Anthropic, OpenAI-kompatibel, Pollinations, Gemini Nano von Chrome oder eine einfache regelbasierte lokale Engine. Externe Hosts werden nur kontaktiert, wenn du sie wählst (Anbieter-APIs, esm.run-CDN für WebLLM, Pollinations). Oberfläche in 7 Sprachen.
+Constelar ist eine Anwendung in einer einzigen Datei für KI-Begleiter mit lokalem, sichtbarem Gedächtnis (permanent / evolving / discovered). Die Daten liegen in localStorage (`constelar_state_v1`). KI-Anbieter: WebLLM im Tab, Anthropic, OpenAI-kompatibel, Pollinations, Gemini Nano von Chrome oder eine einfache regelbasierte lokale Engine. Externe Hosts werden nur kontaktiert, wenn du sie wählst (Anbieter-APIs, esm.run-CDN für WebLLM, Pollinations). Oberfläche in 8 Sprachen.
