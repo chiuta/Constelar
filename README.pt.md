@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · **Português** · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versão:** 1.3.1 · **Última atualização:** 2026-10-22
+**Versão:** 1.3.2 · **Última atualização:** 2026-10-22
 
 Idiomas da interface: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,8 @@ MIT para o código e a estrutura da aplicação — veja o ficheiro `LICENSE`. A
 Auditoria: 2026-10-10 — verificado com Playwright e axe-core; as renderizações de conteúdo (mensagens, memórias, resumo) usam `escapeHtml` (testado com um payload `<img onerror>`); a exportação de dados esvazia a chave API. Corrigido: a barra superior em ecrã estreito (o separador «Memory» saía do ecrã). Ronda 2 (2026-10-11): a formulação «100% local» aparecia apenas no campo «About» do GitHub, não na página; o texto da página (meta description, «stored locally», definições) é exato: os dados ficam no navegador, e o texto segue para uma IA externa, para o Pollinations ou para a CDN `esm.run` (WebLLM) apenas se escolher esse fornecedor. Texto correto para «About» (a aplicar manualmente no GitHub): «Companheiros de IA com memória armazenada localmente no navegador; as mensagens seguem para um fornecedor externo apenas se o escolher.» Sem CSP nem SRI no WebLLM: o `import()` dinâmico a partir de `esm.run` não pode ter o atributo `integrity`, e o `connect-src` teria de permitir qualquer anfitrião escolhido pelo utilizador (Base URL livre), pelo que uma CSP útil seria tão ampla quanto a sua ausência.
 
 ## Histórico / Changelog
+
+- 1.3.2 — 2026-10-22: O consentimento do Pollinations, a confirmação de URL não segura, a confirmação de substituição na importação e os avisos de voz/importação usam diálogos e avisos integrados em vez de window.confirm/alert; o campo de pesquisa e a caixa de mensagem têm nomes acessíveis (traduzidos); um único h1 na página (a marca), o nome do companheiro e o título do estado vazio são h2; áreas táteis maiores e texto ≥ 12 px em telemóvel.
 
 - 1.3.1 — 2026-10-22: **correção**: o título da página segue o idioma escolhido; os companheiros de demonstração não modificados (perfil, memórias) são reescritos no novo idioma ao mudar de idioma.
 ### 1.2.0 — 2026-10-18

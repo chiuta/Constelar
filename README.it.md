@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione:** 1.3.1 · **Ultimo aggiornamento:** 2026-10-22
+**Versione:** 1.3.2 · **Ultimo aggiornamento:** 2026-10-22
 
 Lingue dell'interfaccia: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,8 @@ MIT per il codice e la struttura dell'applicazione — vedi il file `LICENSE`. E
 Audit: 2026-10-10 — verificato con Playwright e axe-core; i rendering dei contenuti (messaggi, ricordi, riepilogo) usano `escapeHtml` (testato con un payload `<img onerror>`); l'esportazione dei dati svuota la chiave API. Corretto: la barra superiore su schermo stretto (la scheda «Memory» usciva dallo schermo). Giro 2 (2026-10-11): la dicitura «100% locale» compariva solo nel campo «About» su GitHub, non nella pagina; il testo della pagina (meta description, «stored locally», impostazioni) è esatto: i dati restano nel browser, e il testo parte verso un'IA esterna, verso Pollinations o verso il CDN `esm.run` (WebLLM) solo se scegli quel fornitore. Testo corretto per «About» (da applicare manualmente su GitHub): «Compagni IA con memoria archiviata localmente nel browser; i messaggi partono verso un fornitore esterno solo se lo scegli tu.» Nessuna CSP e nessuna SRI su WebLLM: l'`import()` dinamico da `esm.run` non può portare l'attributo `integrity`, e `connect-src` dovrebbe consentire qualsiasi host scelto dall'utente (Base URL libero), quindi una CSP utile sarebbe ampia quanto la sua assenza.
 
 ## Cronologia / Changelog
+
+- 1.3.2 — 2026-10-22: Il consenso per Pollinations, la conferma dell’URL non sicuro, la conferma di sovrascrittura all’importazione e gli avvisi di voce/importazione usano finestre e avvisi integrati invece di window.confirm/alert; il campo di ricerca e la casella di messaggio hanno nomi accessibili (tradotti); un solo h1 nella pagina (il marchio), il nome del compagno e il titolo dello stato vuoto sono h2; aree tattili più grandi e testo ≥ 12 px su mobile.
 
 - 1.3.1 — 2026-10-22: **correzione**: il titolo della pagina segue la lingua scelta; i compagni demo non modificati (profilo, ricordi) vengono riscritti nella nuova lingua al cambio di lingua.
 ### 1.2.0 — 2026-10-18

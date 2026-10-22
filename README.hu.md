@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió:** 1.3.1 · **Utolsó frissítés:** 2026-10-22
+**Verzió:** 1.3.2 · **Utolsó frissítés:** 2026-10-22
 
 A felület nyelvei: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,8 @@ MIT az alkalmazás kódjára és szerkezetére — lásd a `LICENSE` fájlt. A f
 Audit: 2026-10-10 — Playwright-tal és axe-core-ral ellenőrizve; a tartalom megjelenítése (üzenetek, emlékek, összefoglaló) `escapeHtml`-t használ (`<img onerror>` adattal tesztelve); az adatexport kiüríti az API-kulcsot. Javítva: a felső sáv keskeny képernyőn (a „Memory” lap kicsúszott a képernyőről). 2. kör (2026-10-11): a „100%-ban helyi” megfogalmazás csak a GitHubon az „About” mezőben szerepelt, az oldalon nem; az oldal szövege (meta description, „stored locally”, beállítások) pontos: az adatok a böngészőben maradnak, a szöveg pedig csak akkor megy külső MI-hez, a Pollinationshöz vagy az `esm.run` CDN-hez (WebLLM), ha azt a szolgáltatót választod. Helyes szöveg az „About” mezőhöz (kézzel alkalmazandó a GitHubon): „MI-társak a böngészőben helyben tárolt memóriával; az üzenetek csak akkor mennek külső szolgáltatóhoz, ha te azt választod.” Nincs CSP és nincs SRI a WebLLM-en: az `esm.run`-ról érkező dinamikus `import()` nem hordozhat `integrity` attribútumot, a `connect-src`-nek pedig bármely, a felhasználó által választott gazdagépet engedélyeznie kellene (szabad Base URL), így egy hasznos CSP ugyanolyan tág lenne, mint a hiánya.
 
 ## Előzmények / Changelog
+
+- 1.3.2 — 2026-10-22: A Pollinations-hozzájárulás, a nem biztonságos URL megerősítése, az importálási felülírás megerősítése és a hang/import értesítések oldalon belüli párbeszédpaneleket és értesítéseket használnak a window.confirm/alert helyett; a keresőmező és az üzenetmező hozzáférhető névvel rendelkezik (lefordítva); az oldalon egyetlen h1 van (a márkanév), a társ neve és az üres állapot címe h2; nagyobb érintési célpontok és legalább 12 px szöveg mobilon.
 
 - 1.3.1 — 2026-10-22: **javítás**: az oldal címe a kiválasztott nyelvet követi; a nem módosított demó társak (profil, emlékek) nyelvváltáskor az új nyelven íródnak újra.
 ### 1.2.0 — 2026-10-18

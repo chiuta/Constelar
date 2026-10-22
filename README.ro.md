@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 1.3.1 · **Ultima actualizare:** 2026-10-22
+**Versiune:** 1.3.2 · **Ultima actualizare:** 2026-10-22
 
 Limbile interfeței: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,8 @@ MIT pentru codul și structura aplicației — vezi fișierul `LICENSE`. Eventua
 Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conținut (mesaje, memorii, rezumat) folosesc `escapeHtml` (testat cu payload `<img onerror>`); exportul de date golește cheia API. Corectat: bara de sus pe ecran îngust (fila „Memory" ieșea din ecran). Rundă 2 (2026-10-11): formularea „100% locală” apărea doar în câmpul „About” de pe GitHub, nu în pagină; textul paginii (meta description, „stored locally”, setări) este exact: datele rămân în browser, iar textul pleacă spre un AI extern, spre Pollinations sau spre CDN-ul `esm.run` (WebLLM) doar dacă alegeți acel furnizor. Text corect pentru „About” (de aplicat manual pe GitHub): „Companioni AI cu memorie stocată local în browser; mesajele pleacă spre un furnizor extern doar dacă îl alegi tu.” Fără CSP și fără SRI pe WebLLM: `import()` dinamic de pe `esm.run` nu poate purta atribut `integrity`, iar `connect-src` ar trebui să permită orice gazdă aleasă de utilizator (Base URL liber), deci o CSP utilă ar fi la fel de largă ca absența ei.
 
 ## Istoric / Changelog
+
+- 1.3.2 — 2026-10-22: Acordul pentru Pollinations, confirmarea URL-ului nesigur, confirmarea suprascrierii la import și alertele de voce/import folosesc dialoguri și notificări în pagină, nu window.confirm/alert; câmpul de căutare și caseta de mesaj au nume accesibile (traduse); un singur h1 în pagină (marca), numele companionului și titlul stării goale sunt h2; ținte tactile mai mari și text ≥ 12 px pe mobil.
 
 - 1.3.1 — 2026-10-22: **remediere**: titlul paginii urmează limba aleasă; companionii demo nemodificați (profil, amintiri) sunt rescriși în limba nouă la schimbarea limbii.
 ### 1.2.0 — 2026-10-18

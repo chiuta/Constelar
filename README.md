@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 1.3.1 · **Last updated:** 2026-10-22
+**Version:** 1.3.2 · **Last updated:** 2026-10-22
 
 Interface languages: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,8 @@ MIT for the code and structure of the app — see the `LICENSE` file. Any third-
 Audit: 2026-10-10 — verified with Playwright and axe-core; content rendering (messages, memories, summary) uses `escapeHtml` (tested with an `<img onerror>` payload); the data export blanks the API key. Fixed: the top bar on a narrow screen (the "Memory" tab went off-screen). Round 2 (2026-10-11): the wording "100% local" appeared only in the "About" field on GitHub, not on the page; the page text (meta description, "stored locally", settings) is accurate: the data stays in the browser, and the text goes to an external AI, to Pollinations or to the `esm.run` CDN (WebLLM) only if you choose that provider. Correct text for "About" (to be applied manually on GitHub): "AI companions with memory stored locally in the browser; messages go to an external provider only if you choose it." No CSP and no SRI on WebLLM: the dynamic `import()` from `esm.run` cannot carry an `integrity` attribute, and `connect-src` would have to allow any host chosen by the user (free Base URL), so a useful CSP would be as wide as having none.
 
 ## History / Changelog
+
+- 1.3.2 — 2026-10-22: The Pollinations consent, the insecure-URL confirmation, the import-overwrite confirmation and the voice/import alerts use in-page dialogs and notices instead of window.confirm/alert; the search field and the message box now have accessible names (translated); a single h1 on the page (the brand), the companion name and empty-state titles are h2; larger touch targets and text ≥ 12 px on mobile.
 
 - 1.3.1 — 2026-10-22: **fix**: the page title follows the selected language; untouched demo companions (profile, memories) are re-written in the new language when the language changes.
 ### 1.2.0 — 2026-10-18

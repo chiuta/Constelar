@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 1.3.1 · **Zuletzt aktualisiert:** 2026-10-22
+**Version:** 1.3.2 · **Zuletzt aktualisiert:** 2026-10-22
 
 Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -65,6 +65,8 @@ MIT für den Code und die Struktur der Anwendung — siehe Datei `LICENSE`. Even
 Audit: 2026-10-10 — geprüft mit Playwright und axe-core; die Inhaltsdarstellung (Nachrichten, Erinnerungen, Zusammenfassung) verwendet `escapeHtml` (getestet mit einer `<img onerror>`-Nutzlast); der Datenexport leert den API-Schlüssel. Behoben: die obere Leiste auf schmalem Bildschirm (der Tab „Memory“ lag außerhalb des Bildschirms). Runde 2 (2026-10-11): Die Formulierung „100 % lokal“ stand nur im Feld „About“ auf GitHub, nicht auf der Seite; der Seitentext (Meta-Beschreibung, „stored locally“, Einstellungen) ist zutreffend: Die Daten bleiben im Browser, und der Text geht nur an eine externe KI, an Pollinations oder an das CDN `esm.run` (WebLLM), wenn du diesen Anbieter wählst. Korrekter Text für „About“ (manuell auf GitHub anzuwenden): „KI-Begleiter mit lokal im Browser gespeichertem Gedächtnis; Nachrichten gehen nur an einen externen Anbieter, wenn du ihn wählst.“ Keine CSP und kein SRI für WebLLM: Der dynamische `import()` von `esm.run` kann kein `integrity`-Attribut tragen, und `connect-src` müsste jeden vom Nutzer gewählten Host erlauben (freie Base URL), sodass eine nützliche CSP genauso weit wäre wie gar keine.
 
 ## Verlauf / Changelog
+
+- 1.3.2 — 2026-10-22: Die Pollinations-Einwilligung, die Bestätigung unsicherer URLs, die Bestätigung des Überschreibens beim Import und die Sprach-/Import-Hinweise nutzen Dialoge und Hinweise in der Seite statt window.confirm/alert; Suchfeld und Nachrichtenfeld haben zugängliche Namen (übersetzt); nur ein h1 auf der Seite (die Marke), Name des Begleiters und Titel des leeren Zustands sind h2; größere Touch-Ziele und Text ≥ 12 px auf dem Handy.
 
 - 1.3.1 — 2026-10-22: **Korrektur**: der Seitentitel folgt der gewählten Sprache; unveränderte Demo-Begleiter (Profil, Erinnerungen) werden beim Sprachwechsel in der neuen Sprache neu geschrieben.
 ### 1.2.0 — 2026-10-18
