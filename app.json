@@ -2,8 +2,8 @@
   "schema": 1,
   "slug": "constelar",
   "name": "Constelar — companioni AI cu memorie reală, stocată local",
-  "version": "1.3.6",
-  "updated": "2026-10-22",
+  "version": "1.3.7",
+  "updated": "2026-10-23",
   "description": "Companioni AI cu memorie persistentă. Fără cont, fără server, fără telemetrie — memoria și conversațiile rămân pe dispozitivul tău; textul pleacă spre un AI extern doar dacă îl alegi tu.",
   "egress": [
     {
@@ -42,8 +42,8 @@
     "constelar_pollinations_ok_v1",
     "constelar_state_v1"
   ],
-  "sizeBytes": 534677,
-  "sha256": "388509383c75a7123d59c98282eb961786933fcc23738f10b2954f75dc51a4b1",
+  "sizeBytes": 564214,
+  "sha256": "987a0607aede4d0497a295b2b81e77e5fd074c8f31763a4b47974dc663dad36e",
   "csp": {
     "present": true,
     "directives": {
@@ -83,6 +83,8 @@
     },
     "modules": [
       "core",
+      "store",
+      "dialog",
       "label",
       "bundle"
     ]
@@ -91,6 +93,8 @@
     "version": "1.2.0",
     "modules": [
       "core",
+      "store",
+      "dialog",
       "label",
       "bundle"
     ]
