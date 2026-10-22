@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió:** 1.3.5 · **Utolsó frissítés:** 2026-10-22
+**Verzió:** 1.3.6 · **Utolsó frissítés:** 2026-10-22
 
 A felület nyelvei: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -47,7 +47,7 @@ A Constelar egy alkalmazás (opcionálisan PWA), amelyben egy vagy több MI-„t
 - **Kapcsolatba lépő gazdagépek, csak a te műveletedre:**
   - a választott MI-szolgáltató: `api.anthropic.com`, `api.openai.com` vagy más Base URL (az előbeállításokban az `openrouter.ai` is), az üzeneteket és a kulcsot közvetlenül a böngészőből küldve;
   - `text.pollinations.ai`, ha a Pollinationst választod (az alkalmazás egyszer kér hozzájárulást);
-  - `esm.run` (CDN), a `@mlc-ai/web-llm@0.2.84` könyvtár betöltéséhez, majd a választott modell letöltéséhez, ha WebLLM-et használsz;
+  - `raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/00fe7a40…/` (a modell `.wasm` könyvtára, rögzített commit, SHA-256 SRI-vel ellenőrizve) és `huggingface.co/mlc-ai/` (+ `*.huggingface.co`, `*.hf.co`) a választott modell súlyaihoz (rögzített ellenőrzőösszeg nélkül), ha WebLLM-et használsz (a `@mlc-ai/web-llm@0.2.84` könyvtár maga a `vendor/` mappában van);
   - az `iasp.info` (krízisforrások) hivatkozásai és a „Share” gombok csak kattintásra nyílnak meg.
 - Nincs analitika. Az oldalon CSP-szabály (meta) van érvényben, a saját szkripthez SHA-256 hash alapú `script-src`-vel (`'unsafe-inline'` nélkül); a `connect-src` engedélyezi a `https:`-t, mert az OpenAI-kompatibilis szolgáltató URL-jét a felhasználó választja. Az előbeállításokban szereplő modellnevek (Groq, OpenRouter, Together, Mistral stb.) gyakran változnak, és 2026.10.11-én nem voltak ellenőrizhetők: szerkeszd a „Model” mezőt, ha egy szolgáltató hibával válaszol. Az alapértelmezett „egyszerű helyi motor” szolgáltatóval vagy már letöltött modellekkel a beszélgetések nem hagyják el az eszközt.
 - HTTPS-en kiszolgálva az `sw.js` (opcionális) regisztrálja magát, és gyorsítótárazza az „app shell”-t; nem nyúl a `localStorage`-hoz.
@@ -72,6 +72,10 @@ Audit: 2026-10-10 — Playwright-tal és axe-core-ral ellenőrizve; a tartalom m
 - 1.3.2 — 2026-10-22: A Pollinations-hozzájárulás, a nem biztonságos URL megerősítése, az importálási felülírás megerősítése és a hang/import értesítések oldalon belüli párbeszédpaneleket és értesítéseket használnak a window.confirm/alert helyett; a keresőmező és az üzenetmező hozzáférhető névvel rendelkezik (lefordítva); az oldalon egyetlen h1 van (a márkanév), a társ neve és az üres állapot címe h2; nagyobb érintési célpontok és legalább 12 px szöveg mobilon.
 
 - 1.3.1 — 2026-10-22: **javítás**: az oldal címe a kiválasztott nyelvet követi; a nem módosított demó társak (profil, emlékek) nyelvváltáskor az új nyelven íródnak újra.
+### 1.3.6 — 2026-10-22
+- A WebLLM már nem CDN-ről jön: a `@mlc-ai/web-llm@0.2.84` könyvtár és a worker (`vendor/web-llm-worker.mjs`, valódi fájl az `esm.run`-ról importáló blob helyett) a `vendor/` mappában van. A modellkönyvtárak (`.wasm`) a `binary-mlc-llm-libs` egy rögzített commitjáról jönnek, és SHA-256 SRI-vel ellenőrzöttek (eltérésnél elutasítva, lefordított üzenettel). A CSP kivette az `esm.run` és a `cdn.jsdelivr.net` címet a `script-src`-ből.
+- Új szövegek (a könyvtár nem töltődött be, integritáshiba) 8 nyelven. Hozzáadott méret: kb. 5,8 MB (WebLLM). Új `NOTICE.md`.
+
 ### 1.2.0 — 2026-10-18
 - Javítva: egy `settings` nélküli társfájl importálása már nem állítja vissza a nyelvet, a szolgáltatót és a modellt (a jelenlegiek megmaradnak).
 - A titkosítatlan biztonsági mentés (1.1.0 készlet) már nem tartalmazza az API-kulcsot; a jelszóval titkosított megtartja. Titkosítatlan mentés visszaállításakor a kulcsot újra meg kell adni.
@@ -102,4 +106,4 @@ Alexio — Alexandru-Ionuț Chiuță. Kapcsolat: alexio@trom.tf
 
 ## Összefoglaló
 
-A Constelar egyetlen fájlból álló alkalmazás MI-társakhoz helyi, látható memóriával (permanent / evolving / discovered). Az adatok a localStorage-ban élnek (`constelar_state_v1`). MI-szolgáltatók: a lapon futó WebLLM, Anthropic, OpenAI-kompatibilis, Pollinations, a Chrome Gemini Nano modellje, vagy egy egyszerű, szabályalapú helyi motor. Külső gazdagépekkel csak akkor veszi fel a kapcsolatot, ha te azokat választod (szolgáltatói API-k, esm.run CDN a WebLLM-hez, Pollinations). Felület 8 nyelven.
+A Constelar egyetlen fájlból álló alkalmazás MI-társakhoz helyi, látható memóriával (permanent / evolving / discovered). Az adatok a localStorage-ban élnek (`constelar_state_v1`). MI-szolgáltatók: a lapon futó WebLLM, Anthropic, OpenAI-kompatibilis, Pollinations, a Chrome Gemini Nano modellje, vagy egy egyszerű, szabályalapú helyi motor. Külső gazdagépekkel csak akkor veszi fel a kapcsolatot, ha te azokat választod (szolgáltatói API-k, Hugging Face/GitHub modellfájlok a WebLLM-hez, Pollinations). Felület 8 nyelven.

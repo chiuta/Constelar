@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 1.3.5 · **Zuletzt aktualisiert:** 2026-10-22
+**Version:** 1.3.6 · **Zuletzt aktualisiert:** 2026-10-22
 
 Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -47,7 +47,7 @@ Constelar ist eine Anwendung (optional als PWA), in der du einen oder mehrere KI
 - **Kontaktierte Hosts, nur auf deine Aktion hin:**
   - der gewählte KI-Anbieter: `api.anthropic.com`, `api.openai.com` oder eine andere Base URL (einschließlich `openrouter.ai` in den Voreinstellungen), wobei Nachrichten und Schlüssel direkt aus dem Browser gesendet werden;
   - `text.pollinations.ai`, wenn du Pollinations wählst (die Anwendung fragt einmalig nach der Zustimmung);
-  - `esm.run` (CDN), zum Laden der Bibliothek `@mlc-ai/web-llm@0.2.84` und anschließend zum Herunterladen des gewählten Modells, wenn du WebLLM verwendest;
+  - `raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/00fe7a40…/` (die Modellbibliothek `.wasm`, fester Commit, per SHA-256-SRI geprüft) und `huggingface.co/mlc-ai/` (+ `*.huggingface.co`, `*.hf.co`) für die Gewichte des gewählten Modells (ohne festen Hash), wenn du WebLLM verwendest (die Bibliothek `@mlc-ai/web-llm@0.2.84` selbst liegt in `vendor/`);
   - die Links zu `iasp.info` (Krisenressourcen) und die „Share“-Schaltflächen öffnen sich nur beim Klicken.
 - Keine Analysedienste. Die Seite hat eine CSP-Richtlinie (Meta) mit `script-src` per SHA-256-Hash für das eigene Skript (ohne `'unsafe-inline'`); `connect-src` erlaubt `https:`, weil die URL des OpenAI-kompatiblen Anbieters vom Nutzer gewählt wird. Die Modellnamen in den Voreinstellungen (Groq, OpenRouter, Together, Mistral usw.) ändern sich oft und konnten am 11.10.2026 nicht geprüft werden: Bearbeite das Feld „Model“, wenn ein Anbieter mit einem Fehler antwortet. Mit dem Standardanbieter „einfache lokale Engine“ oder mit bereits heruntergeladenen Modellen verlassen die Unterhaltungen das Gerät nicht.
 - Wenn die Seite über HTTPS ausgeliefert wird, registriert sich `sw.js` (optional) und speichert die „App-Shell“ im Cache; es berührt `localStorage` nicht.
@@ -72,6 +72,10 @@ Audit: 2026-10-10 — geprüft mit Playwright und axe-core; die Inhaltsdarstellu
 - 1.3.2 — 2026-10-22: Die Pollinations-Einwilligung, die Bestätigung unsicherer URLs, die Bestätigung des Überschreibens beim Import und die Sprach-/Import-Hinweise nutzen Dialoge und Hinweise in der Seite statt window.confirm/alert; Suchfeld und Nachrichtenfeld haben zugängliche Namen (übersetzt); nur ein h1 auf der Seite (die Marke), Name des Begleiters und Titel des leeren Zustands sind h2; größere Touch-Ziele und Text ≥ 12 px auf dem Handy.
 
 - 1.3.1 — 2026-10-22: **Korrektur**: der Seitentitel folgt der gewählten Sprache; unveränderte Demo-Begleiter (Profil, Erinnerungen) werden beim Sprachwechsel in der neuen Sprache neu geschrieben.
+### 1.3.6 — 2026-10-22
+- WebLLM kommt nicht mehr von einem CDN: die Bibliothek `@mlc-ai/web-llm@0.2.84` und der Worker (`vendor/web-llm-worker.mjs`, eine echte Datei statt eines Blobs mit Import von `esm.run`) liegen in `vendor/`. Die Modellbibliotheken (`.wasm`) stammen von einem festen Commit von `binary-mlc-llm-libs` und werden per SHA-256-SRI geprüft (bei Abweichung abgelehnt, mit übersetzter Meldung). Die CSP entfernt `esm.run` und `cdn.jsdelivr.net` aus `script-src`.
+- Neue Texte (Bibliothek nicht geladen, Integritätsfehler) in 8 Sprachen. Zusätzliche Größe: ca. 5,8 MB (WebLLM). Neue `NOTICE.md`.
+
 ### 1.2.0 — 2026-10-18
 - Behoben: Der Import einer Begleiter-Datei ohne `settings` setzt Sprache, Anbieter und Modell nicht mehr zurück (die aktuellen bleiben erhalten).
 - Die unverschlüsselte Sicherung (Kit 1.1.0) enthält den API-Schlüssel nicht mehr; die mit Passwort verschlüsselte behält ihn. Beim Wiederherstellen einer unverschlüsselten Sicherung wird der Schlüssel neu eingegeben.
@@ -102,4 +106,4 @@ Alexio — Alexandru-Ionuț Chiuță. Kontakt: alexio@trom.tf
 
 ## Zusammenfassung
 
-Constelar ist eine Anwendung in einer einzigen Datei für KI-Begleiter mit lokalem, sichtbarem Gedächtnis (permanent / evolving / discovered). Die Daten liegen in localStorage (`constelar_state_v1`). KI-Anbieter: WebLLM im Tab, Anthropic, OpenAI-kompatibel, Pollinations, Gemini Nano von Chrome oder eine einfache regelbasierte lokale Engine. Externe Hosts werden nur kontaktiert, wenn du sie wählst (Anbieter-APIs, esm.run-CDN für WebLLM, Pollinations). Oberfläche in 8 Sprachen.
+Constelar ist eine Anwendung in einer einzigen Datei für KI-Begleiter mit lokalem, sichtbarem Gedächtnis (permanent / evolving / discovered). Die Daten liegen in localStorage (`constelar_state_v1`). KI-Anbieter: WebLLM im Tab, Anthropic, OpenAI-kompatibel, Pollinations, Gemini Nano von Chrome oder eine einfache regelbasierte lokale Engine. Externe Hosts werden nur kontaktiert, wenn du sie wählst (Anbieter-APIs, Modelldateien von Hugging Face/GitHub für WebLLM, Pollinations). Oberfläche in 8 Sprachen.

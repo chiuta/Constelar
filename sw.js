@@ -55,8 +55,8 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
-  // doar resurse de pe același origin: CDN-ul WebLLM / greutățile modelului (alt origin, uneori
-  // GB) nu trebuie interceptate sau duplicate în cache-ul shell-ului
+  // doar resurse de pe același origin (inclusiv vendor/ — biblioteca WebLLM și worker-ul, memorate la prima folosire):
+  // greutățile modelului (alt origin, uneori GB) nu trebuie interceptate sau duplicate în cache-ul shell-ului
   var url;
   try { url = new URL(event.request.url); } catch (e) { return; }
   if (url.origin !== self.location.origin) return;

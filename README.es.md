@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión:** 1.3.5 · **Última actualización:** 2026-10-22
+**Versión:** 1.3.6 · **Última actualización:** 2026-10-22
 
 Idiomas de la interfaz: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -47,7 +47,7 @@ Constelar es una aplicación (PWA opcional) en la que creas uno o varios «compa
 - **Hosts contactados, solo por una acción tuya:**
   - el proveedor de IA elegido: `api.anthropic.com`, `api.openai.com` u otra Base URL (incluido `openrouter.ai` en los preajustes), con los mensajes y la clave enviados directamente desde el navegador;
   - `text.pollinations.ai`, si eliges Pollinations (la aplicación pide el consentimiento una sola vez);
-  - `esm.run` (CDN), para cargar la biblioteca `@mlc-ai/web-llm@0.2.84` y luego descargar el modelo elegido, si usas WebLLM;
+  - `raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/00fe7a40…/` (la biblioteca del modelo `.wasm`, commit fijado, verificada con SRI SHA-256) y `huggingface.co/mlc-ai/` (+ `*.huggingface.co`, `*.hf.co`) para los pesos del modelo elegido (sin hash fijado), si usas WebLLM (la biblioteca `@mlc-ai/web-llm@0.2.84` en sí está en `vendor/`);
   - los enlaces a `iasp.info` (recursos de crisis) y los botones «Share» se abren solo al hacer clic.
 - Sin analíticas. La página tiene una política CSP (meta), con `script-src` mediante hash SHA-256 para su propio script (sin `'unsafe-inline'`); `connect-src` permite `https:` porque la URL del proveedor compatible con OpenAI la elige el usuario. Los nombres de modelos de los preajustes (Groq, OpenRouter, Together, Mistral, etc.) cambian con frecuencia y no pudieron verificarse el 11.10.2026: edita el campo «Model» si un proveedor responde con un error. Con el proveedor predeterminado «motor local simple» o con modelos ya descargados, las conversaciones no salen del dispositivo.
 - Cuando se sirve por HTTPS, `sw.js` (opcional) se registra y guarda en caché el «app shell»; no toca `localStorage`.
@@ -72,6 +72,10 @@ Auditoría: 2026-10-10 — verificado con Playwright y axe-core; los renderizado
 - 1.3.2 — 2026-10-22: El consentimiento de Pollinations, la confirmación de URL insegura, la confirmación de sobrescritura al importar y los avisos de voz/importación usan diálogos y avisos integrados en lugar de window.confirm/alert; el campo de búsqueda y el cuadro de mensaje tienen nombres accesibles (traducidos); un solo h1 en la página (la marca), el nombre del compañero y el título del estado vacío son h2; zonas táctiles más grandes y texto ≥ 12 px en móvil.
 
 - 1.3.1 — 2026-10-22: **corrección**: el título de la página sigue el idioma elegido; los compañeros de demostración sin modificar (perfil, recuerdos) se reescriben en el nuevo idioma al cambiar de idioma.
+### 1.3.6 — 2026-10-22
+- WebLLM ya no viene de un CDN: la biblioteca `@mlc-ai/web-llm@0.2.84` y el worker (`vendor/web-llm-worker.mjs`, un archivo real en lugar de un blob que importaba de `esm.run`) están en `vendor/`. Las bibliotecas de modelo (`.wasm`) vienen de un commit fijado de `binary-mlc-llm-libs` y se verifican con SRI SHA-256 (se rechazan si difieren, con mensaje traducido). La CSP quita `esm.run` y `cdn.jsdelivr.net` de `script-src`.
+- Textos nuevos (biblioteca no cargada, fallo de integridad) en 8 idiomas. Tamaño añadido: ~5,8 MB (WebLLM). Nuevo `NOTICE.md`.
+
 ### 1.2.0 — 2026-10-18
 - Corregido: importar un archivo de compañeros sin `settings` ya no restablece el idioma, el proveedor y el modelo (se mantienen los actuales).
 - La copia de seguridad sin cifrar (kit 1.1.0) ya no contiene la clave API; la cifrada con contraseña la conserva. Al restaurar una copia sin cifrar, la clave se vuelve a introducir.
@@ -102,4 +106,4 @@ Alexio — Alexandru-Ionuț Chiuță. Contacto: alexio@trom.tf
 
 ## Resumen
 
-Constelar es una aplicación de un solo archivo para compañeros de IA con memoria local y visible (permanent / evolving / discovered). Los datos residen en localStorage (`constelar_state_v1`). Proveedores de IA: WebLLM en la pestaña, Anthropic, compatible con OpenAI, Pollinations, Gemini Nano de Chrome o un motor local simple basado en reglas. Los hosts externos solo se contactan cuando los eliges (API de los proveedores, CDN esm.run para WebLLM, Pollinations). Interfaz en 8 idiomas.
+Constelar es una aplicación de un solo archivo para compañeros de IA con memoria local y visible (permanent / evolving / discovered). Los datos residen en localStorage (`constelar_state_v1`). Proveedores de IA: WebLLM en la pestaña, Anthropic, compatible con OpenAI, Pollinations, Gemini Nano de Chrome o un motor local simple basado en reglas. Los hosts externos solo se contactan cuando los eliges (API de los proveedores, archivos de modelo de Hugging Face/GitHub para WebLLM, Pollinations). Interfaz en 8 idiomas.
