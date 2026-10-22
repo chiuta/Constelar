@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · **Français** · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version :** 1.3.3 · **Dernière mise à jour :** 2026-10-22
+**Version :** 1.3.4 · **Dernière mise à jour :** 2026-10-22
 
 Langues de l'interface : **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -43,7 +43,7 @@ Constelar est une application (PWA en option) dans laquelle vous créez un ou pl
 
 ## Confidentialité et réseau
 
-- **Stockage local :** `localStorage`, clé `constelar_state_v1` (compagnons, souvenirs, conversations, paramètres ; y compris la clé API si vous la saisissez). Les brouillons de messages non envoyés sont conservés séparément, dans la clé `constelar_drafts_v1` (supprimés à l'envoi). L'application teste la disponibilité de `localStorage` et avertit s'il ne fonctionne pas. Pas de cookies.
+- **Stockage local :** `localStorage`, clé `constelar_state_v1` (compagnons, souvenirs, conversations, paramètres ; sans la clé API : la clé est conservée dans `sessionStorage` (jusqu’à la fermeture de l’onglet) ou, uniquement si vous cochez « Mémoriser sur cet appareil », dans la clé séparée `constelar_apikey_persist`). Les brouillons de messages non envoyés sont conservés séparément, dans la clé `constelar_drafts_v1` (supprimés à l'envoi). L'application teste la disponibilité de `localStorage` et avertit s'il ne fonctionne pas. Pas de cookies.
 - **Hôtes contactés, uniquement sur votre action :**
   - le fournisseur d'IA choisi : `api.anthropic.com`, `api.openai.com` ou une autre Base URL (y compris `openrouter.ai` dans les préréglages), avec les messages et la clé envoyés directement depuis le navigateur ;
   - `text.pollinations.ai`, si vous choisissez Pollinations (l'application demande le consentement une seule fois) ;
@@ -66,6 +66,7 @@ Audit : 2026-10-10 — vérifié avec Playwright et axe-core ; les rendus de con
 
 ## Historique / Changelog
 
+- 1.3.4 — 2026-10-22: Sécurité : la clé API n’est plus enregistrée en clair dans le localStorage ; elle reste dans le sessionStorage (jusqu’à la fermeture de l’onglet), les clés enregistrées par les anciennes versions sont migrées puis supprimées, une case facultative « Mémoriser sur cet appareil » (avec avertissement) la conserve volontairement, et les exports ne la contiennent jamais.
 - 1.3.3 — 2026-10-22 : fff-kit 1.1.2 : PBKDF2 600 000 itérations, protection anti-clickjacking
 - 1.3.2 — 2026-10-22 : Le consentement Pollinations, la confirmation d’URL non sécurisée, la confirmation d’écrasement à l’import et les alertes voix/import utilisent des dialogues et notifications intégrés au lieu de window.confirm/alert ; le champ de recherche et la zone de message ont des noms accessibles (traduits) ; un seul h1 dans la page (la marque), le nom du compagnon et le titre de l’état vide sont des h2 ; cibles tactiles plus grandes et texte ≥ 12 px sur mobile.
 

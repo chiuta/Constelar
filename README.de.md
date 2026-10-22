@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 1.3.3 · **Zuletzt aktualisiert:** 2026-10-22
+**Version:** 1.3.4 · **Zuletzt aktualisiert:** 2026-10-22
 
 Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -43,7 +43,7 @@ Constelar ist eine Anwendung (optional als PWA), in der du einen oder mehrere KI
 
 ## Datenschutz und Netzwerk
 
-- **Lokale Speicherung:** `localStorage`, Schlüssel `constelar_state_v1` (Begleiter, Erinnerungen, Unterhaltungen, Einstellungen; einschließlich des API-Schlüssels, falls du ihn eingibst). Entwürfe ungesendeter Nachrichten werden getrennt im Schlüssel `constelar_drafts_v1` gespeichert (beim Senden gelöscht). Die Anwendung prüft die Verfügbarkeit von `localStorage` und warnt, falls es nicht funktioniert. Keine Cookies.
+- **Lokale Speicherung:** `localStorage`, Schlüssel `constelar_state_v1` (Begleiter, Erinnerungen, Unterhaltungen, Einstellungen; ohne den API-Schlüssel: Der Schlüssel liegt im `sessionStorage` (bis zum Schließen des Tabs) oder, nur wenn du „Auf diesem Gerät merken“ aktivierst, im separaten Schlüssel `constelar_apikey_persist`). Entwürfe ungesendeter Nachrichten werden getrennt im Schlüssel `constelar_drafts_v1` gespeichert (beim Senden gelöscht). Die Anwendung prüft die Verfügbarkeit von `localStorage` und warnt, falls es nicht funktioniert. Keine Cookies.
 - **Kontaktierte Hosts, nur auf deine Aktion hin:**
   - der gewählte KI-Anbieter: `api.anthropic.com`, `api.openai.com` oder eine andere Base URL (einschließlich `openrouter.ai` in den Voreinstellungen), wobei Nachrichten und Schlüssel direkt aus dem Browser gesendet werden;
   - `text.pollinations.ai`, wenn du Pollinations wählst (die Anwendung fragt einmalig nach der Zustimmung);
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — geprüft mit Playwright und axe-core; die Inhaltsdarstellu
 
 ## Verlauf / Changelog
 
+- 1.3.4 — 2026-10-22: Sicherheit: Der API-Schlüssel wird nicht mehr im Klartext im localStorage gespeichert; er liegt im sessionStorage (bis zum Schließen des Tabs), von älteren Versionen gespeicherte Schlüssel werden migriert und gelöscht, ein optionales Kästchen „Auf diesem Gerät merken“ (mit Warnhinweis) behält ihn bewusst, und Exporte enthalten ihn nie.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 mit 600.000 Iterationen, Schutz vor Clickjacking
 - 1.3.2 — 2026-10-22: Die Pollinations-Einwilligung, die Bestätigung unsicherer URLs, die Bestätigung des Überschreibens beim Import und die Sprach-/Import-Hinweise nutzen Dialoge und Hinweise in der Seite statt window.confirm/alert; Suchfeld und Nachrichtenfeld haben zugängliche Namen (übersetzt); nur ein h1 auf der Seite (die Marke), Name des Begleiters und Titel des leeren Zustands sind h2; größere Touch-Ziele und Text ≥ 12 px auf dem Handy.
 

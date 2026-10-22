@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · **Português** · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versão:** 1.3.3 · **Última atualização:** 2026-10-22
+**Versão:** 1.3.4 · **Última atualização:** 2026-10-22
 
 Idiomas da interface: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -43,7 +43,7 @@ O Constelar é uma aplicação (PWA opcional) em que cria um ou vários «compan
 
 ## Privacidade e rede
 
-- **Armazenamento local:** `localStorage`, chave `constelar_state_v1` (companheiros, memórias, conversas, definições; incluindo a chave API, se a introduzir). Os rascunhos de mensagens não enviadas ficam guardados em separado, na chave `constelar_drafts_v1` (eliminados ao enviar). A aplicação testa a disponibilidade do `localStorage` e avisa se não funcionar. Sem cookies.
+- **Armazenamento local:** `localStorage`, chave `constelar_state_v1` (companheiros, memórias, conversas, definições; sem a chave API: a chave fica em `sessionStorage` (até fechar o separador) ou, só se marcar «Lembrar neste dispositivo», na chave separada `constelar_apikey_persist`). Os rascunhos de mensagens não enviadas ficam guardados em separado, na chave `constelar_drafts_v1` (eliminados ao enviar). A aplicação testa a disponibilidade do `localStorage` e avisa se não funcionar. Sem cookies.
 - **Anfitriões contactados, apenas por ação sua:**
   - o fornecedor de IA escolhido: `api.anthropic.com`, `api.openai.com` ou outro Base URL (incluindo `openrouter.ai` nas predefinições), com as mensagens e a chave enviadas diretamente do navegador;
   - `text.pollinations.ai`, se escolher o Pollinations (a aplicação pede o consentimento uma única vez);
@@ -66,6 +66,7 @@ Auditoria: 2026-10-10 — verificado com Playwright e axe-core; as renderizaçõ
 
 ## Histórico / Changelog
 
+- 1.3.4 — 2026-10-22: Segurança: a chave API deixou de ser guardada em claro no localStorage; fica no sessionStorage (até fechar o separador), as chaves guardadas por versões anteriores são migradas e apagadas, uma caixa opcional «Lembrar neste dispositivo» (com aviso) mantém-na de propósito, e as exportações nunca a incluem.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iterações, proteção anti-clickjacking
 - 1.3.2 — 2026-10-22: O consentimento do Pollinations, a confirmação de URL não segura, a confirmação de substituição na importação e os avisos de voz/importação usam diálogos e avisos integrados em vez de window.confirm/alert; o campo de pesquisa e a caixa de mensagem têm nomes acessíveis (traduzidos); um único h1 na página (a marca), o nome do companheiro e o título do estado vazio são h2; áreas táteis maiores e texto ≥ 12 px em telemóvel.
 

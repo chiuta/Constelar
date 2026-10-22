@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión:** 1.3.3 · **Última actualización:** 2026-10-22
+**Versión:** 1.3.4 · **Última actualización:** 2026-10-22
 
 Idiomas de la interfaz: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -43,7 +43,7 @@ Constelar es una aplicación (PWA opcional) en la que creas uno o varios «compa
 
 ## Privacidad y red
 
-- **Almacenamiento local:** `localStorage`, clave `constelar_state_v1` (compañeros, recuerdos, conversaciones, ajustes; incluida la clave API si la introduces). Los borradores de mensajes no enviados se guardan por separado, en la clave `constelar_drafts_v1` (se borran al enviar). La aplicación comprueba la disponibilidad de `localStorage` y avisa si no funciona. Sin cookies.
+- **Almacenamiento local:** `localStorage`, clave `constelar_state_v1` (compañeros, recuerdos, conversaciones, ajustes; sin la clave API: la clave se conserva en `sessionStorage` (hasta cerrar la pestaña) o, solo si marcas «Recordar en este dispositivo», en la clave separada `constelar_apikey_persist`). Los borradores de mensajes no enviados se guardan por separado, en la clave `constelar_drafts_v1` (se borran al enviar). La aplicación comprueba la disponibilidad de `localStorage` y avisa si no funciona. Sin cookies.
 - **Hosts contactados, solo por una acción tuya:**
   - el proveedor de IA elegido: `api.anthropic.com`, `api.openai.com` u otra Base URL (incluido `openrouter.ai` en los preajustes), con los mensajes y la clave enviados directamente desde el navegador;
   - `text.pollinations.ai`, si eliges Pollinations (la aplicación pide el consentimiento una sola vez);
@@ -66,6 +66,7 @@ Auditoría: 2026-10-10 — verificado con Playwright y axe-core; los renderizado
 
 ## Historial / Changelog
 
+- 1.3.4 — 2026-10-22: Seguridad: la clave API ya no se guarda en claro en localStorage; se conserva en sessionStorage (hasta cerrar la pestaña), las claves guardadas por versiones anteriores se migran y se eliminan, una casilla opcional «Recordar en este dispositivo» (con aviso) la conserva a propósito, y las exportaciones nunca la incluyen.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iteraciones, protección anti-clickjacking
 - 1.3.2 — 2026-10-22: El consentimiento de Pollinations, la confirmación de URL insegura, la confirmación de sobrescritura al importar y los avisos de voz/importación usan diálogos y avisos integrados en lugar de window.confirm/alert; el campo de búsqueda y el cuadro de mensaje tienen nombres accesibles (traducidos); un solo h1 en la página (la marca), el nombre del compañero y el título del estado vacío son h2; zonas táctiles más grandes y texto ≥ 12 px en móvil.
 

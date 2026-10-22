@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió:** 1.3.3 · **Utolsó frissítés:** 2026-10-22
+**Verzió:** 1.3.4 · **Utolsó frissítés:** 2026-10-22
 
 A felület nyelvei: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -43,7 +43,7 @@ A Constelar egy alkalmazás (opcionálisan PWA), amelyben egy vagy több MI-„t
 
 ## Adatvédelem és hálózat
 
-- **Helyi tárolás:** `localStorage`, `constelar_state_v1` kulcs (társak, emlékek, beszélgetések, beállítások; beleértve az API-kulcsot, ha megadod). Az el nem küldött üzenetek piszkozatai külön, a `constelar_drafts_v1` kulcsban tárolódnak (küldéskor törlődnek). Az alkalmazás teszteli a `localStorage` elérhetőségét, és figyelmeztet, ha nem működik. Nincsenek sütik.
+- **Helyi tárolás:** `localStorage`, `constelar_state_v1` kulcs (társak, emlékek, beszélgetések, beállítások; az API-kulcs nélkül: a kulcs a `sessionStorage`-ban marad (a lap bezárásáig), vagy – csak ha bejelölöd a „Megjegyzés ezen az eszközön” opciót – a külön `constelar_apikey_persist` kulcsban). Az el nem küldött üzenetek piszkozatai külön, a `constelar_drafts_v1` kulcsban tárolódnak (küldéskor törlődnek). Az alkalmazás teszteli a `localStorage` elérhetőségét, és figyelmeztet, ha nem működik. Nincsenek sütik.
 - **Kapcsolatba lépő gazdagépek, csak a te műveletedre:**
   - a választott MI-szolgáltató: `api.anthropic.com`, `api.openai.com` vagy más Base URL (az előbeállításokban az `openrouter.ai` is), az üzeneteket és a kulcsot közvetlenül a böngészőből küldve;
   - `text.pollinations.ai`, ha a Pollinationst választod (az alkalmazás egyszer kér hozzájárulást);
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — Playwright-tal és axe-core-ral ellenőrizve; a tartalom m
 
 ## Előzmények / Changelog
 
+- 1.3.4 — 2026-10-22: Biztonság: az API-kulcs már nem kerül titkosítatlanul a localStorage-ba; a sessionStorage-ban marad (a lap bezárásáig), a régebbi verziók által mentett kulcsok átkerülnek és törlődnek, egy opcionális „Megjegyzés ezen az eszközön” jelölőnégyzet (figyelmeztetéssel) szándékosan megőrzi, az exportok pedig soha nem tartalmazzák.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iteráció, clickjacking elleni védelem
 - 1.3.2 — 2026-10-22: A Pollinations-hozzájárulás, a nem biztonságos URL megerősítése, az importálási felülírás megerősítése és a hang/import értesítések oldalon belüli párbeszédpaneleket és értesítéseket használnak a window.confirm/alert helyett; a keresőmező és az üzenetmező hozzáférhető névvel rendelkezik (lefordítva); az oldalon egyetlen h1 van (a márkanév), a társ neve és az üres állapot címe h2; nagyobb érintési célpontok és legalább 12 px szöveg mobilon.
 
