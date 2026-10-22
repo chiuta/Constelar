@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 1.3.2 · **Ultima actualizare:** 2026-10-22
+**Versiune:** 1.3.3 · **Ultima actualizare:** 2026-10-22
 
 Limbile interfeței: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conți
 
 ## Istoric / Changelog
 
+- 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iterații, protecție anti-clickjacking
 - 1.3.2 — 2026-10-22: Acordul pentru Pollinations, confirmarea URL-ului nesigur, confirmarea suprascrierii la import și alertele de voce/import folosesc dialoguri și notificări în pagină, nu window.confirm/alert; câmpul de căutare și caseta de mesaj au nume accesibile (traduse); un singur h1 în pagină (marca), numele companionului și titlul stării goale sunt h2; ținte tactile mai mari și text ≥ 12 px pe mobil.
 
 - 1.3.1 — 2026-10-22: **remediere**: titlul paginii urmează limba aleasă; companionii demo nemodificați (profil, amintiri) sunt rescriși în limba nouă la schimbarea limbii.

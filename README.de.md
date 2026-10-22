@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 1.3.2 · **Zuletzt aktualisiert:** 2026-10-22
+**Version:** 1.3.3 · **Zuletzt aktualisiert:** 2026-10-22
 
 Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — geprüft mit Playwright und axe-core; die Inhaltsdarstellu
 
 ## Verlauf / Changelog
 
+- 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 mit 600.000 Iterationen, Schutz vor Clickjacking
 - 1.3.2 — 2026-10-22: Die Pollinations-Einwilligung, die Bestätigung unsicherer URLs, die Bestätigung des Überschreibens beim Import und die Sprach-/Import-Hinweise nutzen Dialoge und Hinweise in der Seite statt window.confirm/alert; Suchfeld und Nachrichtenfeld haben zugängliche Namen (übersetzt); nur ein h1 auf der Seite (die Marke), Name des Begleiters und Titel des leeren Zustands sind h2; größere Touch-Ziele und Text ≥ 12 px auf dem Handy.
 
 - 1.3.1 — 2026-10-22: **Korrektur**: der Seitentitel folgt der gewählten Sprache; unveränderte Demo-Begleiter (Profil, Erinnerungen) werden beim Sprachwechsel in der neuen Sprache neu geschrieben.

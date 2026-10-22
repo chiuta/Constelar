@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión:** 1.3.2 · **Última actualización:** 2026-10-22
+**Versión:** 1.3.3 · **Última actualización:** 2026-10-22
 
 Idiomas de la interfaz: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Auditoría: 2026-10-10 — verificado con Playwright y axe-core; los renderizado
 
 ## Historial / Changelog
 
+- 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iteraciones, protección anti-clickjacking
 - 1.3.2 — 2026-10-22: El consentimiento de Pollinations, la confirmación de URL insegura, la confirmación de sobrescritura al importar y los avisos de voz/importación usan diálogos y avisos integrados en lugar de window.confirm/alert; el campo de búsqueda y el cuadro de mensaje tienen nombres accesibles (traducidos); un solo h1 en la página (la marca), el nombre del compañero y el título del estado vacío son h2; zonas táctiles más grandes y texto ≥ 12 px en móvil.
 
 - 1.3.1 — 2026-10-22: **corrección**: el título de la página sigue el idioma elegido; los compañeros de demostración sin modificar (perfil, recuerdos) se reescriben en el nuevo idioma al cambiar de idioma.
