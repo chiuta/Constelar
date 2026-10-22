@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · **Français** · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version :** 1.3.0 · **Dernière mise à jour :** 2026-10-19
+**Version :** 1.3.1 · **Dernière mise à jour :** 2026-10-22
 
 Langues de l'interface : **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit : 2026-10-10 — vérifié avec Playwright et axe-core ; les rendus de con
 
 ## Historique / Changelog
 
+- 1.3.1 — 2026-10-22: **correctif** : le titre de la page suit la langue choisie ; les compagnons de démonstration non modifiés (profil, souvenirs) sont réécrits dans la nouvelle langue lors du changement de langue.
 ### 1.2.0 — 2026-10-18
 - Corrigé : l'import d'un fichier de compagnons sans `settings` ne réinitialise plus la langue, le fournisseur et le modèle (les valeurs actuelles sont conservées).
 - La sauvegarde non chiffrée (kit 1.1.0) ne contient plus la clé API ; celle chiffrée par mot de passe la conserve. Lors de la restauration d'une sauvegarde non chiffrée, la clé est à ressaisir.

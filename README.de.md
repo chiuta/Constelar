@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 1.3.0 · **Zuletzt aktualisiert:** 2026-10-19
+**Version:** 1.3.1 · **Zuletzt aktualisiert:** 2026-10-22
 
 Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — geprüft mit Playwright und axe-core; die Inhaltsdarstellu
 
 ## Verlauf / Changelog
 
+- 1.3.1 — 2026-10-22: **Korrektur**: der Seitentitel folgt der gewählten Sprache; unveränderte Demo-Begleiter (Profil, Erinnerungen) werden beim Sprachwechsel in der neuen Sprache neu geschrieben.
 ### 1.2.0 — 2026-10-18
 - Behoben: Der Import einer Begleiter-Datei ohne `settings` setzt Sprache, Anbieter und Modell nicht mehr zurück (die aktuellen bleiben erhalten).
 - Die unverschlüsselte Sicherung (Kit 1.1.0) enthält den API-Schlüssel nicht mehr; die mit Passwort verschlüsselte behält ihn. Beim Wiederherstellen einer unverschlüsselten Sicherung wird der Schlüssel neu eingegeben.

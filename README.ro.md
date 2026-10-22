@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 1.3.0 · **Ultima actualizare:** 2026-10-19
+**Versiune:** 1.3.1 · **Ultima actualizare:** 2026-10-22
 
 Limbile interfeței: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conți
 
 ## Istoric / Changelog
 
+- 1.3.1 — 2026-10-22: **remediere**: titlul paginii urmează limba aleasă; companionii demo nemodificați (profil, amintiri) sunt rescriși în limba nouă la schimbarea limbii.
 ### 1.2.0 — 2026-10-18
 - Reparat: importul unui fișier de companioni fără `settings` nu mai resetează limba, providerul și modelul (rămân cele curente).
 - Copia de siguranță necriptată (kit 1.1.0) nu mai conține cheia API; cea criptată cu parolă o păstrează. La restaurarea unei copii necriptate, cheia se reintroduce.

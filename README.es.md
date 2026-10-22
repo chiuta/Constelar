@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · **Español** · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versión:** 1.3.0 · **Última actualización:** 2026-10-19
+**Versión:** 1.3.1 · **Última actualización:** 2026-10-22
 
 Idiomas de la interfaz: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Auditoría: 2026-10-10 — verificado con Playwright y axe-core; los renderizado
 
 ## Historial / Changelog
 
+- 1.3.1 — 2026-10-22: **corrección**: el título de la página sigue el idioma elegido; los compañeros de demostración sin modificar (perfil, recuerdos) se reescriben en el nuevo idioma al cambiar de idioma.
 ### 1.2.0 — 2026-10-18
 - Corregido: importar un archivo de compañeros sin `settings` ya no restablece el idioma, el proveedor y el modelo (se mantienen los actuales).
 - La copia de seguridad sin cifrar (kit 1.1.0) ya no contiene la clave API; la cifrada con contraseña la conserva. Al restaurar una copia sin cifrar, la clave se vuelve a introducir.

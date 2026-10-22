@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 1.3.0 · **Last updated:** 2026-10-19
+**Version:** 1.3.1 · **Last updated:** 2026-10-22
 
 Interface languages: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — verified with Playwright and axe-core; content rendering (
 
 ## History / Changelog
 
+- 1.3.1 — 2026-10-22: **fix**: the page title follows the selected language; untouched demo companions (profile, memories) are re-written in the new language when the language changes.
 ### 1.2.0 — 2026-10-18
 - Fixed: importing a companions file without `settings` no longer resets the language, provider and model (the current ones stay).
 - The unencrypted backup (kit 1.1.0) no longer contains the API key; the password-encrypted one keeps it. When restoring an unencrypted backup, the key is re-entered.

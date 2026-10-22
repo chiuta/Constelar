@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió:** 1.3.0 · **Utolsó frissítés:** 2026-10-19
+**Verzió:** 1.3.1 · **Utolsó frissítés:** 2026-10-22
 
 A felület nyelvei: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — Playwright-tal és axe-core-ral ellenőrizve; a tartalom m
 
 ## Előzmények / Changelog
 
+- 1.3.1 — 2026-10-22: **javítás**: az oldal címe a kiválasztott nyelvet követi; a nem módosított demó társak (profil, emlékek) nyelvváltáskor az új nyelven íródnak újra.
 ### 1.2.0 — 2026-10-18
 - Javítva: egy `settings` nélküli társfájl importálása már nem állítja vissza a nyelvet, a szolgáltatót és a modellt (a jelenlegiek megmaradnak).
 - A titkosítatlan biztonsági mentés (1.1.0 készlet) már nem tartalmazza az API-kulcsot; a jelszóval titkosított megtartja. Titkosítatlan mentés visszaállításakor a kulcsot újra meg kell adni.
