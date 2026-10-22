@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · **Français** · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version :** 1.3.4 · **Dernière mise à jour :** 2026-10-22
+**Version :** 1.3.5 · **Dernière mise à jour :** 2026-10-22
 
 Langues de l'interface : **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit : 2026-10-10 — vérifié avec Playwright et axe-core ; les rendus de con
 
 ## Historique / Changelog
 
+- 1.3.5 — 2026-10-22 : fff-kit 1.1.4 : cibles tactiles et taille de texte minimale
 - 1.3.4 — 2026-10-22: Sécurité : la clé API n’est plus enregistrée en clair dans le localStorage ; elle reste dans le sessionStorage (jusqu’à la fermeture de l’onglet), les clés enregistrées par les anciennes versions sont migrées puis supprimées, une case facultative « Mémoriser sur cet appareil » (avec avertissement) la conserve volontairement, et les exports ne la contiennent jamais.
 - 1.3.3 — 2026-10-22 : fff-kit 1.1.2 : PBKDF2 600 000 itérations, protection anti-clickjacking
 - 1.3.2 — 2026-10-22 : Le consentement Pollinations, la confirmation d’URL non sécurisée, la confirmation d’écrasement à l’import et les alertes voix/import utilisent des dialogues et notifications intégrés au lieu de window.confirm/alert ; le champ de recherche et la zone de message ont des noms accessibles (traduits) ; un seul h1 dans la page (la marque), le nom du compagnon et le titre de l’état vide sont des h2 ; cibles tactiles plus grandes et texte ≥ 12 px sur mobile.

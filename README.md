@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 1.3.4 · **Last updated:** 2026-10-22
+**Version:** 1.3.5 · **Last updated:** 2026-10-22
 
 Interface languages: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — verified with Playwright and axe-core; content rendering (
 
 ## History / Changelog
 
+- 1.3.5 — 2026-10-22: fff-kit 1.1.4: touch targets and minimum text size
 - 1.3.4 — 2026-10-22: Security: the API key is no longer saved in plain text in localStorage; it is kept in sessionStorage (until the tab is closed), keys saved by older versions are migrated and deleted, an optional “Remember on this device” checkbox (with a warning) keeps it on purpose, and exports never contain it.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600,000 iterations, anti-clickjacking protection
 - 1.3.2 — 2026-10-22: The Pollinations consent, the insecure-URL confirmation, the import-overwrite confirmation and the voice/import alerts use in-page dialogs and notices instead of window.confirm/alert; the search field and the message box now have accessible names (translated); a single h1 on the page (the brand), the companion name and empty-state titles are h2; larger touch targets and text ≥ 12 px on mobile.

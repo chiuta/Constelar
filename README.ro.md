@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 1.3.4 · **Ultima actualizare:** 2026-10-22
+**Versiune:** 1.3.5 · **Ultima actualizare:** 2026-10-22
 
 Limbile interfeței: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conți
 
 ## Istoric / Changelog
 
+- 1.3.5 — 2026-10-22: fff-kit 1.1.4: ținte tactile și text minim
 - 1.3.4 — 2026-10-22: Securitate: cheia API nu se mai salvează în clar în localStorage; se păstrează în sessionStorage (până la închiderea filei), cheile salvate de versiunile vechi se migrează și se șterg, o bifă opțională „Ține minte pe acest dispozitiv” (cu avertisment) o păstrează intenționat, iar exporturile nu o conțin niciodată.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iterații, protecție anti-clickjacking
 - 1.3.2 — 2026-10-22: Acordul pentru Pollinations, confirmarea URL-ului nesigur, confirmarea suprascrierii la import și alertele de voce/import folosesc dialoguri și notificări în pagină, nu window.confirm/alert; câmpul de căutare și caseta de mesaj au nume accesibile (traduse); un singur h1 în pagină (marca), numele companionului și titlul stării goale sunt h2; ținte tactile mai mari și text ≥ 12 px pe mobil.

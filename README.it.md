@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · **Italiano** · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versione:** 1.3.4 · **Ultimo aggiornamento:** 2026-10-22
+**Versione:** 1.3.5 · **Ultimo aggiornamento:** 2026-10-22
 
 Lingue dell'interfaccia: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — verificato con Playwright e axe-core; i rendering dei cont
 
 ## Cronologia / Changelog
 
+- 1.3.5 — 2026-10-22: fff-kit 1.1.4: target touch e dimensione minima del testo
 - 1.3.4 — 2026-10-22: Sicurezza: la chiave API non viene più salvata in chiaro nel localStorage; resta nel sessionStorage (fino alla chiusura della scheda), le chiavi salvate dalle versioni precedenti vengono migrate ed eliminate, una casella facoltativa «Ricorda su questo dispositivo» (con avviso) la conserva di proposito, e gli export non la contengono mai.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600.000 iterazioni, protezione anti-clickjacking
 - 1.3.2 — 2026-10-22: Il consenso per Pollinations, la conferma dell’URL non sicuro, la conferma di sovrascrittura all’importazione e gli avvisi di voce/importazione usano finestre e avvisi integrati invece di window.confirm/alert; il campo di ricerca e la casella di messaggio hanno nomi accessibili (tradotti); un solo h1 nella pagina (il marchio), il nome del compagno e il titolo dello stato vuoto sono h2; aree tattili più grandi e testo ≥ 12 px su mobile.

@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · **Magyar**
 
-**Verzió:** 1.3.4 · **Utolsó frissítés:** 2026-10-22
+**Verzió:** 1.3.5 · **Utolsó frissítés:** 2026-10-22
 
 A felület nyelvei: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -66,6 +66,7 @@ Audit: 2026-10-10 — Playwright-tal és axe-core-ral ellenőrizve; a tartalom m
 
 ## Előzmények / Changelog
 
+- 1.3.5 — 2026-10-22: fff-kit 1.1.4: érintési célpontok és minimális szövegméret
 - 1.3.4 — 2026-10-22: Biztonság: az API-kulcs már nem kerül titkosítatlanul a localStorage-ba; a sessionStorage-ban marad (a lap bezárásáig), a régebbi verziók által mentett kulcsok átkerülnek és törlődnek, egy opcionális „Megjegyzés ezen az eszközön” jelölőnégyzet (figyelmeztetéssel) szándékosan megőrzi, az exportok pedig soha nem tartalmazzák.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iteráció, clickjacking elleni védelem
 - 1.3.2 — 2026-10-22: A Pollinations-hozzájárulás, a nem biztonságos URL megerősítése, az importálási felülírás megerősítése és a hang/import értesítések oldalon belüli párbeszédpaneleket és értesítéseket használnak a window.confirm/alert helyett; a keresőmező és az üzenetmező hozzáférhető névvel rendelkezik (lefordítva); az oldalon egyetlen h1 van (a márkanév), a társ neve és az üres állapot címe h2; nagyobb érintési célpontok és legalább 12 px szöveg mobilon.
