@@ -1,11 +1,11 @@
 // Constelar — cheia API nu se mai scrie în clar în localStorage (sessionStorage + opțiune explicită „Ține minte”).
 // Rulare: node api-key-storage.test.mjs [calea/spre/index.html]
 import {createRequire} from "module"; import path from "path"; import {fileURLToPath} from "url";
-const require = createRequire("/home/claude/pw/package.json"); const {chromium} = require("playwright");
+const require = createRequire("/opt/node-tools/package.json"); const {chromium} = require("playwright");
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const FILE = "file://" + path.resolve(process.argv[2] || path.join(HERE, "..", "index.html"));
 let fails = 0, passes = 0; const check = (n, c, x) => { c ? (passes++, console.log("  ok  " + n)) : (fails++, console.log("FAIL  " + n + (x !== undefined ? "  -> " + JSON.stringify(x) : ""))); };
-const b = await chromium.launch({executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome", args: ["--no-sandbox"]});
+const b = await chromium.launch({executablePath: "/opt/pw-browsers/chromium", args: ["--no-sandbox"]});
 const CAN = "sk-TESTCANARY-123", CAN2 = "sk-LEGACY-456";
 const lsHas = (p, c) => p.evaluate(c => Object.entries(localStorage).filter(([k, v]) => v.includes(c)).map(([k]) => k), c);
 const ssHas = (p, c) => p.evaluate(c => Object.entries(sessionStorage).filter(([k, v]) => v.includes(c)).map(([k]) => k), c);
