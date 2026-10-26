@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 1.3.9 · **Last updated:** 2026-10-26
+**Version:** 2.0.0 · **Last updated:** 2026-10-26
 
 Interface languages: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -18,6 +18,7 @@ Constelar is an app (optionally a PWA) in which you create one or more AI "compa
 
 ## Features
 
+- **Link map (2.0)**: in the Memory tab, the "Orbits / Link map" switch shows memories as stars and constellations by `#tags` written in the text (e.g. "loves #music"); search, category and constellation filters, **saved scenes** (per companion) and **PNG image export**. Tags live only in the memory text, locally; new strings are translated into all 8 languages.
 - Multiple companions: name, relationship type, traits, context / backstory, own AI provider or the global one; a button to generate a companion at random.
 - Two tabs for each companion: **Chat** and **Memory**. The memory has three categories: *Permanent*, *Evolving*, *Discovered* (the latter with optional auto-extraction), displayed as stars that you can tap for details.
 - AI providers in Settings: WebLLM (a model run in the tab through WebGPU, downloaded once, 1B / 3B / 8B variants), Anthropic (Claude), OpenAI-compatible (presets Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama), Pollinations (no account), Chrome's native Gemini Nano and a simple rule-based local engine (not a neural network; labelled as such in the chat).

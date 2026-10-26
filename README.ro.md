@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 1.3.9 · **Ultima actualizare:** 2026-10-26
+**Versiune:** 2.0.0 · **Ultima actualizare:** 2026-10-26
 
 Limbile interfeței: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -18,6 +18,7 @@ Constelar este o aplicație (PWA opțională) în care creați unul sau mai mul�
 
 ## Funcții
 
+- **Hartă de legături (2.0)**: în fila Memory, comutatorul „Orbite / Hartă de legături” afișează amintirile ca stele și constelații după `#etichete` scrise în text (ex. „îi place #muzica”); căutare, filtru pe categorie și pe constelație, **scene salvate** (filtrele per companion) și **export imagine** PNG. Etichetele sunt doar în textul amintirii, local; textele noi sunt traduse în cele 8 limbi.
 - Companioni multipli: nume, tip de relație, trăsături, context / backstory, furnizor AI propriu sau cel global; buton de generare aleatoare a unui companion.
 - Două file pentru fiecare companion: **Chat** și **Memory**. Memoria are trei categorii: *Permanent*, *Evolving*, *Discovered* (aceasta din urmă cu auto-extragere opțională), afișate ca stele pe care le puteți atinge pentru detalii.
 - Furnizori AI în Setări: WebLLM (model rulat în tab prin WebGPU, descărcat o dată, variante 1B / 3B / 8B), Anthropic (Claude), compatibil OpenAI (presetări Groq, OpenRouter, Together, Mistral, DeepSeek, xAI, Ollama), Pollinations (fără cont), Gemini Nano nativ din Chrome și un motor local simplu bazat pe reguli (nu este o rețea neurală; etichetat ca atare în chat).
