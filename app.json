@@ -42,8 +42,8 @@
     "constelar_pollinations_ok_v1",
     "constelar_state_v1"
   ],
-  "sizeBytes": 564636,
-  "sha256": "f6defeb3cad1d8daaa5a5ad67b6d2b6885d218bc636cac5cd9e2e8693981f525",
+  "sizeBytes": 564669,
+  "sha256": "797975cd7a8259a42492a84829ee7b2c8535b02cef807f5514bcf1437a2daf81",
   "csp": {
     "present": true,
     "directives": {
