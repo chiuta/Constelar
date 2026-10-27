@@ -27,7 +27,7 @@
  */
 
 const CACHE_PREFIX = "constelar-shell-";
-const CACHE_NAME = CACHE_PREFIX + "v6";
+const CACHE_NAME = CACHE_PREFIX + "v7";
 const SHELL_URL = "./index.html";
 
 self.addEventListener("install", (event) => {

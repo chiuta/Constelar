@@ -2,7 +2,11 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 2.0.0 · **Ultima actualizare:** 2026-10-26
+**Versiune:** 2.0.1 · **Ultima actualizare:** 2026-10-27
+
+**Stare:** stabilă (2.0.1). Furnizorii AI și WebLLM nu au fost verificați cu servere reale în această recenzie.
+
+**Offline:** parțial. Aplicația și motorul local simplu merg offline după prima vizită; modelele WebLLM se descarcă o dată, iar orice alt furnizor AI cere rețea.
 
 Limbile interfeței: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -53,6 +57,16 @@ Constelar este o aplicație (PWA opțională) în care creați unul sau mai mul�
 - Fără analitice. Pagina are politică CSP (meta), cu `script-src` pe hash SHA-256 pentru scriptul propriu (fără `'unsafe-inline'`); `connect-src` permite `https:` deoarece URL-ul furnizorului compatibil OpenAI este ales de utilizator. Numele modelelor din presetări (Groq, OpenRouter, Together, Mistral etc.) se schimbă des și nu au putut fi verificate la 11.10.2026: editați câmpul „Model” dacă un furnizor răspunde cu eroare. Cu furnizorul implicit „motor local simplu" sau cu modele deja descărcate, conversațiile nu părăsesc dispozitivul.
 - Când este servit prin HTTPS, `sw.js` (opțional) se înregistrează și păstrează în cache „app shell"-ul; nu atinge `localStorage`.
 
+## Unde se păstrează memoria și cum o ștergi
+
+- Totul (companioni, amintiri, conversații, setări) este în `localStorage` al acestui browser, cheia `constelar_state_v1`; nimic nu se stochează pe un server. Amintirile sunt în obiectul `memories` al fiecărui companion (trei liste: permanente, evolutive, descoperite).
+- Ștergi o amintire: butonul ✕ de lângă ea. **Ștergi toată memoria unui companion:** butonul „Șterge toată memoria acestui companion” din fila Memorie (cere confirmare; conversațiile și setările rămân). Ștergi un companion întreg: butonul de ștergere din bara laterală. Ștergi tot: „Șterge” în panoul de date/copie de siguranță sau golești datele site-ului din browser.
+- Exportă (⇩) mai întâi dacă vrei o copie; memoria ștearsă nu se poate restaura.
+
+## Relația cu AI-Liber
+
+Constelar se suprapune parțial cu [AI-Liber](https://github.com/chiuta/AI-Liber): ambele permit alegerea unui furnizor AI sau a unui model local. Constelar adaugă companioni cu memorie persistentă și vizibilă (orbite și hartă de legături); AI-Liber este un chat general. Nimic nu a fost unit sau eliminat din vreuna dintre aplicații.
+
 ## Rulare locală / offline
 
 Descărcați `index.html` (opțional și `sw.js`, pentru instalare ca aplicație pe un server HTTPS) și deschideți-l în browser. Fără internet funcționează motorul local simplu și modelele WebLLM deja descărcate în cache; furnizorii externi și prima descărcare WebLLM necesită internet.
@@ -67,6 +81,7 @@ Audit: 2026-10-10 — verificat cu Playwright și axe-core; randările de conți
 
 ## Istoric / Changelog
 
+- 2.0.1 — 2026-10-27: buton nou „Șterge toată memoria acestui companion” în fila Memorie (cu confirmare, conversațiile și setările rămân); notă despre suprapunerea parțială cu AI-Liber (aplicație și README); „Unde se păstrează memoria” în secțiunea de confidențialitate; linii Stare / Offline. Detalii în CHANGELOG.md.
 - 1.3.5 — 2026-10-22: fff-kit 1.1.4: ținte tactile și text minim
 - 1.3.4 — 2026-10-22: Securitate: cheia API nu se mai salvează în clar în localStorage; se păstrează în sessionStorage (până la închiderea filei), cheile salvate de versiunile vechi se migrează și se șterg, o bifă opțională „Ține minte pe acest dispozitiv” (cu avertisment) o păstrează intenționat, iar exporturile nu o conțin niciodată.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600 000 iterații, protecție anti-clickjacking

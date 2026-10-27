@@ -2,7 +2,11 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 2.0.0 · **Last updated:** 2026-10-26
+**Version:** 2.0.1 · **Last updated:** 2026-10-27
+
+**Status:** stable (2.0.1). AI providers and WebLLM were not checked against real servers in this review.
+
+**Offline:** partial. The app and the simple local engine work offline after the first visit; WebLLM models are downloaded once, and every other AI provider needs a network connection.
 
 Interface languages: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -53,6 +57,16 @@ Constelar is an app (optionally a PWA) in which you create one or more AI "compa
 - No analytics. The page has a CSP policy (meta), with `script-src` by SHA-256 hash for its own script (no `'unsafe-inline'`); `connect-src` allows `https:` because the URL of the OpenAI-compatible provider is chosen by the user. The model names in the presets (Groq, OpenRouter, Together, Mistral, etc.) change often and could not be verified on 11.10.2026: edit the "Model" field if a provider answers with an error. With the default provider "simple local engine" or with models already downloaded, the conversations do not leave the device.
 - When served over HTTPS, `sw.js` (optional) registers and caches the "app shell"; it does not touch `localStorage`.
 
+## Where your memory is stored and how to delete it
+
+- Everything (companions, memories, conversations, settings) is in `localStorage` of this browser, key `constelar_state_v1`; nothing is stored on a server. Memories are in each companion's `memories` object (three lists: permanent, evolving, discovered).
+- Delete one memory: the ✕ button next to it. **Delete all the memory of one companion:** the "Delete all memory of this companion" button in the Memory tab (asks for confirmation; conversations and settings stay). Delete a whole companion: the delete button in the sidebar. Delete everything: "Wipe" in the data/backup panel, or clear the site data in the browser.
+- Export (⇩) first if you want a copy; deleted memory cannot be restored.
+
+## Relation to AI-Liber
+
+Constelar partly overlaps with [AI-Liber](https://github.com/chiuta/AI-Liber): both let you pick an AI provider or a local model. Constelar adds companions with persistent, visible memory (orbits and link map); AI-Liber is a general chat. Nothing was merged or removed from either app.
+
 ## Running locally / offline
 
 Download `index.html` (optionally also `sw.js`, for installing as an app on an HTTPS server) and open it in the browser. Without internet the simple local engine and the WebLLM models already downloaded to the cache work; external providers and the first WebLLM download require internet.
@@ -67,6 +81,7 @@ Audit: 2026-10-10 — verified with Playwright and axe-core; content rendering (
 
 ## History / Changelog
 
+- 2.0.1 — 2026-10-27: new "Delete all memory of this companion" button in the Memory tab (confirmation, conversations and settings stay); note on the partial overlap with AI-Liber (app and README); "Where your memory is stored" in the privacy section; Status / Offline lines. Details in CHANGELOG.md.
 - 1.3.5 — 2026-10-22: fff-kit 1.1.4: touch targets and minimum text size
 - 1.3.4 — 2026-10-22: Security: the API key is no longer saved in plain text in localStorage; it is kept in sessionStorage (until the tab is closed), keys saved by older versions are migrated and deleted, an optional “Remember on this device” checkbox (with a warning) keeps it on purpose, and exports never contain it.
 - 1.3.3 — 2026-10-22: fff-kit 1.1.2: PBKDF2 600,000 iterations, anti-clickjacking protection
