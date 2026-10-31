@@ -1,0 +1,10 @@
+{
+  "storageKeys": [
+    "constelar_apikey_persist",
+    "constelar_apikey_session",
+    "constelar_apikey_vault",
+    "constelar_drafts_v1",
+    "constelar_pollinations_ok_v1",
+    "constelar_state_v1"
+  ]
+}
