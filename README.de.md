@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · **Deutsch** · [Magyar](README.hu.md)
 
-**Version:** 2.0.1 · **Zuletzt aktualisiert:** 2026-10-27
+**Version:** 2.1.1 · **Zuletzt aktualisiert:** 2026-11-02
 
 Oberflächensprachen: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -46,7 +46,7 @@ Constelar ist eine Anwendung (optional als PWA), in der du einen oder mehrere KI
 - **Lokale Speicherung:** `localStorage`, Schlüssel `constelar_state_v1` (Begleiter, Erinnerungen, Unterhaltungen, Einstellungen; ohne den API-Schlüssel: Der Schlüssel liegt im `sessionStorage` (bis zum Schließen des Tabs) oder, nur wenn du „Auf diesem Gerät merken“ aktivierst, im separaten Schlüssel `constelar_apikey_persist`). Entwürfe ungesendeter Nachrichten werden getrennt im Schlüssel `constelar_drafts_v1` gespeichert (beim Senden gelöscht). Die Anwendung prüft die Verfügbarkeit von `localStorage` und warnt, falls es nicht funktioniert. Keine Cookies.
 - **Kontaktierte Hosts, nur auf deine Aktion hin:**
   - der gewählte KI-Anbieter: `api.anthropic.com`, `api.openai.com` oder eine andere Base URL (einschließlich `openrouter.ai` in den Voreinstellungen), wobei Nachrichten und Schlüssel direkt aus dem Browser gesendet werden;
-  - `text.pollinations.ai`, wenn du Pollinations wählst (die Anwendung fragt einmalig nach der Zustimmung);
+  - `text.pollinations.ai`, wenn du Pollinations wählst (die Anwendung fragt einmalig nach der Zustimmung) — Das ist die klassische anonyme Pollinations-API: pro IP begrenzt, ohne Verfügbarkeitsgarantie; das neuere `gen.pollinations.ai` verlangt einen Schlüssel.
   - `raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/00fe7a40…/` (die Modellbibliothek `.wasm`, fester Commit, per SHA-256-SRI geprüft) und `huggingface.co/mlc-ai/` (+ `*.huggingface.co`, `*.hf.co`) für die Gewichte des gewählten Modells (ohne festen Hash), wenn du WebLLM verwendest (die Bibliothek `@mlc-ai/web-llm@0.2.84` selbst liegt in `vendor/`);
   - die Links zu `iasp.info` (Krisenressourcen) und die „Share“-Schaltflächen öffnen sich nur beim Klicken.
 - Keine Analysedienste. Die Seite hat eine CSP-Richtlinie (Meta) mit `script-src` per SHA-256-Hash für das eigene Skript (ohne `'unsafe-inline'`); `connect-src` erlaubt `https:`, weil die URL des OpenAI-kompatiblen Anbieters vom Nutzer gewählt wird. Die Modellnamen in den Voreinstellungen (Groq, OpenRouter, Together, Mistral usw.) ändern sich oft und konnten am 11.10.2026 nicht geprüft werden: Bearbeite das Feld „Model“, wenn ein Anbieter mit einem Fehler antwortet. Mit dem Standardanbieter „einfache lokale Engine“ oder mit bereits heruntergeladenen Modellen verlassen die Unterhaltungen das Gerät nicht.

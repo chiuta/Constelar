@@ -1,5 +1,11 @@
 # Jurnal de modificări
 
+## 2.1.1 — 2026-11-02
+
+### Surse actualizate (runda 2, verificat la 2026-11-02)
+- README (8 limbi): Pollinations precizat — API-ul clasic anonim e limitat pe IP și fără garanție de disponibilitate; noul gen.pollinations.ai cere cheie (verificat în APIDOCS.md al proiectului).
+- Eticheta Pollinations („gratuit, fără cont și fără cheie”) completată în toate cele 8 limbi cu „cereri limitate”: accesul anonim există, dar este limitat (documentația Pollinations din iulie 2026; noua documentație folosește `gen.pollinations.ai` cu chei `pk_`/`sk_`). Punctul final `text.pollinations.ai` rămâne neschimbat; starea lui pe termen lung nu a putut fi confirmată din sursa oficială.
+
 ## 2.1.0 — 2026-10-31
 
 ### Securitate

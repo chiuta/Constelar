@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 2.0.1 · **Last updated:** 2026-10-27
+**Version:** 2.1.1 · **Last updated:** 2026-11-02
 
 **Status:** stable (2.0.1). AI providers and WebLLM were not checked against real servers in this review.
 
@@ -51,7 +51,7 @@ Constelar is an app (optionally a PWA) in which you create one or more AI "compa
 - **Local storage:** `localStorage`, key `constelar_state_v1` (companions, memories, conversations, settings; without the API key: the key is kept in `sessionStorage` (until the tab is closed), or in the separate key `constelar_apikey_persist` only if you tick “Remember on this device”). Drafts of unsent messages are kept separately, in the key `constelar_drafts_v1` (deleted on sending). The app tests the availability of `localStorage` and warns if it does not work. No cookies.
 - **Hosts contacted, only on your action:**
   - the chosen AI provider: `api.anthropic.com`, `api.openai.com` or another Base URL (including `openrouter.ai` in the presets), with the messages and the key sent directly from the browser;
-  - `text.pollinations.ai`, if you choose Pollinations (the app asks for consent once);
+  - `text.pollinations.ai`, if you choose Pollinations (the app asks for consent once) — This is Pollinations' classic anonymous API: limited per IP, no uptime guarantee; the newer `gen.pollinations.ai` requires a key.
   - `raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/00fe7a40…/` (the model library `.wasm`, pinned commit, verified by SHA-256 SRI) and `huggingface.co/mlc-ai/` (+ `*.huggingface.co`, `*.hf.co`) for the chosen model's weights (no pinned hash), if you use WebLLM (the library `@mlc-ai/web-llm@0.2.84` itself is in `vendor/`);
   - the links to `iasp.info` (crisis resources) and the "Share" buttons open only on click.
 - No analytics. The page has a CSP policy (meta), with `script-src` by SHA-256 hash for its own script (no `'unsafe-inline'`); `connect-src` allows `https:` because the URL of the OpenAI-compatible provider is chosen by the user. The model names in the presets (Groq, OpenRouter, Together, Mistral, etc.) change often and could not be verified on 11.10.2026: edit the "Model" field if a provider answers with an error. With the default provider "simple local engine" or with models already downloaded, the conversations do not leave the device.

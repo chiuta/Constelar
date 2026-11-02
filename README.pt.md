@@ -2,7 +2,7 @@
 
 [English](README.md) · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · **Português** · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versão:** 2.0.1 · **Última atualização:** 2026-10-27
+**Versão:** 2.1.1 · **Última atualização:** 2026-11-02
 
 Idiomas da interface: **Română, English, Français, Italiano, Español, Português (PT), Deutsch, Magyar**
 
@@ -46,7 +46,7 @@ O Constelar é uma aplicação (PWA opcional) em que cria um ou vários «compan
 - **Armazenamento local:** `localStorage`, chave `constelar_state_v1` (companheiros, memórias, conversas, definições; sem a chave API: a chave fica em `sessionStorage` (até fechar o separador) ou, só se marcar «Lembrar neste dispositivo», na chave separada `constelar_apikey_persist`). Os rascunhos de mensagens não enviadas ficam guardados em separado, na chave `constelar_drafts_v1` (eliminados ao enviar). A aplicação testa a disponibilidade do `localStorage` e avisa se não funcionar. Sem cookies.
 - **Anfitriões contactados, apenas por ação sua:**
   - o fornecedor de IA escolhido: `api.anthropic.com`, `api.openai.com` ou outro Base URL (incluindo `openrouter.ai` nas predefinições), com as mensagens e a chave enviadas diretamente do navegador;
-  - `text.pollinations.ai`, se escolher o Pollinations (a aplicação pede o consentimento uma única vez);
+  - `text.pollinations.ai`, se escolher o Pollinations (a aplicação pede o consentimento uma única vez) — É a API clássica anónima da Pollinations: limitada por IP, sem garantia de disponibilidade; a nova `gen.pollinations.ai` exige uma chave.
   - `raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/00fe7a40…/` (a biblioteca do modelo `.wasm`, commit fixo, verificada com SRI SHA-256) e `huggingface.co/mlc-ai/` (+ `*.huggingface.co`, `*.hf.co`) para os pesos do modelo escolhido (sem hash fixo), se utilizar o WebLLM (a biblioteca `@mlc-ai/web-llm@0.2.84` em si está em `vendor/`);
   - as ligações para `iasp.info` (recursos de crise) e os botões «Share» abrem-se apenas ao clicar.
 - Sem ferramentas de análise. A página tem uma política CSP (meta), com `script-src` por hash SHA-256 para o script próprio (sem `'unsafe-inline'`); `connect-src` permite `https:` porque o URL do fornecedor compatível com OpenAI é escolhido pelo utilizador. Os nomes dos modelos nas predefinições (Groq, OpenRouter, Together, Mistral, etc.) mudam com frequência e não puderam ser verificados a 11.10.2026: edite o campo «Model» se um fornecedor responder com um erro. Com o fornecedor predefinido «motor local simples» ou com modelos já descarregados, as conversas não saem do dispositivo.

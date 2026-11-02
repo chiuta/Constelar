@@ -2,7 +2,7 @@
 
 [English](README.md) · **Română** · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Versiune:** 2.0.1 · **Ultima actualizare:** 2026-10-27
+**Versiune:** 2.1.1 · **Ultima actualizare:** 2026-11-02
 
 **Stare:** stabilă (2.0.1). Furnizorii AI și WebLLM nu au fost verificați cu servere reale în această recenzie.
 
@@ -51,7 +51,7 @@ Constelar este o aplicație (PWA opțională) în care creați unul sau mai mul�
 - **Stocare locală:** `localStorage`, cheia `constelar_state_v1` (companioni, memorii, conversații, setări; fără cheia API: cheia se păstrează în `sessionStorage` (până la închiderea filei) sau, doar dacă bifați „Ține minte pe acest dispozitiv”, în cheia separată `constelar_apikey_persist`). Ciornele mesajelor netrimise se păstrează separat, în cheia `constelar_drafts_v1` (se șterg la trimitere). Aplicația testează disponibilitatea `localStorage` și avertizează dacă nu funcționează. Fără cookie-uri.
 - **Hosturi contactate, doar la acțiunea dumneavoastră:**
   - furnizorul AI ales: `api.anthropic.com`, `api.openai.com` sau alt Base URL (inclusiv `openrouter.ai` în presetări), cu mesajele și cheia trimise direct din browser;
-  - `text.pollinations.ai`, dacă alegeți Pollinations (aplicația cere acordul o singură dată);
+  - `text.pollinations.ai`, dacă alegeți Pollinations (aplicația cere acordul o singură dată) — Este API-ul clasic anonim Pollinations: limitat pe IP, fără garanție de disponibilitate; noul `gen.pollinations.ai` cere cheie.
   - `raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/00fe7a40…/` (biblioteca modelului `.wasm`, commit fixat, verificată prin SRI SHA-256) și `huggingface.co/mlc-ai/` (+ `*.huggingface.co`, `*.hf.co`) pentru ponderile modelului ales (fără hash fixat), dacă folosiți WebLLM (biblioteca `@mlc-ai/web-llm@0.2.84` este în `vendor/`);
   - linkurile către `iasp.info` (resurse de criză) și butoanele „Share" se deschid doar la clic.
 - Fără analitice. Pagina are politică CSP (meta), cu `script-src` pe hash SHA-256 pentru scriptul propriu (fără `'unsafe-inline'`); `connect-src` permite `https:` deoarece URL-ul furnizorului compatibil OpenAI este ales de utilizator. Numele modelelor din presetări (Groq, OpenRouter, Together, Mistral etc.) se schimbă des și nu au putut fi verificate la 11.10.2026: editați câmpul „Model” dacă un furnizor răspunde cu eroare. Cu furnizorul implicit „motor local simplu" sau cu modele deja descărcate, conversațiile nu părăsesc dispozitivul.
