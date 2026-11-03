@@ -14,6 +14,7 @@ const STATE = {
   settings: {lang: "en"}
 };
 const {browser, page, st} = await launch();
+if (!AXE) { check("axe-core disponibil (setați FFF_AXE sau AXE_PATH, sau npm i -D axe-core)", false); await browser.close(); summary(); }
 await page.addInitScript({content: AXE});
 await page.evaluate(s => localStorage.setItem("constelar_state_v1", JSON.stringify(s)), STATE);
 await page.reload(); await page.waitForTimeout(900);
