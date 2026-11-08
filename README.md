@@ -2,7 +2,7 @@
 
 **English** · [Română](README.ro.md) · [Français](README.fr.md) · [Italiano](README.it.md) · [Español](README.es.md) · [Português](README.pt.md) · [Deutsch](README.de.md) · [Magyar](README.hu.md)
 
-**Version:** 2.1.5 · **Last updated:** 2026-11-07
+**Version:** 2.1.6 · **Last updated:** 2026-11-08
 
 **Status:** stable (2.0.1). AI providers and WebLLM were not checked against real servers in this review.
 
