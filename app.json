@@ -33,6 +33,7 @@
     "serviceWorker",
     "localStorage",
     "Web Crypto",
+    "WebGL",
     "WebGPU",
     "Worker",
     "BroadcastChannel"
@@ -45,13 +46,13 @@
     "constelar_pollinations_ok_v1",
     "constelar_state_v1"
   ],
-  "sizeBytes": 869999,
-  "sha256": "10cba687d80ecef00cc063eb96778fa9457d96ad37e51624c9b924c18dde23ee",
+  "sizeBytes": 921639,
+  "sha256": "296c27e0378eed41083a06977ae37107f6207e8b298a42b3420c19cc650b3df1",
   "csp": {
     "present": true,
     "directives": {
       "default-src": "'none'",
-      "script-src": "'self' 'wasm-unsafe-eval' sha256×6",
+      "script-src": "'self' 'wasm-unsafe-eval' sha256×7",
       "style-src": "'self' 'unsafe-inline'",
       "img-src": "'self' data: blob:",
       "font-src": "'self' data:",
